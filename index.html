@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1b1446">
+<meta name="description" content="ORDAGRANT – quiz, pussel, sudoku, gåtor, rebusar, korsord och småspel på svenska.">
+<title>ORDAGRANT – ordlekar, pussel och småspel på svenska</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ff5d8f'/%3E%3Ctext x='50' y='72' font-size='64' text-anchor='middle' font-family='Arial' font-weight='900' fill='white'%3EO%3C/text%3E%3C/svg%3E">
+<style>
+/* ORDAGRANT – gemensam stil */
+:root{
+  --bg:#140f36; --bg2:#1f1752; --panel:#ffffff; --panel2:#f5f3ff; --ink:#1d1840; --muted:#6b6790;
+  --line:#e3def8; --brand:#ff5d8f; --brand2:#7b5cff; --ok:#16b17e; --bad:#ef4656; --warn:#ffb020;
+  --radius:18px; --shadow:0 10px 30px rgba(15,8,60,.25); --shadow-sm:0 4px 12px rgba(15,8,60,.15);
+  --font: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --emoji: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+html{background:var(--bg)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(1200px 700px at 10% -10%,#3b2aa8 0,transparent 60%),radial-gradient(900px 600px at 110% 10%,#a3247a 0,transparent 55%),linear-gradient(160deg,var(--bg),var(--bg2))}
+body{font-family:var(--font);color:var(--ink);background:var(--bg);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;line-height:1.45}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+button,a,input,.hole,.mcard,.tile{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow-x:hidden}
+:focus-visible{outline:3px solid #ffd23f;outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg-blobs span{position:absolute;width:40vmax;height:40vmax;border-radius:50%;filter:blur(70px);opacity:.25;animation:float 18s ease-in-out infinite alternate}
+.bg-blobs span:nth-child(1){background:#ff5d8f;left:-10vmax;top:40%}
+.bg-blobs span:nth-child(2){background:#29c7ff;right:-12vmax;top:-5vmax;animation-delay:-6s}
+.bg-blobs span:nth-child(3){background:#ffd23f;left:40%;bottom:-25vmax;animation-delay:-12s;opacity:.15}
+@keyframes float{to{transform:translate(4vmax,-3vmax) scale(1.08)}}
+
+/* Toppfält */
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(12px,3vw,28px);background:rgba(20,15,54,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+.brand{text-decoration:none;display:flex;align-items:center}
+.brand-tiles{display:flex;gap:3px}
+.brand-tiles i{font-style:normal;font-weight:900;color:#fff;width:clamp(20px,4.2vw,30px);height:clamp(24px,4.8vw,34px);display:grid;place-items:center;border-radius:7px;font-size:clamp(13px,2.6vw,19px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.2);transition:transform .2s}
+.brand-tiles i:nth-child(-n+4){background:linear-gradient(160deg,#ff7aa3,#ff3d77)}
+.brand-tiles i:nth-child(n+5){background:linear-gradient(160deg,#9b82ff,#6a45ff)}
+.brand:hover .brand-tiles i{transform:translateY(-2px) rotate(-3deg)}
+.brand:hover .brand-tiles i:nth-child(even){transform:translateY(-2px) rotate(3deg)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-stats{display:flex;gap:8px;color:#fff;font-size:14px}
+.stat-chip{background:rgba(255,255,255,.12);padding:6px 12px;border-radius:999px;white-space:nowrap;font-weight:600}
+.stat-chip b{color:#ffd23f}
+.aud-pill{color:#fff;font-size:13px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:5px 10px;border-radius:999px;white-space:nowrap}
+.aud-pill:empty{display:none}
+@media (max-width:560px){.aud-pill{display:none}.stat-chip.secondary{display:none}}
+
+main:focus,main:focus-visible{outline:none}
+main{position:relative;z-index:1;flex:1;width:100%;max-width:1180px;margin:0 auto;padding:clamp(14px,3vw,32px) clamp(10px,3vw,28px) 40px;outline:none}
+.footer{position:relative;z-index:1;text-align:center;color:rgba(255,255,255,.55);font-size:13px;padding:16px}
+.noscript{color:#fff;text-align:center}
+
+/* Startmeny */
+.hero{color:#fff;text-align:center;margin:8px auto 22px;max-width:780px;animation:rise .5s ease both}
+.hero h1{font-size:clamp(28px,5.5vw,52px);margin:0 0 6px;letter-spacing:-.02em;line-height:1.1}
+.hero h1 .grad{background:linear-gradient(90deg,#ffd23f,#ff5d8f,#9b82ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0;color:rgba(255,255,255,.78);font-size:clamp(15px,2.2vw,18px)}
+.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:0 0 18px}
+.dash .dtile{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px 16px;color:#fff}
+.dash .dtile .v{font-size:28px;font-weight:800;color:#ffd23f;line-height:1.1}
+.dash .dtile .l{font-size:13px;color:rgba(255,255,255,.7)}
+.aud-box{background:rgba(255,255,255,.95);border-radius:var(--radius);padding:16px;margin-bottom:22px;box-shadow:var(--shadow);animation:rise .5s .05s ease both}
+.aud-box h2{margin:0 0 4px;font-size:18px}
+.aud-box p.sub{margin:0 0 12px;color:var(--muted);font-size:14px}
+.aud-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.aud-opt{border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px;text-align:left;display:flex;gap:10px;align-items:center;transition:transform .15s,border-color .15s,box-shadow .15s}
+.aud-opt:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.aud-opt .e{font-size:30px;font-family:var(--emoji)}
+.aud-opt b{display:block;font-size:16px}
+.aud-opt small{color:var(--muted);font-size:12.5px;display:block;line-height:1.3}
+.aud-opt[aria-pressed="true"]{border-color:var(--brand2);background:linear-gradient(160deg,#f4f0ff,#ffeef4);box-shadow:0 0 0 3px rgba(123,92,255,.2)}
+@media (max-width:640px){.aud-options{grid-template-columns:1fr}.aud-opt{padding:10px}}
+.section-title{color:#fff;font-size:20px;margin:26px 4px 12px;display:flex;align-items:center;gap:10px}
+.section-title::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.15)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.card{position:relative;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:#fff;border-radius:var(--radius);padding:18px;min-height:178px;background:linear-gradient(145deg,var(--c1),var(--c2));box-shadow:var(--shadow);overflow:hidden;transition:transform .2s ease,box-shadow .2s ease;animation:rise .45s ease both}
+.card::before{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.14)}
+.card:hover{transform:translateY(-4px) rotate(-.4deg);box-shadow:0 18px 40px rgba(15,8,60,.4)}
+.card .emoji{font-size:40px;line-height:1;font-family:var(--emoji);filter:drop-shadow(0 3px 4px rgba(0,0,0,.2))}
+.card h3{margin:4px 0 0;font-size:21px}
+.card p{margin:0;font-size:14px;opacity:.92;flex:1}
+.card .meta{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;font-weight:700;flex-wrap:wrap}
+.card .meta span{background:rgba(0,0,0,.18);padding:4px 9px;border-radius:999px}
+.card .bar{height:6px;background:rgba(0,0,0,.18);border-radius:9px;overflow:hidden}
+.card .bar i{display:block;height:100%;background:#fff;border-radius:9px;transition:width .6s}
+.menu-actions{display:flex;justify-content:center;margin-top:28px}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* Spelvy */
+.game{background:var(--panel);border-radius:22px;box-shadow:var(--shadow);padding:clamp(14px,3vw,28px);animation:rise .35s ease both;min-height:60vh}
+.game-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.game-head h1{margin:0;font-size:clamp(20px,3.6vw,28px);display:flex;align-items:center;gap:10px;flex:1;min-width:180px}
+.game-head h1 .e{font-family:var(--emoji)}
+.game-head .best{font-size:13px;color:var(--muted);font-weight:600}
+.btn{border:0;border-radius:12px;padding:10px 16px;font-weight:700;background:var(--panel2);color:var(--ink);transition:transform .12s,background .15s,box-shadow .15s;display:inline-flex;align-items:center;gap:6px;justify-content:center;text-decoration:none;line-height:1.2;touch-action:manipulation}
+.btn:hover{background:#ebe6ff}
+.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:linear-gradient(135deg,var(--brand2),#9b6bff);color:#fff;box-shadow:0 4px 14px rgba(123,92,255,.35)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.pink{background:linear-gradient(135deg,#ff5d8f,#ff8a5b);color:#fff}
+.btn.ok{background:var(--ok);color:#fff}
+.btn.ghost{background:transparent;border:2px solid var(--line)}
+.btn.small{padding:7px 11px;font-size:14px;border-radius:10px}
+.btn.on{background:var(--brand2);color:#fff}
+.btn-back{background:var(--ink);color:#fff}
+.btn-back:hover{background:#2c2566}
+.btn-danger{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.25)}
+.btn-danger:hover{background:rgba(239,70,86,.25);color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.center{justify-content:center}
+.spacer{flex:1}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px}
+.pill.warn{background:#fff3d6}
+.muted{color:var(--muted)}
+.center{text-align:center}
+.seg{display:inline-flex;background:var(--panel2);border-radius:12px;padding:4px;gap:4px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:7px 12px;border-radius:9px;font-weight:700;font-size:14px}
+.seg button[aria-pressed="true"]{background:#fff;box-shadow:var(--shadow-sm);color:var(--brand2)}
+.stage{max-width:760px;margin:0 auto}
+.panel{background:var(--panel2);border-radius:16px;padding:18px}
+.result{text-align:center;padding:20px 10px;animation:pop .4s ease both}
+.result .big{font-size:56px;font-family:var(--emoji)}
+.result h2{margin:6px 0}
+.result .score{font-size:40px;font-weight:900;color:var(--brand2)}
+@keyframes pop{0%{transform:scale(.85);opacity:0}60%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.shake{animation:shake .4s}
+.feedback{min-height:28px;font-weight:700;margin:10px 0;text-align:center}
+.feedback.ok{color:var(--ok)} .feedback.bad{color:var(--bad)} .feedback.info{color:var(--brand2)}
+
+/* Toast & konfetti */
+.toasts{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;z-index:100;pointer-events:none;width:min(92vw,420px)}
+.toast{background:#1d1840;color:#fff;padding:12px 16px;border-radius:14px;box-shadow:var(--shadow);font-weight:600;animation:toastIn .3s ease both;text-align:center}
+.toast.ok{background:linear-gradient(135deg,#0fa572,#16c48b)}
+.toast.out{animation:toastOut .3s ease both}
+@keyframes toastIn{from{opacity:0;transform:translateY(14px)}}
+@keyframes toastOut{to{opacity:0;transform:translateY(14px)}}
+.confetti{position:fixed;top:-12px;width:10px;height:14px;z-index:99;pointer-events:none;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),105vh) rotate(var(--rot));opacity:.9}}
+
+/* Dialog */
+.modal-back{position:fixed;inset:0;background:rgba(10,6,40,.55);display:grid;place-items:center;z-index:90;animation:toastIn .2s}
+.modal{background:#fff;border-radius:18px;padding:22px;max-width:380px;width:90vw;box-shadow:var(--shadow)}
+.modal h2{margin:0 0 8px}
+
+/* Quiz */
+.quiz-q{font-size:clamp(19px,3vw,25px);font-weight:800;margin:14px 0 18px;text-align:center}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.quiz-opts{grid-template-columns:1fr}}
+.quiz-opt{border:2px solid var(--line);background:#fff;border-radius:14px;padding:14px;font-weight:700;text-align:left;font-size:16px;display:flex;gap:10px;align-items:center;transition:transform .12s,border-color .15s,background .15s}
+.quiz-opt:hover:not(:disabled){border-color:var(--brand2);transform:translateY(-2px)}
+.quiz-opt .k{width:28px;height:28px;border-radius:8px;background:var(--panel2);display:grid;place-items:center;flex:none;font-size:14px}
+.quiz-opt.right{background:#e2f8ef;border-color:var(--ok)}
+.quiz-opt.wrong{background:#fde7ea;border-color:var(--bad)}
+.quiz-opt:disabled{cursor:default}
+.timer{height:8px;background:var(--panel2);border-radius:9px;overflow:hidden}
+.timer i{display:block;height:100%;background:linear-gradient(90deg,var(--ok),var(--warn),var(--bad));background-size:300% 100%;transition:width .25s linear}
+.fact{background:#f0ecff;border-radius:12px;padding:10px 14px;margin-top:12px;font-size:14.5px}
+
+/* Svarsspel (gåtor/rebusar) */
+.ans-card{text-align:center;padding:26px 18px;border-radius:20px;background:linear-gradient(160deg,#f6f2ff,#fff0f5);margin-bottom:14px}
+.ans-card .prompt{font-size:clamp(19px,3.2vw,25px);font-weight:700;line-height:1.35}
+.ans-card .rebus{font-family:var(--emoji);font-size:clamp(40px,9vw,68px);letter-spacing:.06em;line-height:1.25}
+.ans-card .num{color:var(--muted);font-size:13px;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em}
+.ans-form{display:flex;gap:8px}
+.ans-form input{flex:1;min-width:0;padding:13px 14px;border:2px solid var(--line);border-radius:12px;font-size:18px;background:#fff}
+.ans-form input:focus{border-color:var(--brand2);outline:none}
+.hints{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.hint{background:#fff7e0;border-radius:10px;padding:8px 12px;font-size:15px;animation:rise .3s}
+.dots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:16px}
+.dots button{width:30px;height:30px;border-radius:9px;border:2px solid var(--line);background:#fff;font-size:12px;font-weight:700;padding:0}
+.dots button.solved{background:var(--ok);border-color:var(--ok);color:#fff}
+.dots button.cur{border-color:var(--brand2);box-shadow:0 0 0 2px rgba(123,92,255,.3)}
+
+/* 15-pussel */
+.puzzle-wrap{display:grid;place-items:center;margin:12px 0}
+.puzzle{position:relative;width:min(100%,420px);aspect-ratio:1;background:#2a2260;border-radius:18px;padding:6px;touch-action:none}
+.tile{position:absolute;border:0;border-radius:12px;font-weight:900;color:#fff;font-size:clamp(20px,5vw,32px);display:grid;place-items:center;transition:transform .14s ease;box-shadow:inset 0 -5px 0 rgba(0,0,0,.18)}
+.tile.inplace{filter:saturate(1.2) brightness(1.06)}
+.puzzle.won .tile{animation:pop .5s}
+
+/* Sudoku */
+.sudoku{display:grid;grid-template-columns:repeat(9,1fr);width:100%;max-width:470px;aspect-ratio:1;margin:8px auto;border:3px solid var(--ink);border-radius:10px;overflow:hidden;background:var(--ink);gap:1px}
+.sud-cell{background:#fff;border:0;display:grid;place-items:center;font-size:clamp(17px,4.2vw,26px);font-weight:700;color:var(--brand2);position:relative;padding:0;transition:background .1s}
+.sud-cell.given{color:var(--ink);font-weight:800;background:#f6f5fb}
+.sud-cell.br{border-right:2px solid var(--ink)}
+.sud-cell.bb{border-bottom:2px solid var(--ink)}
+.sud-cell.peer{background:#efebff}
+.sud-cell.same{background:#ddd3ff}
+.sud-cell.sel{background:#c6b6ff}
+.sud-cell.conflict{color:var(--bad);background:#ffe3e7}
+.sud-cell.wrong{background:#ffd0d6}
+.sud-cell.hinted{color:var(--ok)}
+.sud-notes{position:absolute;inset:2px;display:grid;grid-template-columns:repeat(3,1fr);font-size:clamp(8px,1.8vw,11px);color:var(--muted);font-weight:600;line-height:1}
+.sud-notes span{display:grid;place-items:center}
+.numpad{display:grid;grid-template-columns:repeat(9,1fr);gap:clamp(3px,1vw,6px);width:100%;max-width:470px;margin:10px auto}
+.numpad button{aspect-ratio:1;border:0;border-radius:10px;background:var(--panel2);font-weight:800;font-size:clamp(16px,4vw,22px)}
+.numpad button:hover{background:#e3dcff}
+.numpad button.done{opacity:.35}
+
+/* Krypto */
+.krypto{display:flex;flex-wrap:wrap;gap:14px 22px;justify-content:center;margin:16px 0}
+.kword{display:flex;gap:4px}
+.kcell{display:flex;flex-direction:column;align-items:center;gap:3px}
+.kcell input{width:clamp(28px,6.6vw,38px);height:clamp(34px,7.6vw,44px);text-align:center;font-size:clamp(17px,4vw,22px);font-weight:800;border:0;border-bottom:3px solid var(--ink);background:#f5f3ff;border-radius:7px 7px 0 0;text-transform:uppercase;padding:0;caret-color:transparent}
+.kcell input:focus{outline:none;background:#ddd3ff}
+.kcell input.match{background:#ece5ff}
+.kcell input.fixed{color:var(--ok);border-bottom-color:var(--ok)}
+.kcell input.dupe{color:var(--bad)}
+.kcell small{font-size:12px;color:var(--muted);font-weight:700}
+.kpunct{align-self:flex-start;font-size:22px;font-weight:800;padding-top:6px}
+.kfreq{font-size:13px;color:var(--muted);text-align:center}
+
+/* Korsord */
+.cw-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,1fr);gap:20px;align-items:start}
+@media (max-width:820px){.cw-layout{grid-template-columns:1fr}}
+.cw-grid{display:grid;gap:2px;width:100%;max-width:520px;margin:0 auto;background:transparent}
+.cw-cell{position:relative;aspect-ratio:1;background:transparent}
+.cw-cell.on{background:var(--ink);border-radius:5px;padding:1px}
+.cw-cell input{width:100%;height:100%;border:0;border-radius:4px;text-align:center;font-weight:800;font-size:clamp(13px,3.2vw,21px);text-transform:uppercase;background:#fff;padding:0;caret-color:transparent}
+.cw-cell input:focus{outline:none}
+.cw-cell.word input{background:#e6dfff}
+.cw-cell.cur input{background:#ffd23f}
+.cw-cell.good input{color:var(--ok)}
+.cw-cell.bad input{background:#ffd0d6;color:var(--bad)}
+.cw-cell .n{position:absolute;left:3px;top:1px;font-size:clamp(7px,1.5vw,10px);font-weight:800;color:var(--muted);pointer-events:none;z-index:1}
+.cw-clues h3{margin:6px 0;font-size:16px}
+.cw-clues ol{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:3px}
+.cw-clues li{padding:6px 10px;border-radius:9px;cursor:pointer;font-size:15px}
+.cw-clues li:hover{background:var(--panel2)}
+.cw-clues li.active{background:#e6dfff;font-weight:700}
+.cw-clues li.done{color:var(--ok);text-decoration:line-through}
+.cw-clues li b{display:inline-block;min-width:24px}
+.cw-current{background:var(--ink);color:#fff;border-radius:12px;padding:10px 14px;margin-bottom:12px;font-weight:600;min-height:44px}
+
+/* Ordblandning */
+.scr-slots,.scr-tiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:58px;margin:12px 0}
+.ltile{width:clamp(40px,10vw,52px);height:clamp(46px,11vw,58px);border-radius:12px;border:0;font-weight:900;font-size:clamp(20px,5vw,26px);background:linear-gradient(160deg,#ffcf5c,#ffa53d);color:#4a2a00;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15);transition:transform .12s;animation:pop .3s both}
+.ltile:hover{transform:translateY(-3px)}
+.ltile.used{visibility:hidden}
+.slot{width:clamp(40px,10vw,52px);height:clamp(46px,11vw,58px);border-radius:12px;border:2px dashed #cfc6f5;display:grid;place-items:center;font-weight:900;font-size:clamp(20px,5vw,26px);background:#fff}
+.slot.filled{border-style:solid;border-color:var(--brand2);background:#f2eeff;cursor:pointer}
+.slot.fixed{border-color:var(--ok);background:#e2f8ef;cursor:default}
+
+/* Memory */
+.mem{display:grid;gap:clamp(6px,1.6vw,10px);margin:12px auto;width:100%;max-width:520px}
+.mcard{aspect-ratio:1;perspective:700px;border:0;background:transparent;padding:0}
+.mcard .in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.mcard.flip .in,.mcard.matched .in{transform:rotateY(180deg)}
+.mcard .f,.mcard .b{position:absolute;inset:0;border-radius:14px;display:grid;place-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.mcard .f{background:linear-gradient(145deg,#7b5cff,#ff5d8f);box-shadow:var(--shadow-sm)}
+.mcard .f::after{content:"?";color:rgba(255,255,255,.75);font-weight:900;font-size:clamp(20px,5vw,30px)}
+.mcard .b{background:#fff;border:2px solid var(--line);transform:rotateY(180deg);font-size:clamp(26px,7vw,44px);font-family:var(--emoji)}
+.mcard.matched .b{border-color:var(--ok);background:#e9fbf3;animation:pop .4s}
+
+/* Snake */
+.snake-wrap{display:grid;place-items:center;gap:10px}
+.snake-wrap canvas{width:min(100%,440px);aspect-ratio:1;border-radius:16px;background:#1a1446;box-shadow:var(--shadow);touch-action:none}
+.dpad{display:grid;grid-template-columns:repeat(3,58px);grid-template-rows:repeat(2,52px);gap:6px}
+.dpad button{border:0;border-radius:12px;background:var(--panel2);font-size:22px;font-weight:900}
+.dpad .u{grid-column:2}.dpad .l{grid-column:1;grid-row:2}.dpad .d{grid-column:2;grid-row:2}.dpad .r{grid-column:3;grid-row:2}
+@media (hover:hover) and (pointer:fine){.dpad{display:none}}
+
+/* Mullvad */
+.holes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,3vw,22px);width:100%;max-width:460px;margin:14px auto;padding:18px;background:linear-gradient(180deg,#8fd16a,#5fae45);border-radius:22px;box-shadow:var(--shadow)}
+.hole{position:relative;aspect-ratio:1;border:0;background:transparent;padding:0;overflow:hidden;border-radius:0 0 50% 50%;touch-action:manipulation}
+.hole::before{content:"";position:absolute;left:6%;right:6%;bottom:4%;height:34%;background:radial-gradient(ellipse at center,#3b2412 0,#5b3a1d 60%,#6d4a26 100%);border-radius:50%}
+.mole{position:absolute;left:18%;right:18%;bottom:10%;height:72%;transform:translateY(110%);transition:transform .14s ease-out;display:grid;place-items:center;font-size:clamp(34px,10vw,56px);font-family:var(--emoji)}
+.mole.up{transform:translateY(0)}
+.mole .body{width:100%;height:100%;border-radius:50% 50% 30% 30%;background:linear-gradient(180deg,#8a6143,#6b462c);position:relative;box-shadow:inset 0 -6px 0 rgba(0,0,0,.15)}
+.mole .body::before,.mole .body::after{content:"";position:absolute;top:30%;width:12%;height:12%;background:#111;border-radius:50%}
+.mole .body::before{left:28%}.mole .body::after{right:28%}
+.mole .nose{position:absolute;left:50%;top:48%;width:24%;height:16%;transform:translateX(-50%);background:#ff8fab;border-radius:50%}
+.mole.gold .body{background:linear-gradient(180deg,#ffe066,#e6a800)}
+.mole.hit .body{filter:brightness(.6)}
+.mole.bomb{font-size:clamp(34px,10vw,56px)}
+.mole .stars{position:absolute;top:-8%;font-size:22px}
+@media (max-width:560px){.dash{grid-template-columns:repeat(2,1fr);gap:8px}.dash .dtile{padding:10px 12px}.dash .dtile .v{font-size:22px}}
+
+</style>
+</head>
+<body>
+<div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+<header class="topbar">
+  <a class="brand" href="#/" aria-label="ORDAGRANT – till startmenyn"><span class="brand-tiles" aria-hidden="true"><i>O</i><i>R</i><i>D</i><i>A</i><i>G</i><i>R</i><i>A</i><i>N</i><i>T</i></span><span class="sr-only">ORDAGRANT</span></a>
+  <div class="topbar-right"><div class="aud-pill" id="aud-pill"></div><div class="topbar-stats" id="topbar-stats" aria-live="polite"></div></div>
+</header>
+<main id="app" tabindex="-1"></main>
+<footer class="footer">
+  <span>ORDAGRANT · fungerar helt offline · framsteg sparas i din webbläsare</span>
+</footer>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<noscript><p class="noscript">ORDAGRANT kräver JavaScript. Aktivera JavaScript i webbläsaren för att spela.</p></noscript>
+<script>
+/* ==== js/core.js ==== */
+/* ORDAGRANT – kärna: lagring, målgrupp, routing, hjälpfunktioner */
+(function () {
+  'use strict';
+  const KEY = 'ordagrant:v1';
+  const AUDIENCES = {
+    familj: { id: 'familj', name: 'Familj', emoji: '👨‍👩‍👧', desc: 'Alla åldrar, från ca 8 år. Lättare frågor och lugnare tempo.' },
+    ungdom: { id: 'ungdom', name: 'Ungdom', emoji: '🧑‍🎤', desc: 'Ca 12–17 år. Lagom kluriga utmaningar.' },
+    vuxen:  { id: 'vuxen',  name: 'Vuxen',  emoji: '🧠', desc: 'Svårare frågor, kluriga gåtor och tuffare sudoku.' },
+  };
+  // Vilka svårighetsnivåer (1–3) som ingår för varje målgrupp
+  const LEVELS = { familj: [1], ungdom: [1, 2], vuxen: [2, 3] };
+
+  /* Säker lagring: localStorage om det går, annars minne (t.ex. file:// i vissa webbläsare, privat läge) */
+  const memStore = {};
+  let lsOK = false;
+  try { const t = '__ordagrant_test__'; window.localStorage.setItem(t, '1'); window.localStorage.removeItem(t); lsOK = true; } catch (e) { lsOK = false; }
+  function lsGet(k) { if (lsOK) { try { return window.localStorage.getItem(k); } catch (e) { /* fall tillbaka */ } } return Object.prototype.hasOwnProperty.call(memStore, k) ? memStore[k] : null; }
+  function lsSet(k, v) { memStore[k] = String(v); if (lsOK) { try { window.localStorage.setItem(k, String(v)); } catch (e) { /* t.ex. fullt eller blockerat */ } } }
+  function load() {
+    try { const d = JSON.parse(lsGet(KEY)); if (d && typeof d === 'object') return d; } catch (e) { /* ignoreras */ }
+    return null;
+  }
+  let state = load() || { total: 0, rounds: 0, audience: 'familj', games: {} };
+  if (!AUDIENCES[state.audience]) state.audience = 'familj';
+  if (!state.games || typeof state.games !== 'object') state.games = {};
+  function save() { try { lsSet(KEY, JSON.stringify(state)); } catch (e) { /* ignoreras */ } }
+  function g(id) { return (state.games[id] = state.games[id] || { best: 0, points: 0, plays: 0, solved: [] }); }
+
+  const Hub = {
+    games: [], AUDIENCES, LEVELS, lsGet, lsSet, get persistent() { return lsOK; },
+    register(game) { this.games.push(game); },
+    get audience() { return state.audience; },
+    setAudience(a) { if (AUDIENCES[a]) { state.audience = a; save(); renderTopbar(); } },
+    levels() { return LEVELS[state.audience]; },
+    /** Filtrera innehåll med fältet lvl (1–3) efter vald målgrupp */
+    forAudience(list) { const L = LEVELS[state.audience]; return list.filter(x => L.includes(x.lvl)); },
+    pick(obj) { return obj[state.audience]; },
+    stats() { return state; },
+    game(id) { return g(id); },
+    /** Lägg till poäng och spara rekord för en omgång */
+    finishRound(id, points) {
+      const s = g(id); points = Math.max(0, Math.round(points));
+      s.plays++; s.points += points; state.total += points; state.rounds++;
+      const record = points > s.best; if (record) s.best = points;
+      save(); renderTopbar();
+      return record;
+    },
+    /** Poäng för enskild uppgift; full poäng bara första gången den löses */
+    solveItem(id, itemId, points) {
+      const s = g(id); const first = !s.solved.includes(itemId);
+      if (first) { s.solved.push(itemId); s.points += points; state.total += points; if (points > s.best) s.best = points; }
+      save(); renderTopbar();
+      return first ? points : 0;
+    },
+    isSolved(id, itemId) { return g(id).solved.includes(itemId); },
+    addPoints(id, points) { const s = g(id); s.points += points; state.total += points; save(); renderTopbar(); },
+    reset() { const a = state.audience; state = { total: 0, rounds: 0, audience: a, games: {} }; save(); renderTopbar(); },
+    totalSolved() { return Object.values(state.games).reduce((n, x) => n + (x.solved ? x.solved.length : 0), 0); },
+  };
+
+  /* ---------- Hjälpfunktioner ---------- */
+  Hub.el = function (tag, attrs, ...kids) {
+    const e = document.createElement(tag);
+    if (attrs) for (const [k, v] of Object.entries(attrs)) {
+      if (v == null || v === false) continue;
+      if (k === 'class') e.className = v;
+      else if (k === 'html') e.innerHTML = v;
+      else if (k === 'text') e.textContent = v;
+      else if (k === 'style' && typeof v === 'object') { for (const [sk, sv] of Object.entries(v)) { if (sk.startsWith('--')) e.style.setProperty(sk, sv); else e.style[sk] = sv; } }
+      else if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v === true ? '' : v);
+    }
+    for (const k of kids.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(String(k)));
+    return e;
+  };
+  Hub.shuffle = function (a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  Hub.rand = (n) => Math.floor(Math.random() * n);
+  /** Normalisera svar: gemener, NFC, utan skiljetecken och extra mellanslag */
+  Hub.norm = function (s) {
+    return String(s || '').normalize('NFC').toLocaleLowerCase('sv-SE')
+      .replace(/[^\p{L}\p{N} ]+/gu, ' ').replace(/\s+/g, ' ').trim();
+  };
+  /** Utan prickar/ringar (för att tolerera tangentbord utan å/ä/ö) */
+  Hub.plain = function (s) { return Hub.norm(s).replace(/[åä]/g, 'a').replace(/ö/g, 'o').replace(/é/g, 'e'); };
+  const ARTICLES = /^(en|ett|ett par|den|det|de|min|mitt|din|ditt|sin|sitt) /;
+  /** Jämför ett svar mot en lista godkända svar. Returnerar 'exact', 'loose' eller false. */
+  Hub.check = function (input, answers) {
+    const a = Hub.norm(input).replace(ARTICLES, '');
+    if (!a) return false;
+    const list = answers.map(x => Hub.norm(x).replace(ARTICLES, ''));
+    if (list.includes(a) || list.includes(a.replace(/ /g, ''))) return 'exact';
+    const p = Hub.plain(a), pl = list.map(Hub.plain);
+    if (pl.includes(p) || pl.includes(p.replace(/ /g, ''))) return 'loose';
+    return false;
+  };
+  /** Hämta den senast inskrivna bokstaven (fungerar med Android-tangentbord/IME där keydown ger 'Unidentified') */
+  Hub.lastLetter = function (e, inp) {
+    const pick = (t) => (t || '').toLocaleUpperCase('sv-SE').replace(/[^A-ZÅÄÖ]/g, '');
+    const fromData = pick(e && e.data); if (fromData) return fromData.slice(-1);
+    const v = pick(inp.value); if (!v) return '';
+    // Om markören står först (t.ex. tryck framför befintlig bokstav) är den nya bokstaven först
+    if (inp.selectionStart === 1 && v.length > 1) return v[0];
+    return v.slice(-1);
+  };
+  /** Markera innehållet vid fokus så att nästa bokstav ersätter den gamla */
+  Hub.selectOnFocus = function (inp) { const sel = () => { try { inp.setSelectionRange(0, inp.value.length); } catch (e) { /* ignoreras */ } }; inp.addEventListener('focus', () => setTimeout(sel, 0)); inp.addEventListener('click', sel); };
+  Hub.fmtTime = (sec) => { sec = Math.max(0, Math.floor(sec)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); };
+  Hub.fmt = (n) => Number(n).toLocaleString('sv-SE');
+
+  Hub.toast = function (msg, kind) {
+    const box = document.getElementById('toasts'); if (!box) return;
+    const t = Hub.el('div', { class: 'toast ' + (kind || ''), role: 'status' }, msg);
+    box.append(t);
+    setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 320); }, 2300);
+  };
+  Hub.confetti = function (n) {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const colors = ['#ff5d8f', '#7b5cff', '#ffd23f', '#29c7ff', '#16b17e'];
+    for (let i = 0; i < (n || 60); i++) {
+      const c = Hub.el('div', { class: 'confetti' });
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[i % colors.length];
+      c.style.setProperty('--dx', (Math.random() * 200 - 100) + 'px');
+      c.style.setProperty('--rot', (Math.random() * 900) + 'deg');
+      c.style.animationDuration = (1.6 + Math.random() * 1.6) + 's';
+      c.style.animationDelay = Math.random() * .3 + 's';
+      document.body.append(c);
+      setTimeout(() => c.remove(), 3800);
+    }
+  };
+  Hub.confirm = function (title, text, okText) {
+    return new Promise(res => {
+      const close = (v) => { back.remove(); res(v); };
+      const back = Hub.el('div', { class: 'modal-back', onclick: (e) => { if (e.target === back) close(false); } },
+        Hub.el('div', { class: 'modal', role: 'dialog', 'aria-modal': 'true' },
+          Hub.el('h2', null, title), Hub.el('p', { class: 'muted' }, text),
+          Hub.el('div', { class: 'row', style: { justifyContent: 'flex-end' } },
+            Hub.el('button', { class: 'btn ghost', onclick: () => close(false) }, 'Avbryt'),
+            Hub.el('button', { class: 'btn pink', onclick: () => close(true) }, okText || 'OK'))));
+      document.body.append(back);
+      back.querySelector('.btn.pink').focus();
+    });
+  };
+  /** Gemensamt resultatkort efter en omgång */
+  Hub.resultView = function ({ emoji, title, text, points, record, onAgain }) {
+    if (points > 0) Hub.confetti(record ? 90 : 45);
+    return Hub.el('div', { class: 'result' },
+      Hub.el('div', { class: 'big' }, emoji || '🎉'),
+      Hub.el('h2', null, title),
+      text ? Hub.el('p', { class: 'muted' }, text) : null,
+      Hub.el('div', { class: 'score' }, '+' + Hub.fmt(points) + ' poäng'),
+      record ? Hub.el('p', null, '🏆 Nytt personligt rekord!') : null,
+      Hub.el('div', { class: 'row center', style: { marginTop: '14px' } },
+        Hub.el('button', { class: 'btn primary', onclick: onAgain }, '🔄 Spela igen'),
+        Hub.el('a', { class: 'btn', href: '#/' }, '🏠 Till menyn')));
+  };
+
+  /* ---------- Topbar ---------- */
+  function renderTopbar() {
+    const t = document.getElementById('topbar-stats'); if (!t) return;
+    t.innerHTML = '';
+    t.append(Hub.el('span', { class: 'stat-chip' }, '⭐ ', Hub.el('b', null, Hub.fmt(state.total)), ' p'));
+    t.append(Hub.el('span', { class: 'stat-chip secondary' }, '✅ ', Hub.el('b', null, Hub.totalSolved()), ' lösta'));
+    const a = document.getElementById('aud-pill');
+    if (a) { const A = AUDIENCES[state.audience]; a.textContent = A.emoji + ' ' + A.name; a.title = 'Vald målgrupp'; }
+  }
+  Hub.renderTopbar = renderTopbar;
+
+  /* ---------- Routing ---------- */
+  let current = null;
+  function route() {
+    const app = document.getElementById('app');
+    if (current && current.unmount) { try { current.unmount(); } catch (e) { console.error(e); } }
+    current = null;
+    app.innerHTML = '';
+    const id = (location.hash.match(/^#\/([\w-]+)/) || [])[1];
+    const game = id && Hub.games.find(x => x.id === id);
+    if (!game) { Hub.renderMenu(app); document.title = 'ORDAGRANT – ordlekar, pussel och småspel på svenska'; }
+    else {
+      document.title = game.title + ' – ORDAGRANT';
+      const s = g(game.id);
+      const body = Hub.el('div', { class: 'game-body' });
+      const head = Hub.el('div', { class: 'game-head' },
+        Hub.el('a', { class: 'btn btn-back', href: '#/', 'aria-label': 'Tillbaka till menyn' }, '← Till menyn'),
+        Hub.el('h1', null, Hub.el('span', { class: 'e' }, game.emoji), game.title),
+        Hub.el('span', { class: 'best' }, '🏆 Bästa: ' + Hub.fmt(s.best) + ' p · Totalt: ' + Hub.fmt(s.points) + ' p'));
+      app.append(Hub.el('section', { class: 'game', 'data-game': game.id }, head, body));
+      current = game;
+      try { game.mount(body); } catch (e) { console.error(e); body.append(Hub.el('p', null, 'Något gick fel när spelet skulle starta.')); }
+    }
+    window.scrollTo(0, 0);
+    app.focus({ preventScroll: true });
+  }
+  Hub.start = function () { renderTopbar(); window.addEventListener('hashchange', route); route(); };
+  window.Hub = Hub;
+})();
+
+</script>
+<script>
+/* ==== js/data.js ==== */
+/* ORDAGRANT – innehåll. lvl: 1 = lätt (familj), 2 = medel (ungdom), 3 = svår (vuxen) */
+window.DATA = {};
+
+/* ---------- Quiz: [fråga, rätt svar, felaktiga alternativ, fakta] ---------- */
+DATA.quiz = [
+  // Nivå 1 – familj
+  { lvl: 1, q: 'Vad heter Sveriges huvudstad?', a: 'Stockholm', w: ['Göteborg', 'Malmö', 'Uppsala'], f: 'Stockholm är byggt på fjorton öar mellan Mälaren och Östersjön.' },
+  { lvl: 1, q: 'Vilka färger har Sveriges flagga?', a: 'Blått och gult', w: ['Rött och vitt', 'Blått och vitt', 'Grönt och gult'], f: 'Den svenska flaggan har ett gult kors på blå botten.' },
+  { lvl: 1, q: 'Vem skrev böckerna om Pippi Långstrump?', a: 'Astrid Lindgren', w: ['Selma Lagerlöf', 'Elsa Beskow', 'Maria Gripe'], f: 'Den första boken om Pippi kom ut 1945.' },
+  { lvl: 1, q: 'Vilket djur kallas ofta ”skogens konung”?', a: 'Älgen', w: ['Björnen', 'Vargen', 'Lodjuret'], f: 'En vuxen älgtjur kan väga över 500 kilo.' },
+  { lvl: 1, q: 'Vilket datum firas Lucia?', a: '13 december', w: ['24 december', '6 juni', '1 maj'], f: 'Luciatåget sjunger ofta ”Natten går tunga fjät”.' },
+  { lvl: 1, q: 'Vad heter gåskarlen som Nils Holgersson rider på?', a: 'Mårten', w: ['Akka', 'Gåsapiga', 'Karlsson'], f: 'Akka från Kebnekaise är ledaren för vildgässen.' },
+  { lvl: 1, q: 'Vilken är Sveriges största ö?', a: 'Gotland', w: ['Öland', 'Orust', 'Hisingen'], f: 'Gotland är drygt 3 000 kvadratkilometer stort.' },
+  { lvl: 1, q: 'Vilket datum är Sveriges nationaldag?', a: '6 juni', w: ['1 maj', '24 juni', '13 december'], f: 'Gustav Vasa valdes till kung den 6 juni 1523.' },
+  { lvl: 1, q: 'Hur många ben har en spindel?', a: 'Åtta', w: ['Sex', 'Tio', 'Fyra'], f: 'Insekter har sex ben, men spindlar är spindeldjur med åtta.' },
+  { lvl: 1, q: 'Vad heter Sveriges valuta?', a: 'Krona', w: ['Euro', 'Mark', 'Daler'], f: 'En krona består av 100 öre.' },
+  { lvl: 1, q: 'Vad brukar man dansa runt på midsommar?', a: 'Midsommarstången', w: ['Julgranen', 'Brasan', 'Påskriset'], f: 'Många dansar till ”Små grodorna” runt stången.' },
+  { lvl: 1, q: 'Vad heter Emils lillasyster i böckerna om Emil i Lönneberga?', a: 'Ida', w: ['Lotta', 'Madicken', 'Annika'], f: 'Emil hissade upp Ida i flaggstången!' },
+  { lvl: 1, q: 'Vem bor i Villa Villekulla?', a: 'Pippi Långstrump', w: ['Emil', 'Ronja Rövardotter', 'Karlsson på taket'], f: 'Pippi bor där med hästen Lilla Gubben och apan Herr Nilsson.' },
+  { lvl: 1, q: 'Vilken färg får kräftor när de kokas?', a: 'Röda', w: ['Blå', 'Gröna', 'Svarta'], f: 'Levande kräftor är mörkt brungröna.' },
+  // Nivå 2 – ungdom
+  { lvl: 2, q: 'Vilken är Sveriges största sjö?', a: 'Vänern', w: ['Vättern', 'Mälaren', 'Storsjön'], f: 'Vänern är också EU:s största sjö.' },
+  { lvl: 2, q: 'Vad heter Sveriges högsta berg?', a: 'Kebnekaise', w: ['Sarektjåkkå', 'Helagsfjället', 'Åreskutan'], f: 'Kebnekaise ligger i Lappland, nära Kiruna.' },
+  { lvl: 2, q: 'Hur många landskap har Sverige?', a: '25', w: ['21', '29', '18'], f: 'Landskapen är historiska – län är den administrativa indelningen.' },
+  { lvl: 2, q: 'Vilken svensk grupp vann Eurovision 1974 med ”Waterloo”?', a: 'ABBA', w: ['Roxette', 'Ace of Base', 'Europe'], f: 'Tävlingen hölls det året i Brighton i England.' },
+  { lvl: 2, q: 'Vem instiftade Nobelpriset?', a: 'Alfred Nobel', w: ['Anders Celsius', 'Carl von Linné', 'Gustav Vasa'], f: 'Nobel uppfann bland annat dynamiten.' },
+  { lvl: 2, q: 'I vilken stad ligger nöjesparken Liseberg?', a: 'Göteborg', w: ['Stockholm', 'Malmö', 'Helsingborg'], f: 'Liseberg öppnade 1923.' },
+  { lvl: 2, q: 'Vilket företag grundade Ingvar Kamprad?', a: 'IKEA', w: ['H&M', 'Volvo', 'Spotify'], f: 'IK står för Ingvar Kamprad, E för Elmtaryd och A för Agunnaryd.' },
+  { lvl: 2, q: 'Vem gav namn åt temperaturskalan med 100 grader mellan vattnets frys- och kokpunkt?', a: 'Anders Celsius', w: ['Alfred Nobel', 'Carl von Linné', 'Isaac Newton'], f: 'Celsius var astronom i Uppsala.' },
+  { lvl: 2, q: 'Vilken svensk musiktjänst lanserades 2008?', a: 'Spotify', w: ['Klarna', 'Skype', 'Minecraft'], f: 'Spotify grundades av Daniel Ek och Martin Lorentzon.' },
+  { lvl: 2, q: 'Vilken kanal går från Sjötorp vid Vänern till Mem vid Östersjön?', a: 'Göta kanal', w: ['Södertälje kanal', 'Dalslands kanal', 'Trollhätte kanal'], f: 'Göta kanal kallas ibland ”Sveriges blå band”.' },
+  { lvl: 2, q: 'Vilket är Sveriges nordligaste landskap?', a: 'Lappland', w: ['Norrbotten', 'Jämtland', 'Västerbotten'], f: 'Lappland är också Sveriges största landskap till ytan.' },
+  { lvl: 2, q: 'Vilken planet ligger närmast solen?', a: 'Merkurius', w: ['Venus', 'Mars', 'Jorden'], f: 'Ett år på Merkurius är bara 88 dygn långt.' },
+  { lvl: 2, q: 'Vilket grundämne har den kemiska beteckningen O?', a: 'Syre', w: ['Guld', 'Väte', 'Kväve'], f: 'O kommer från latinets oxygenium.' },
+  { lvl: 2, q: 'Vad kallas festen då man äter kräftor i augusti?', a: 'Kräftskiva', w: ['Surströmmingsfest', 'Gåsamiddag', 'Julbord'], f: 'Många bär roliga hattar och sjunger snapsvisor (eller lemonadvisor).' },
+  // Nivå 3 – vuxen
+  { lvl: 3, q: 'Vilket år valdes Gustav Vasa till kung?', a: '1523', w: ['1397', '1611', '1718'], f: 'Valet skedde i Strängnäs den 6 juni 1523.' },
+  { lvl: 3, q: 'Vilket år blev Sverige medlem i EU?', a: '1995', w: ['1986', '1992', '2001'], f: 'Folkomröstningen hölls i november 1994.' },
+  { lvl: 3, q: 'Vilket år blev Sverige medlem i Nato?', a: '2024', w: ['2022', '2023', '2025'], f: 'Sverige blev Natos 32:a medlemsland i mars 2024.' },
+  { lvl: 3, q: 'Vilken svensk naturforskare införde det tvåledade namnsystemet för arter?', a: 'Carl von Linné', w: ['Anders Celsius', 'Emanuel Swedenborg', 'Olof Rudbeck'], f: 'Till exempel heter människan Homo sapiens.' },
+  { lvl: 3, q: 'Vem skrev ”Nils Holgerssons underbara resa genom Sverige”?', a: 'Selma Lagerlöf', w: ['August Strindberg', 'Astrid Lindgren', 'Verner von Heidenstam'], f: 'Lagerlöf blev 1909 första kvinna att få Nobelpriset i litteratur.' },
+  { lvl: 3, q: 'Vem regisserade filmen ”Det sjunde inseglet” (1957)?', a: 'Ingmar Bergman', w: ['Lasse Hallström', 'Bo Widerberg', 'Roy Andersson'], f: 'I filmen spelar riddaren schack med Döden.' },
+  { lvl: 3, q: 'Vilken stad brukar kallas Sveriges äldsta?', a: 'Sigtuna', w: ['Uppsala', 'Visby', 'Lund'], f: 'Sigtuna grundades omkring år 980.' },
+  { lvl: 3, q: 'Vilken union mellan Danmark, Norge och Sverige bildades 1397?', a: 'Kalmarunionen', w: ['Hansan', 'Nordiska rådet', 'Lübeckunionen'], f: 'Drottning Margareta låg bakom unionen.' },
+  { lvl: 3, q: 'Vilken konstnär målade ”Midvinterblot”?', a: 'Carl Larsson', w: ['Anders Zorn', 'Bruno Liljefors', 'John Bauer'], f: 'Målningen hänger i dag i Nationalmuseum.' },
+  { lvl: 3, q: 'Vilket år upplöstes unionen mellan Sverige och Norge?', a: '1905', w: ['1814', '1918', '1864'], f: 'Unionen hade då funnits sedan 1814.' },
+  { lvl: 3, q: 'Vilket år gick Sverige över till högertrafik?', a: '1967', w: ['1955', '1972', '1980'], f: 'Omläggningen kallades Dagen H och skedde den 3 september.' },
+  { lvl: 3, q: 'Vilken svensk kung stupade i slaget vid Lützen 1632?', a: 'Gustav II Adolf', w: ['Karl XII', 'Gustav Vasa', 'Karl XI'], f: 'Den 6 november firas Gustav Adolfsdagen – med bakelse.' },
+  { lvl: 3, q: 'Hur många län har Sverige?', a: '21', w: ['25', '18', '24'], f: 'Det största länet till ytan är Norrbottens län.' },
+  { lvl: 3, q: 'Vilken svensk kemist upptäckte bland annat grundämnena selen och torium?', a: 'Jöns Jacob Berzelius', w: ['Carl Wilhelm Scheele', 'Svante Arrhenius', 'Alfred Nobel'], f: 'Berzelius införde också de kemiska beteckningarna med bokstäver.' },
+];
+
+/* ---------- Gåtor: q = gåta, a = godkända svar, h = ledtrådar ---------- */
+DATA.gator = [
+  { id: 'g1', lvl: 1, q: 'Jag är vit och kall, faller från himlen på vintern och kan bli en gubbe på gården. Vad är jag?', a: ['snö', 'snön'], h: ['Man kan åka pulka på mig.'] },
+  { id: 'g2', lvl: 1, q: 'Vad har ett öga men kan ändå inte se?', a: ['nål', 'nålen', 'synål', 'stoppnål'], h: ['Den används när man syr.'] },
+  { id: 'g3', lvl: 1, q: 'Vad blir blötare ju mer det torkar?', a: ['handduk', 'handduken', 'badlakan', 'kökshandduk'], h: ['Den hänger i badrummet.'] },
+  { id: 'g4', lvl: 1, q: 'Vad har en hals men inget huvud?', a: ['flaska', 'flaskan', 'butelj', 'vas'], h: ['Man kan dricka saft ur den.'] },
+  { id: 'g5', lvl: 1, q: 'Vilken månad har 28 dagar?', a: ['alla', 'alla månader', 'alla månaderna', 'varenda månad', 'samtliga'], h: ['Tänk efter – det är inte bara februari!'] },
+  { id: 'g6', lvl: 1, q: 'Vad har många tänder men kan ändå inte bita?', a: ['kam', 'kammen', 'såg', 'sågen', 'blixtlås', 'gaffel', 'kratta'], h: ['Den används i håret.'] },
+  { id: 'g7', lvl: 1, q: 'Vad går och går men kommer aldrig fram till dörren?', a: ['klocka', 'klockan', 'ur', 'väggklocka', 'armbandsur'], h: ['Den tickar.'] },
+  { id: 'g8', lvl: 1, q: 'Vad har tangenter men kan inte öppna ett enda lås?', a: ['piano', 'pianot', 'tangentbord', 'tangentbordet', 'flygel', 'keyboard', 'dragspel'], h: ['Man kan spela musik på det.'] },
+  { id: 'g9', lvl: 1, q: 'Vad tillhör dig, men används mest av andra?', a: ['namn', 'namnet', 'ditt namn'], h: ['Andra säger det när de ropar på dig.'] },
+  { id: 'g10', lvl: 1, q: 'Vad kan resa jorden runt men sitter ändå kvar i hörnet?', a: ['frimärke', 'frimärket', 'frimärken'], h: ['Det sitter på ett brev.'] },
+  { id: 'g11', lvl: 1, q: 'Vad blir större ju mer du tar bort från det?', a: ['hål', 'hålet', 'grop', 'gropen', 'ett hål'], h: ['Ta fram spaden och gräv!'] },
+  { id: 'g12', lvl: 1, q: 'Ju fler du tar, desto fler lämnar du efter dig. Vad är det?', a: ['steg', 'fotsteg', 'fotspår', 'spår'], h: ['De syns i snön när du går.'] },
+  { id: 'g13', lvl: 1, q: 'Vad blir kortare ju längre det brinner?', a: ['ljus', 'ljuset', 'stearinljus', 'levande ljus', 'tändsticka'], h: ['Det står ofta på bordet vid advent.'] },
+  // Nivå 2
+  { id: 'g14', lvl: 2, q: 'Vad går på fyra ben på morgonen, på två mitt på dagen och på tre på kvällen?', a: ['människa', 'människan', 'människor', 'en människa', 'människans liv'], h: ['Det här är sfinxens berömda gåta.', 'Morgon, dag och kväll står för ett helt liv – den tredje ”foten” är en käpp.'] },
+  { id: 'g15', lvl: 2, q: 'Vad är svart när du köper det, rött när du använder det och grått när du slänger det?', a: ['kol', 'grillkol', 'träkol', 'kolet', 'stenkol'], h: ['Det behövs till grillen.', 'Det blir till aska till slut.'] },
+  { id: 'g16', lvl: 2, q: 'Vad springer men går aldrig, har en bädd men sover aldrig och har en mynning men pratar aldrig?', a: ['flod', 'floden', 'älv', 'älven', 'å', 'ån', 'bäck', 'bäcken'], h: ['Det rinner.', 'Den kan mynna ut i havet.'] },
+  { id: 'g17', lvl: 2, q: 'Ju mer det finns av det, desto mindre ser du. Vad är det?', a: ['mörker', 'mörkret', 'dimma', 'dimman', 'natt', 'natten'], h: ['Tänd en lampa så försvinner det.'] },
+  { id: 'g18', lvl: 2, q: 'Vad går upp men kommer aldrig ner igen?', a: ['ålder', 'åldern', 'din ålder', 'min ålder'], h: ['Den ökar varje födelsedag.'] },
+  { id: 'g19', lvl: 2, q: 'Jag har en rygg men ingen mage, och blad men ingen stam. Vad är jag?', a: ['bok', 'boken', 'kniv', 'kniven'], h: ['Du kan hitta mig på biblioteket.', 'Man bläddrar i mig.'] },
+  { id: 'g20', lvl: 2, q: 'Vad kan man bryta utan att röra det?', a: ['löfte', 'ett löfte', 'löftet', 'tystnad', 'tystnaden', 'rekord', 'ett rekord'], h: ['Man kan också ge det – eller hålla det.'] },
+  { id: 'g21', lvl: 2, q: 'Vilket ord stavas alltid fel i alla ordböcker?', a: ['fel', 'ordet fel'], h: ['Läs frågan bokstavligt – ordagrant!'] },
+  { id: 'g22', lvl: 2, q: 'Jag har städer men inga hus, skogar men inga träd och sjöar men inga fiskar. Vad är jag?', a: ['karta', 'kartan', 'en karta', 'atlas', 'kartbok', 'världskarta'], h: ['Man använder mig för att hitta rätt.'] },
+  // Nivå 3
+  { id: 'g23', lvl: 3, q: 'En man gick ut i ösregnet utan paraply och utan hatt. Ändå blev inte ett enda hårstrå på hans huvud blött. Hur kom det sig?', a: ['skallig', 'han var skallig', 'flintskallig', 'flint', 'han var flintskallig', 'han hade inget hår', 'inget hår', 'han hade flint'], h: ['Det handlar om håret – eller bristen på det.'] },
+  { id: 'g24', lvl: 3, q: 'Vad finns en gång i en minut, två gånger i ett moment, men aldrig på hundra år?', a: ['m', 'bokstaven m', 'ett m'], h: ['Titta på själva orden, inte på tiden.', 'Det är en bokstav.'] },
+  { id: 'g25', lvl: 3, q: 'Vad är så skört att det går sönder bara du säger dess namn?', a: ['tystnad', 'tystnaden'], h: ['Shhh …'] },
+  { id: 'g26', lvl: 3, q: 'Vilket ord blir kortare om man lägger till tre bokstäver?', a: ['kort'], h: ['Svaret finns i själva frågan.', 'Lägg till ”-are”.'] },
+  { id: 'g27', lvl: 3, q: 'Två pappor och två söner gick och fiskade. De fick tre fiskar och alla fick varsin. Hur gick det till?', a: ['tre', 'de var tre', 'de var bara tre', 'bara tre', 'tre personer', 'farfar pappa och son', 'farfar far och son', 'morfar pappa och son', 'farfar', 'morfar'], h: ['Hur många personer var det egentligen?', 'Någon är både pappa och son.'] },
+  { id: 'g28', lvl: 3, q: 'Vad står mitt i Paris?', a: ['r', 'bokstaven r', 'ett r'], h: ['Det är inget torn.', 'Titta på stavningen: P-A-R-I-S.'] },
+];
+
+/* ---------- Rebusar: e = emoji, a = godkända svar, h = ledtrådar ---------- */
+DATA.rebusar = [
+  { id: 'r1', lvl: 1, e: '☀️ + 🌹', a: ['solros', 'solrosen'], h: ['En stor gul blomma.', 'Sol + ros'] },
+  { id: 'r2', lvl: 1, e: '❄️ + 👴', a: ['snögubbe', 'snögubben'], h: ['Byggs på vintern.', 'Snö + gubbe'] },
+  { id: 'r3', lvl: 1, e: '🧊 + 🐻', a: ['isbjörn', 'isbjörnen'], h: ['Lever på Arktis.', 'Is + björn'] },
+  { id: 'r4', lvl: 1, e: '🦶 + ⚽', a: ['fotboll', 'fotbollen'], h: ['En sport med elva spelare per lag.', 'Fot + boll'] },
+  { id: 'r5', lvl: 1, e: '✋ + ⚽', a: ['handboll', 'handbollen'], h: ['En sport där man inte får sparka.', 'Hand + boll'] },
+  { id: 'r6', lvl: 1, e: '🍎 + 🌳', a: ['äppelträd', 'äppelträdet', 'äppleträd'], h: ['Det växer i trädgården.', 'Äpple + träd'] },
+  { id: 'r7', lvl: 1, e: '🌧️ + 🏹', a: ['regnbåge', 'regnbågen'], h: ['Syns på himlen när solen tittar fram efter en skur.', 'Regn + båge'] },
+  { id: 'r8', lvl: 1, e: '🎄 + ⭐', a: ['julstjärna', 'julstjärnan', 'julgransstjärna', 'granstjärna'], h: ['Hänger i fönstret i december.', 'Jul + stjärna'] },
+  { id: 'r9', lvl: 1, e: '🔥 + 🚗', a: ['brandbil', 'brandbilen'], h: ['Den har sirener och stegar.', 'Brand + bil'] },
+  { id: 'r10', lvl: 1, e: '🔑 + 🕳️', a: ['nyckelhål', 'nyckelhålet'], h: ['Finns i dörren.', 'Nyckel + hål'] },
+  { id: 'r11', lvl: 1, e: '☀️ + 👓', a: ['solglasögon', 'solglasögonen'], h: ['Bra att ha på stranden.', 'Sol + glasögon'] },
+  { id: 'r12', lvl: 1, e: '🏠 + 🐈', a: ['huskatt', 'huskatten'], h: ['Ett husdjur som spinner.', 'Hus + katt'] },
+  // Nivå 2
+  { id: 'r13', lvl: 2, e: '🌍 + 👴', a: ['jordgubbe', 'jordgubbar', 'jordgubben'], h: ['Ett rött bär som hör midsommar till.', 'Jord + gubbe'] },
+  { id: 'r14', lvl: 2, e: '🧈 + 🌸', a: ['smörblomma', 'smörblomman', 'smörblommor'], h: ['En gul blomma på ängen.', 'Smör + blomma'] },
+  { id: 'r15', lvl: 2, e: '🧀 + 🍰', a: ['ostkaka', 'ostkakan'], h: ['En dessert från Småland.', 'Ost + kaka'] },
+  { id: 'r16', lvl: 2, e: '👂 + 💍', a: ['örring', 'örringar', 'örringen', 'örhänge', 'örhängen'], h: ['Ett smycke.', 'Öra + ring'] },
+  { id: 'r17', lvl: 2, e: '🍞 + 🔪', a: ['brödkniv', 'brödkniven'], h: ['Finns i kökslådan.', 'Bröd + kniv'] },
+  { id: 'r18', lvl: 2, e: '🍯 + 🐝', a: ['honungsbi', 'honungsbin', 'honungsbiet'], h: ['En insekt som surrar.', 'Honung + bi'] },
+  { id: 'r19', lvl: 2, e: '🌊 + ⭐', a: ['sjöstjärna', 'sjöstjärnan', 'havsstjärna'], h: ['Ett djur på havsbotten med fem armar.', 'Sjö + stjärna'] },
+  { id: 'r20', lvl: 2, e: '🌧️ + 🧥', a: ['regnrock', 'regnjacka', 'regnkappa', 'regnställ', 'regnkläder'], h: ['Bra att ha på sig i höstrusket.', 'Regn + rock'] },
+  { id: 'r21', lvl: 2, e: '🐦 + 🎶', a: ['fågelsång', 'fågelsången', 'fågelkvitter'], h: ['Hörs tidigt på vårmorgnar.', 'Fågel + sång'] },
+  { id: 'r22', lvl: 2, e: '🦢 + 🎵', a: ['svanesång', 'svansång', 'svanesången'], h: ['Betyder någons sista framträdande.', 'Svan + sång'] },
+  // Nivå 3 – ordspråk och uttryck
+  { id: 'r23', lvl: 3, e: '🚫🐄 ➡️ 🧊', a: ['ingen ko på isen', 'det är ingen ko på isen'], h: ['Ett uttryck som betyder ”ingen fara”.', 'Ingen … på …'] },
+  { id: 'r24', lvl: 3, e: '🐈 🔄 🔥🥣', a: ['som katten kring het gröt', 'gå som katten kring het gröt', 'som katten runt het gröt', 'katten kring het gröt'], h: ['Att undvika att säga det viktiga.', 'Gå som … kring het …'] },
+  { id: 'r25', lvl: 3, e: '⏰ = 💰', a: ['tid är pengar', 'tiden är pengar'], h: ['Ett uttryck om att inte slösa.', 'Tid är …'] },
+  { id: 'r26', lvl: 3, e: '🧳👍 🏠🏆', a: ['borta bra men hemma bäst', 'borta bra hemma bäst'], h: ['Säger man när man kommer hem från semestern.', 'Borta … men hemma …'] },
+  { id: 'r27', lvl: 3, e: '🌅 👄 🥇', a: ['morgonstund har guld i mund', 'morgonstund har guld i munnen'], h: ['Den som går upp tidigt får mycket gjort.', 'Morgonstund har …'] },
+  { id: 'r28', lvl: 3, e: '🐦✋ > 🔟🐦🌲', a: ['bättre en fågel i handen än tio i skogen', 'en fågel i handen är bättre än tio i skogen', 'hellre en fågel i handen än tio i skogen'], h: ['Det säkra är bättre än det osäkra.', 'Bättre en fågel i … än tio i …'] },
+  { id: 'r29', lvl: 3, e: '🗣️ = 🥈 · 🤐 = 🥇', a: ['tala är silver tiga är guld', 'tala är silver men tiga är guld'], h: ['Ibland är det klokt att vara tyst.', 'Tala är … tiga är …'] },
+  { id: 'r30', lvl: 3, e: '🍎 ⬇️ 🌳 📏❌', a: ['äpplet faller inte långt från trädet', 'äpplet faller aldrig långt från trädet'], h: ['Barn liknar ofta sina föräldrar.', 'Äpplet faller inte … från …'] },
+];
+
+/* ---------- Ord-Krypto: svenska ordspråk ---------- */
+DATA.krypto = [
+  { id: 'k1', t: 'Borta bra men hemma bäst.' },
+  { id: 'k2', t: 'Bättre sent än aldrig.' },
+  { id: 'k3', t: 'Den som väntar på något gott väntar aldrig för länge.' },
+  { id: 'k4', t: 'Det finns inget dåligt väder, bara dåliga kläder.' },
+  { id: 'k5', t: 'Morgonstund har guld i mund.' },
+  { id: 'k6', t: 'Övning ger färdighet.' },
+  { id: 'k7', t: 'Små grytor har också öron.' },
+  { id: 'k8', t: 'Lagom är bäst.' },
+  { id: 'k9', t: 'Man ska inte sälja skinnet förrän björnen är skjuten.' },
+  { id: 'k10', t: 'Det är ingen ko på isen.' },
+  { id: 'k11', t: 'Ända in i kaklet!' },
+  { id: 'k12', t: 'Tala är silver, tiga är guld.' },
+  { id: 'k13', t: 'Den som gapar efter mycket mister ofta hela stycket.' },
+  { id: 'k14', t: 'Glöm inte bort att fika.' },
+];
+
+/* ---------- Ordblandning ---------- */
+DATA.ord = [
+  { lvl: 1, w: 'KATT', c: 'Djur' }, { lvl: 1, w: 'HÄST', c: 'Djur' }, { lvl: 1, w: 'BOLL', c: 'Leksak' },
+  { lvl: 1, w: 'GLASS', c: 'Godsak' }, { lvl: 1, w: 'SOMMAR', c: 'Årstid' }, { lvl: 1, w: 'SKOLA', c: 'Plats' },
+  { lvl: 1, w: 'BANAN', c: 'Frukt' }, { lvl: 1, w: 'CYKEL', c: 'Fordon' }, { lvl: 1, w: 'MJÖLK', c: 'Dryck' },
+  { lvl: 1, w: 'ÄPPLE', c: 'Frukt' }, { lvl: 1, w: 'BJÖRN', c: 'Djur' }, { lvl: 1, w: 'SNÖBOLL', c: 'Vinterlek' },
+  { lvl: 2, w: 'KANELBULLE', c: 'Fika' }, { lvl: 2, w: 'MIDSOMMAR', c: 'Högtid' }, { lvl: 2, w: 'GIRAFF', c: 'Djur' },
+  { lvl: 2, w: 'PANNKAKA', c: 'Mat' }, { lvl: 2, w: 'SKÄRGÅRD', c: 'Natur' }, { lvl: 2, w: 'BIBLIOTEK', c: 'Plats' },
+  { lvl: 2, w: 'FOTBOLL', c: 'Sport' }, { lvl: 2, w: 'KOMPIS', c: 'Person' }, { lvl: 2, w: 'RYGGSÄCK', c: 'Sak' },
+  { lvl: 2, w: 'DATOR', c: 'Teknik' }, { lvl: 2, w: 'LÄXFÖRHÖR', c: 'Skola' }, { lvl: 2, w: 'SPÖKE', c: 'Rysligt' },
+  { lvl: 3, w: 'ÖVERRASKNING', c: 'Känsla eller händelse' }, { lvl: 3, w: 'TÅLAMOD', c: 'Egenskap' }, { lvl: 3, w: 'NYFIKENHET', c: 'Egenskap' },
+  { lvl: 3, w: 'SÄLLSKAPSSPEL', c: 'Nöje' }, { lvl: 3, w: 'ÄVENTYR', c: 'Upplevelse' }, { lvl: 3, w: 'KRÄFTSKIVA', c: 'Fest' },
+  { lvl: 3, w: 'ARKITEKTUR', c: 'Byggnadskonst' }, { lvl: 3, w: 'SAMHÄLLE', c: 'Gemenskap' }, { lvl: 3, w: 'FÖRSTÅELSE', c: 'Egenskap' },
+  { lvl: 3, w: 'VÄDERLEKSRAPPORT', c: 'Nyheter' },
+];
+
+</script>
+<script>
+/* ==== js/crossword-data.js ==== */
+// Genererad av gen-crossword.js och verifierad av verify-crossword.js
+window.KORSORD_DATA = {
+ "natur": {
+  "title": "Svensk natur",
+  "rows": 10,
+  "cols": 9,
+  "placed": [
+   {
+    "word": "SKÄRGÅRD",
+    "clue": "Många små öar utanför kusten",
+    "row": 3,
+    "col": 0,
+    "dir": "across"
+   },
+   {
+    "word": "MYGGA",
+    "clue": "Surrar och sticks på sommarnätter",
+    "row": 0,
+    "col": 4,
+    "dir": "down"
+   },
+   {
+    "word": "SNÖ",
+    "clue": "Vit nederbörd på vintern",
+    "row": 3,
+    "col": 0,
+    "dir": "down"
+   },
+   {
+    "word": "VÄNERN",
+    "clue": "Sveriges största sjö",
+    "row": 2,
+    "col": 2,
+    "dir": "down"
+   },
+   {
+    "word": "LODJUR",
+    "clue": "Sveriges enda vilda kattdjur",
+    "row": 1,
+    "col": 7,
+    "dir": "down"
+   },
+   {
+    "word": "BJÖRK",
+    "clue": "Träd med vit stam",
+    "row": 6,
+    "col": 4,
+    "dir": "across"
+   },
+   {
+    "word": "ÄLG",
+    "clue": "Kallas skogens konung",
+    "row": 1,
+    "col": 6,
+    "dir": "across"
+   },
+   {
+    "word": "ÖRN",
+    "clue": "Stor rovfågel",
+    "row": 7,
+    "col": 0,
+    "dir": "across"
+   },
+   {
+    "word": "FJÄLL",
+    "clue": "Högt, kalt berg i norr",
+    "row": 5,
+    "col": 5,
+    "dir": "down"
+   },
+   {
+    "word": "RÄV",
+    "clue": "Rödbrun och listig",
+    "row": 7,
+    "col": 1,
+    "dir": "down"
+   }
+  ]
+ },
+ "traditioner": {
+  "title": "Svenska traditioner",
+  "rows": 10,
+  "cols": 11,
+  "placed": [
+   {
+    "word": "MIDSOMMAR",
+    "clue": "Fest med blomkrans och stång",
+    "row": 7,
+    "col": 2,
+    "dir": "across"
+   },
+   {
+    "word": "PÅSK",
+    "clue": "Högtid med ägg och påskkärringar",
+    "row": 5,
+    "col": 5,
+    "dir": "down"
+   },
+   {
+    "word": "KRÄFTOR",
+    "clue": "Röda skaldjur som äts i augusti",
+    "row": 1,
+    "col": 10,
+    "dir": "down"
+   },
+   {
+    "word": "LUCIA",
+    "clue": "Bär ljuskrona den 13 december",
+    "row": 4,
+    "col": 3,
+    "dir": "down"
+   },
+   {
+    "word": "SEMLA",
+    "clue": "Bulle med mandelmassa och grädde",
+    "row": 4,
+    "col": 0,
+    "dir": "across"
+   },
+   {
+    "word": "TOMTE",
+    "clue": "Delar ut julklappar",
+    "row": 5,
+    "col": 7,
+    "dir": "down"
+   },
+   {
+    "word": "SILL",
+    "clue": "Inlagd fisk på smörgåsbordet",
+    "row": 4,
+    "col": 0,
+    "dir": "down"
+   },
+   {
+    "word": "FIKA",
+    "clue": "Kaffe och bulle med vänner",
+    "row": 1,
+    "col": 4,
+    "dir": "down"
+   },
+   {
+    "word": "NUBBE",
+    "clue": "Liten snaps",
+    "row": 0,
+    "col": 1,
+    "dir": "down"
+   },
+   {
+    "word": "JULAFTON",
+    "clue": "Den 24 december",
+    "row": 1,
+    "col": 0,
+    "dir": "across"
+   }
+  ]
+ },
+ "mat": {
+  "title": "Mat och fika",
+  "rows": 10,
+  "cols": 12,
+  "placed": [
+   {
+    "word": "KANELBULLE",
+    "clue": "Har en egen dag den 4 oktober",
+    "row": 6,
+    "col": 0,
+    "dir": "across"
+   },
+   {
+    "word": "KNÄCKEBRÖD",
+    "clue": "Hårt och knaprigt bröd",
+    "row": 0,
+    "col": 5,
+    "dir": "down"
+   },
+   {
+    "word": "POTATIS",
+    "clue": "Knöl som kokas, mosas eller steks",
+    "row": 3,
+    "col": 1,
+    "dir": "down"
+   },
+   {
+    "word": "OST",
+    "clue": "Skärs med hyvel",
+    "row": 9,
+    "col": 0,
+    "dir": "across"
+   },
+   {
+    "word": "GRÄDDE",
+    "clue": "Vispas till tårtan",
+    "row": 1,
+    "col": 9,
+    "dir": "down"
+   },
+   {
+    "word": "ÄPPLE",
+    "clue": "Frukt som kan vara grön eller röd",
+    "row": 3,
+    "col": 7,
+    "dir": "down"
+   },
+   {
+    "word": "SMÖR",
+    "clue": "Bredas på smörgåsen",
+    "row": 8,
+    "col": 3,
+    "dir": "across"
+   },
+   {
+    "word": "LINGON",
+    "clue": "Röda, syrliga bär",
+    "row": 1,
+    "col": 0,
+    "dir": "across"
+   },
+   {
+    "word": "GRÖT",
+    "clue": "Lagas av havregryn och vatten",
+    "row": 2,
+    "col": 8,
+    "dir": "across"
+   },
+   {
+    "word": "KÖTTBULLAR",
+    "clue": "Serveras ofta med lingon och potatismos",
+    "row": 0,
+    "col": 11,
+    "dir": "down"
+   }
+  ]
+ }
+};
+
+</script>
+<script>
+/* ==== js/games/answer-game.js ==== */
+/* Gemensam motor för gåtor och rebusar (textsvar + ledtrådar) */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  Hub.answerGame = function ({ id, items, render, basePoints, hintCost, label }) {
+    return function mount(root) {
+      const list = Hub.forAudience(items);
+      let idx = Math.max(0, list.findIndex(x => !Hub.isSolved(id, x.id)));
+      let hintsUsed = 0, revealed = false;
+      const card = el('div', { class: 'ans-card' });
+      const input = el('input', { type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': 'Ditt svar', placeholder: 'Skriv ditt svar …', lang: 'sv' });
+      const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+      const hints = el('div', { class: 'hints' });
+      const dots = el('div', { class: 'dots' });
+      const prog = el('span', { class: 'pill' });
+      const btnHint = el('button', { class: 'btn', type: 'button', onclick: hint }, '💡 Ledtråd');
+      const btnShow = el('button', { class: 'btn ghost', type: 'button', onclick: show }, '👀 Visa svaret');
+      const form = el('form', { class: 'ans-form', onsubmit: (e) => { e.preventDefault(); answer(); } },
+        input, el('button', { class: 'btn primary', type: 'submit' }, 'Svara'));
+      root.append(el('div', { class: 'stage' },
+        el('div', { class: 'row', style: { marginBottom: '12px' } }, prog, el('span', { class: 'spacer' }),
+          el('span', { class: 'pill' }, Hub.AUDIENCES[Hub.audience].emoji + ' ' + Hub.AUDIENCES[Hub.audience].name)),
+        card, form, fb,
+        el('div', { class: 'row center' },
+          el('button', { class: 'btn small', type: 'button', onclick: () => go(idx - 1) }, '← Föregående'),
+          btnHint, btnShow,
+          el('button', { class: 'btn small', type: 'button', onclick: () => go(idx + 1) }, 'Nästa →')),
+        hints, dots,
+        el('p', { class: 'muted center', style: { fontSize: '13px', marginTop: '14px' } },
+          `Rätt svar ger ${basePoints} poäng (−${hintCost} per ledtråd). Stora eller små bokstäver spelar ingen roll.`)));
+
+      function updateDots() {
+        dots.innerHTML = '';
+        list.forEach((it, i) => dots.append(el('button', {
+          type: 'button', class: (Hub.isSolved(id, it.id) ? 'solved ' : '') + (i === idx ? 'cur' : ''),
+          'aria-label': `${label} ${i + 1}${Hub.isSolved(id, it.id) ? ' (löst)' : ''}`, onclick: () => go(i)
+        }, i + 1)));
+        const n = list.filter(it => Hub.isSolved(id, it.id)).length;
+        prog.textContent = `✅ ${n} av ${list.length} lösta`;
+      }
+      function go(i) {
+        idx = (i + list.length) % list.length; hintsUsed = 0; revealed = false;
+        const it = list[idx];
+        card.innerHTML = '';
+        card.append(el('div', { class: 'num' }, `${label} ${idx + 1} av ${list.length}` + (Hub.isSolved(id, it.id) ? ' · löst ✓' : '')), render(it));
+        card.style.animation = 'none'; void card.offsetWidth; card.style.animation = 'pop .35s ease';
+        hints.innerHTML = ''; fb.textContent = ''; fb.className = 'feedback'; input.value = '';
+        btnHint.disabled = false; btnShow.disabled = false;
+        updateDots();
+        if (matchMedia('(hover:hover)').matches) input.focus({ preventScroll: true });
+      }
+      function allHints(it) { return [...(it.h || []), `Svaret börjar på ”${it.a[0][0].toLocaleUpperCase('sv-SE')}” och har ${it.a[0].replace(/ /g, '').length} bokstäver${it.a[0].includes(' ') ? ' (flera ord)' : ''}.`]; }
+      function hint() {
+        const it = list[idx], hs = allHints(it);
+        if (hintsUsed >= hs.length) return;
+        hints.append(el('div', { class: 'hint' }, '💡 ' + hs[hintsUsed++]));
+        if (hintsUsed >= hs.length) btnHint.disabled = true;
+      }
+      function show() {
+        const it = list[idx]; revealed = true;
+        fb.className = 'feedback info'; fb.textContent = 'Svaret är: ' + it.a[0].toLocaleUpperCase('sv-SE');
+        btnShow.disabled = true; btnHint.disabled = true;
+      }
+      function answer() {
+        const it = list[idx]; if (!input.value.trim()) return;
+        const r = Hub.check(input.value, it.a);
+        if (r) {
+          let pts = 0;
+          if (!revealed) pts = Hub.solveItem(id, it.id, Math.max(5, basePoints - hintsUsed * hintCost));
+          fb.className = 'feedback ok';
+          fb.textContent = (r === 'loose' ? `Rätt! (Med å, ä och ö stavas det ”${it.a[0]}”.) ` : 'Rätt! 🎉 ') +
+            (revealed ? 'Inga poäng när svaret har visats.' : pts ? `+${pts} poäng` : 'Redan löst tidigare – inga nya poäng.');
+          if (pts) { Hub.confetti(35); Hub.toast(`+${pts} poäng!`, 'ok'); }
+          updateDots();
+          setTimeout(() => { if (list[idx] === it) go(idx + 1); }, 1700);
+        } else {
+          fb.className = 'feedback bad'; fb.textContent = 'Inte riktigt – försök igen eller ta en ledtråd.';
+          form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake');
+        }
+      }
+      go(idx);
+    };
+  };
+})();
+
+</script>
+<script>
+/* ==== js/games/quiz.js ==== */
+/* Quiz – flervalsfrågor om Sverige och allmänbildning */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const ROUND = 10, TIME = 20;
+  Hub.register({
+    id: 'quiz', title: 'Quiz', emoji: '❓', section: 'ord', c1: '#7b5cff', c2: '#b06bff',
+    desc: '10 frågor om Sverige och allmänbildning. Svara snabbt för bonuspoäng!',
+    mount(root) {
+      let timerOn = Hub.lsGet('ordagrant:quiztimer') !== '0';
+      let qs, i, score, correct, tick, left, locked;
+      const stage = el('div', { class: 'stage' });
+      root.append(stage);
+      intro();
+
+      function intro() {
+        clearInterval(tick);
+        const A = Hub.AUDIENCES[Hub.audience];
+        const seg = el('div', { class: 'seg', role: 'group', 'aria-label': 'Timer' },
+          el('button', { type: 'button', 'aria-pressed': String(timerOn), onclick: () => { timerOn = true; save(); intro(); } }, '⏱️ Med timer'),
+          el('button', { type: 'button', 'aria-pressed': String(!timerOn), onclick: () => { timerOn = false; save(); intro(); } }, '🐢 Utan timer'));
+        stage.replaceChildren(el('div', { class: 'panel center' },
+          el('div', { style: { fontSize: '54px' } }, '❓'),
+          el('h2', null, 'Redo för quiz?'),
+          el('p', { class: 'muted' }, `${ROUND} frågor anpassade för ${A.emoji} ${A.name.toLowerCase()}. 10 poäng per rätt svar` + (timerOn ? `, plus tidsbonus (${TIME} sekunder per fråga).` : '.')),
+          el('div', { class: 'row center' }, seg),
+          el('div', { class: 'row center', style: { marginTop: '16px' } }, el('button', { class: 'btn primary', onclick: start }, '▶ Starta quizet'))));
+      }
+      function save() { Hub.lsSet('ordagrant:quiztimer', timerOn ? '1' : '0'); }
+      function start() {
+        // Huvudsakligen målgruppens svåraste nivå, kompletterad med nivån under
+        const L = Hub.levels(), top = Math.max(...L);
+        const main = Hub.shuffle(DATA.quiz.filter(q => q.lvl === top));
+        const rest = Hub.shuffle(DATA.quiz.filter(q => L.includes(q.lvl) && q.lvl !== top));
+        const nMain = L.length > 1 ? 7 : ROUND;
+        qs = Hub.shuffle(main.slice(0, nMain).concat(rest.slice(0, ROUND - Math.min(nMain, main.length))));
+        i = 0; score = 0; correct = 0; show();
+      }
+      function show() {
+        clearInterval(tick); locked = false;
+        const q = qs[i];
+        const opts = Hub.shuffle([q.a, ...q.w]);
+        const bar = el('i', { style: { width: '100%' } });
+        const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+        const grid = el('div', { class: 'quiz-opts' }, opts.map((o, k) => el('button', {
+          class: 'quiz-opt', type: 'button', 'data-correct': o === q.a ? '1' : null, onclick: (e) => pick(e.currentTarget, o === q.a)
+        }, el('span', { class: 'k' }, 'ABCD'[k]), o)));
+        const next = el('div', { class: 'row center', style: { marginTop: '14px' } });
+        stage.replaceChildren(
+          el('div', { class: 'row' }, el('span', { class: 'pill' }, `Fråga ${i + 1} / ${qs.length}`), el('span', { class: 'spacer' }), el('span', { class: 'pill' }, `⭐ ${score} p`)),
+          timerOn ? el('div', { class: 'timer', style: { marginTop: '12px' } }, bar) : null,
+          el('div', { class: 'quiz-q' }, q.q), grid, fb, next);
+        left = TIME;
+        if (timerOn) tick = setInterval(() => {
+          left -= 0.25; bar.style.width = Math.max(0, left / TIME * 100) + '%'; bar.style.backgroundPosition = (100 - left / TIME * 100) + '% 0';
+          if (left <= 0) { clearInterval(tick); pick(null, false, true); }
+        }, 250);
+        stage._fb = fb; stage._grid = grid; stage._next = next; stage._q = q;
+      }
+      function pick(btn, ok, timeout) {
+        if (locked) return; locked = true; clearInterval(tick);
+        const { _fb: fb, _grid: grid, _next: next, _q: q } = stage;
+        grid.querySelectorAll('button').forEach(b => { b.disabled = true; if (b.dataset.correct) b.classList.add('right'); });
+        if (ok) {
+          const bonus = timerOn ? Math.round(Math.max(0, left) / TIME * 10) : 0;
+          score += 10 + bonus; correct++;
+          fb.className = 'feedback ok'; fb.textContent = `Rätt! +${10 + bonus} poäng` + (bonus ? ` (varav ${bonus} i tidsbonus)` : '');
+        } else {
+          if (btn) btn.classList.add('wrong');
+          fb.className = 'feedback bad'; fb.textContent = (timeout ? 'Tiden tog slut! ' : 'Fel. ') + 'Rätt svar: ' + q.a;
+        }
+        fb.after(el('div', { class: 'fact' }, '💡 ' + q.f));
+        const last = i === qs.length - 1;
+        const b = el('button', { class: 'btn primary', onclick: () => { if (last) end(); else { i++; show(); } } }, last ? 'Se resultat 🏁' : 'Nästa fråga →');
+        next.append(b); b.focus({ preventScroll: true });
+      }
+      function end() {
+        const record = Hub.finishRound('quiz', score);
+        const msg = correct === qs.length ? 'Alla rätt – imponerande!' : correct >= 7 ? 'Riktigt bra jobbat!' : correct >= 4 ? 'Bra kämpat!' : 'Öva lite till så går det bättre nästa gång!';
+        stage.replaceChildren(Hub.resultView({ emoji: correct >= 7 ? '🏆' : '🎯', title: `${correct} av ${qs.length} rätt`, text: msg, points: score, record, onAgain: start }));
+      }
+      this._stop = () => clearInterval(tick);
+    },
+    unmount() { if (this._stop) this._stop(); },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/pussel.js ==== */
+/* Pussel – klassiskt glidpussel (8- eller 15-pussel) */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const COLORS = ['#ff5d8f', '#ff8a5b', '#ffb020', '#16b17e', '#22c1c3', '#3a7bd5', '#7b5cff', '#b06bff'];
+  Hub.register({
+    id: 'pussel', title: 'Pussel', emoji: '🔢', section: 'logik', c1: '#ffb020', c2: '#ff6a3d',
+    desc: 'Klassiskt glidpussel. Skjut brickorna så att siffrorna hamnar i ordning.',
+    mount(root) {
+      const self = this;
+      let n = Hub.audience === 'familj' ? 3 : 4, tiles, moves, t0, timer, won;
+      const sizeSeg = el('div', { class: 'seg', role: 'group', 'aria-label': 'Storlek' });
+      const movesEl = el('span', { class: 'pill' }), timeEl = el('span', { class: 'pill' });
+      const board = el('div', { class: 'puzzle', role: 'grid', 'aria-label': 'Pusselbräde' });
+      const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+      root.append(el('div', { class: 'stage' },
+        el('div', { class: 'row center' }, sizeSeg, movesEl, timeEl, el('button', { class: 'btn small', onclick: () => newGame() }, '🔀 Blanda nytt')),
+        el('div', { class: 'puzzle-wrap' }, board), fb,
+        el('p', { class: 'muted center', style: { fontSize: '13px' } }, 'Klicka eller tryck på en bricka bredvid den tomma rutan. Du kan också använda piltangenterna.')));
+
+      function renderSeg() {
+        sizeSeg.replaceChildren(...[[3, '3×3 (lätt)'], [4, '4×4 (klassiskt)']].map(([s, t]) =>
+          el('button', { type: 'button', 'aria-pressed': String(n === s), onclick: () => { n = s; renderSeg(); newGame(); } }, t)));
+      }
+      function newGame() {
+        tiles = [...Array(n * n).keys()].map(k => (k + 1) % (n * n)); // 0 = tom
+        let blank = n * n - 1, prev = -1;
+        for (let k = 0; k < n * n * 40; k++) { // slumpa med giltiga drag => alltid lösbart
+          const nb = neighbors(blank).filter(x => x !== prev);
+          const pick = nb[Hub.rand(nb.length)];
+          [tiles[blank], tiles[pick]] = [tiles[pick], tiles[blank]]; prev = blank; blank = pick;
+        }
+        if (solved()) return newGame();
+        moves = 0; won = false; t0 = null; clearInterval(timer); fb.textContent = '';
+        board.classList.remove('won'); build(); update();
+      }
+      function neighbors(i) {
+        const r = Math.floor(i / n), c = i % n, out = [];
+        if (r > 0) out.push(i - n); if (r < n - 1) out.push(i + n); if (c > 0) out.push(i - 1); if (c < n - 1) out.push(i + 1);
+        return out;
+      }
+      function build() {
+        board.innerHTML = '';
+        for (let v = 1; v < n * n; v++) {
+          const b = el('button', { class: 'tile', type: 'button', 'data-v': v, onclick: () => clickTile(v) }, v);
+          b.style.background = `linear-gradient(145deg, ${COLORS[(v - 1) % COLORS.length]}, ${COLORS[(v + 2) % COLORS.length]})`;
+          board.append(b);
+        }
+        layout();
+      }
+      function layout() {
+        const pad = 6, gap = 6, size = board.clientWidth - pad * 2;
+        const cell = (size - gap * (n - 1)) / n;
+        board.querySelectorAll('.tile').forEach(b => {
+          const v = +b.dataset.v, i = tiles.indexOf(v);
+          b.style.width = b.style.height = cell + 'px';
+          b.style.left = b.style.top = pad + 'px';
+          b.style.transform = `translate(${(i % n) * (cell + gap)}px, ${Math.floor(i / n) * (cell + gap)}px)`;
+          b.classList.toggle('inplace', i === v - 1);
+          b.setAttribute('aria-label', `Bricka ${v}`);
+        });
+      }
+      function clickTile(v) {
+        if (won) return;
+        const i = tiles.indexOf(v), blank = tiles.indexOf(0);
+        const ri = Math.floor(i / n), ci = i % n, rb = Math.floor(blank / n), cb = blank % n;
+        if (ri !== rb && ci !== cb) return;
+        // Flytta en hel rad/kolumn mot den tomma rutan
+        const step = ri === rb ? (ci < cb ? -1 : 1) : (ri < rb ? -n : n);
+        let b = blank;
+        while (b !== i) { const nx = b + step; tiles[b] = tiles[nx]; tiles[nx] = 0; b = nx; moves++; }
+        if (!t0) { t0 = Date.now(); timer = setInterval(update, 500); }
+        layout(); update();
+        if (solved()) win();
+      }
+      function key(e) {
+        if (won || !document.body.contains(board)) return;
+        const blank = tiles.indexOf(0), r = Math.floor(blank / n), c = blank % n;
+        const map = { ArrowUp: r < n - 1 ? blank + n : -1, ArrowDown: r > 0 ? blank - n : -1, ArrowLeft: c < n - 1 ? blank + 1 : -1, ArrowRight: c > 0 ? blank - 1 : -1 };
+        if (e.key in map) { e.preventDefault(); if (map[e.key] >= 0) clickTile(tiles[map[e.key]]); }
+      }
+      function solved() { return tiles.every((v, k) => v === (k + 1) % (n * n)); }
+      function secs() { return t0 ? (Date.now() - t0) / 1000 : 0; }
+      function update() { movesEl.textContent = `👣 ${moves} drag`; timeEl.textContent = `⏱️ ${Hub.fmtTime(secs())}`; }
+      function win() {
+        won = true; clearInterval(timer); board.classList.add('won');
+        const s = secs(), base = n === 3 ? 150 : 400;
+        const pts = Math.max(25, Math.round(base - moves * (n === 3 ? 1.5 : 0.8) - s * 0.5));
+        const record = Hub.finishRound('pussel', pts);
+        setTimeout(() => {
+          fb.replaceChildren(Hub.resultView({ emoji: '🧩', title: 'Pusslet är löst!', text: `${moves} drag på ${Hub.fmtTime(s)}.`, points: pts, record, onAgain: newGame }));
+        }, 400);
+      }
+      const onResize = () => layout();
+      window.addEventListener('keydown', key); window.addEventListener('resize', onResize);
+      self._cleanup = () => { clearInterval(timer); window.removeEventListener('keydown', key); window.removeEventListener('resize', onResize); };
+      renderSeg(); newGame();
+      requestAnimationFrame(layout);
+    },
+    unmount() { this._cleanup && this._cleanup(); },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/sudoku.js ==== */
+/* Sudoku – generator med unik lösning, tre svårighetsgrader, anteckningar och kontroll */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const LEVELS = { latt: { name: 'Lätt', givens: 40, pts: 120 }, medel: { name: 'Medel', givens: 32, pts: 220 }, svar: { name: 'Svår', givens: 26, pts: 350 } };
+  const DEFAULT = { familj: 'latt', ungdom: 'medel', vuxen: 'svar' };
+
+  function peersOf(i) {
+    const r = Math.floor(i / 9), c = i % 9, br = r - r % 3, bc = c - c % 3, s = new Set();
+    for (let k = 0; k < 9; k++) { s.add(r * 9 + k); s.add(k * 9 + c); s.add((br + Math.floor(k / 3)) * 9 + bc + k % 3); }
+    s.delete(i); return [...s];
+  }
+  const PEERS = [...Array(81).keys()].map(peersOf);
+  function candidates(g, i) { const used = new Set(PEERS[i].map(p => g[p])); return [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(d => !used.has(d)); }
+  function fill(g) {
+    const i = g.indexOf(0); if (i < 0) return true;
+    for (const d of Hub.shuffle(candidates(g, i))) { g[i] = d; if (fill(g)) return true; }
+    g[i] = 0; return false;
+  }
+  function countSolutions(g, limit) {
+    let best = -1, bestC = null;
+    for (let i = 0; i < 81; i++) if (!g[i]) { const c = candidates(g, i); if (!c.length) return 0; if (!bestC || c.length < bestC.length) { best = i; bestC = c; } }
+    if (best < 0) return 1;
+    let n = 0;
+    for (const d of bestC) { g[best] = d; n += countSolutions(g, limit - n); if (n >= limit) break; }
+    g[best] = 0; return n;
+  }
+  function generate(givens) {
+    const sol = Array(81).fill(0); fill(sol);
+    const puz = sol.slice(); let count = 81;
+    for (const i of Hub.shuffle([...Array(81).keys()])) {
+      if (count <= givens) break;
+      const keep = puz[i]; puz[i] = 0;
+      if (countSolutions(puz.slice(), 2) !== 1) puz[i] = keep; else count--;
+    }
+    return { sol, puz };
+  }
+  Hub.sudokuGenerate = generate; // exponeras för tester
+
+  Hub.register({
+    id: 'sudoku', title: 'Sudoku', emoji: '🔲', section: 'logik', c1: '#16b17e', c2: '#0f8a8a',
+    desc: 'Fyll rutnätet med 1–9. Nya pussel varje gång, med anteckningar och ledtrådar.',
+    mount(root) {
+      const self = this;
+      let level = DEFAULT[Hub.audience], sol, given, vals, notes, sel = -1, notesMode = false, hints = 0, done = false, t0, timer;
+      const seg = el('div', { class: 'seg', role: 'group', 'aria-label': 'Svårighetsgrad' });
+      const gridEl = el('div', { class: 'sudoku', role: 'grid', 'aria-label': 'Sudoku' });
+      const pad = el('div', { class: 'numpad' });
+      const timeEl = el('span', { class: 'pill' });
+      const notesBtn = el('button', { class: 'btn small', type: 'button', 'aria-pressed': 'false', onclick: () => { notesMode = !notesMode; notesBtn.classList.toggle('on', notesMode); notesBtn.setAttribute('aria-pressed', notesMode); } }, '✏️ Anteckningar');
+      const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+      root.append(el('div', { class: 'stage' },
+        el('div', { class: 'row center' }, seg, timeEl),
+        gridEl, pad,
+        el('div', { class: 'row center' }, notesBtn,
+          el('button', { class: 'btn small', type: 'button', onclick: () => input(0) }, '⌫ Sudda'),
+          el('button', { class: 'btn small', type: 'button', onclick: hint }, '💡 Ledtråd'),
+          el('button', { class: 'btn small ok', type: 'button', onclick: check }, '✔ Kontrollera'),
+          el('button', { class: 'btn small', type: 'button', onclick: () => newGame() }, '🆕 Nytt pussel')),
+        fb,
+        el('p', { class: 'muted center', style: { fontSize: '13px' } }, 'Välj en ruta och tryck på en siffra (eller använd tangentbordet: 1–9, Backsteg, piltangenter, N för anteckningar).')));
+      for (let d = 1; d <= 9; d++) pad.append(el('button', { type: 'button', 'data-d': d, onclick: () => input(d), 'aria-label': 'Siffra ' + d }, d));
+
+      function renderSeg() {
+        seg.replaceChildren(...Object.entries(LEVELS).map(([k, L]) => el('button', { type: 'button', 'aria-pressed': String(k === level), onclick: () => { level = k; renderSeg(); newGame(); } }, L.name)));
+      }
+      function newGame() {
+        fb.className = 'feedback info'; fb.textContent = 'Skapar nytt pussel …';
+        setTimeout(() => {
+          const g = generate(LEVELS[level].givens);
+          sol = g.sol; given = g.puz.map(v => v > 0); vals = g.puz.slice(); notes = Array.from({ length: 81 }, () => new Set());
+          sel = vals.indexOf(0); hints = 0; done = false; fb.textContent = '';
+          t0 = Date.now(); clearInterval(timer); timer = setInterval(tickT, 1000); tickT();
+          build(); render();
+        }, 20);
+      }
+      function tickT() { timeEl.textContent = `⏱️ ${Hub.fmtTime((Date.now() - t0) / 1000)} · ${LEVELS[level].name}`; }
+      function build() {
+        gridEl.innerHTML = '';
+        for (let i = 0; i < 81; i++) {
+          const r = Math.floor(i / 9), c = i % 9;
+          const b = el('button', { type: 'button', class: 'sud-cell' + (c % 3 === 2 && c < 8 ? ' br' : '') + (r % 3 === 2 && r < 8 ? ' bb' : ''), role: 'gridcell', onclick: () => { sel = i; render(); } });
+          gridEl.append(b);
+        }
+      }
+      function render() {
+        const cells = gridEl.children, sv = sel >= 0 ? vals[sel] : 0;
+        const peerSet = new Set(sel >= 0 ? PEERS[sel] : []);
+        const counts = Array(10).fill(0); vals.forEach(v => counts[v]++);
+        for (let i = 0; i < 81; i++) {
+          const b = cells[i], v = vals[i];
+          b.classList.toggle('given', given[i]);
+          b.classList.toggle('sel', i === sel);
+          b.classList.toggle('peer', peerSet.has(i));
+          b.classList.toggle('same', sv > 0 && v === sv && i !== sel);
+          b.classList.toggle('conflict', v > 0 && !given[i] && PEERS[i].some(p => vals[p] === v));
+          b.classList.remove('wrong');
+          if (v) b.textContent = v;
+          else { b.textContent = ''; if (notes[i].size) b.append(el('span', { class: 'sud-notes' }, [1, 2, 3, 4, 5, 6, 7, 8, 9].map(d => el('span', null, notes[i].has(d) ? d : '')))); }
+          b.setAttribute('aria-label', `Rad ${Math.floor(i / 9) + 1}, kolumn ${i % 9 + 1}: ${v || 'tom'}`);
+        }
+        pad.querySelectorAll('button').forEach(b => b.classList.toggle('done', counts[+b.dataset.d] >= 9));
+      }
+      function input(d) {
+        if (done || sel < 0 || given[sel]) return;
+        if (notesMode && d) { if (vals[sel]) return; notes[sel].has(d) ? notes[sel].delete(d) : notes[sel].add(d); }
+        else {
+          vals[sel] = vals[sel] === d ? 0 : d; notes[sel].clear();
+          if (d) PEERS[sel].forEach(p => notes[p].delete(d));
+        }
+        render(); if (vals.every((v, i) => v === sol[i])) win();
+      }
+      function hint() {
+        if (done) return;
+        let i = (sel >= 0 && vals[sel] !== sol[sel]) ? sel : -1;
+        if (i < 0) { const empty = [...Array(81).keys()].filter(k => vals[k] !== sol[k]); if (!empty.length) return; i = empty[Hub.rand(empty.length)]; }
+        vals[i] = sol[i]; given[i] = true; notes[i].clear(); hints++; sel = i; render();
+        gridEl.children[i].classList.add('hinted');
+        fb.className = 'feedback info'; fb.textContent = `Ledtråd ${hints}: en siffra har fyllts i (−20 poäng).`;
+        if (vals.every((v, k) => v === sol[k])) win();
+      }
+      function check() {
+        let wrong = 0, empty = 0;
+        for (let i = 0; i < 81; i++) { if (!vals[i]) empty++; else if (vals[i] !== sol[i]) { wrong++; gridEl.children[i].classList.add('wrong'); } }
+        if (wrong) { fb.className = 'feedback bad'; fb.textContent = `${wrong} ${wrong === 1 ? 'siffra är fel' : 'siffror är fel'} (markerade i rött).`; }
+        else { fb.className = 'feedback ok'; fb.textContent = empty ? `Inga fel hittills! ${empty} rutor kvar.` : 'Allt stämmer!'; }
+      }
+      function win() {
+        done = true; clearInterval(timer);
+        const s = (Date.now() - t0) / 1000;
+        const pts = Math.max(20, LEVELS[level].pts - hints * 20 - Math.floor(s / 60) * 2);
+        const record = Hub.finishRound('sudoku', pts);
+        fb.replaceChildren(Hub.resultView({ emoji: '🧠', title: 'Sudokut är löst!', text: `Nivå: ${LEVELS[level].name} · tid ${Hub.fmtTime(s)} · ${hints} ledtrådar.`, points: pts, record, onAgain: newGame }));
+        fb.className = '';
+      }
+      function key(e) {
+        if (!document.body.contains(gridEl) || e.target.tagName === 'INPUT') return;
+        if (/^[1-9]$/.test(e.key)) { input(+e.key); e.preventDefault(); }
+        else if (['Backspace', 'Delete', '0'].includes(e.key)) { input(0); e.preventDefault(); }
+        else if (e.key === 'n' || e.key === 'N') notesBtn.click();
+        else if (e.key.startsWith('Arrow') && sel >= 0) {
+          e.preventDefault();
+          const r = Math.floor(sel / 9), c = sel % 9;
+          const m = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] }[e.key];
+          sel = ((r + m[0] + 9) % 9) * 9 + (c + m[1] + 9) % 9; render();
+        }
+      }
+      window.addEventListener('keydown', key);
+      self._cleanup = () => { clearInterval(timer); window.removeEventListener('keydown', key); };
+      renderSeg(); newGame();
+    },
+    unmount() { this._cleanup && this._cleanup(); },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/krypto.js ==== */
+/* Ord-Krypto – kryptogram där varje bokstav i ett svenskt ordspråk bytts mot en annan */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ';
+  const REVEAL = { familj: 4, ungdom: 3, vuxen: 2 };
+  function makeKey() { // slumpad permutation utan fixpunkter
+    let p; do { p = Hub.shuffle([...ABC]); } while (p.some((ch, i) => ch === ABC[i]));
+    const enc = {}; [...ABC].forEach((ch, i) => enc[ch] = p[i]); return enc;
+  }
+  Hub.kryptoEncode = (text, enc) => [...text.toLocaleUpperCase('sv-SE')].map(ch => enc[ch] || ch).join('');
+
+  Hub.register({
+    id: 'krypto', title: 'Ord-Krypto', emoji: '🔐', section: 'ord', c1: '#3a7bd5', c2: '#00d2ff',
+    desc: 'Knäck koden! Varje bokstav i ett svenskt ordspråk har bytts ut mot en annan.',
+    progress: () => ({ done: DATA.krypto.filter(x => Hub.isSolved('krypto', x.id)).length, of: DATA.krypto.length }),
+    mount(root) {
+      let idx = Math.max(0, DATA.krypto.findIndex(x => !Hub.isSolved('krypto', x.id)));
+      let plain, cipher, dec, guess, fixed, hints, solved;
+      const board = el('div', { class: 'krypto' });
+      const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+      const info = el('span', { class: 'pill' });
+      root.append(el('div', { class: 'stage' },
+        el('div', { class: 'row' }, info, el('span', { class: 'spacer' }),
+          el('button', { class: 'btn small', onclick: () => load(idx - 1) }, '← Föregående'),
+          el('button', { class: 'btn small', onclick: () => load(idx + 1) }, 'Nästa →')),
+        el('p', { class: 'muted center', style: { margin: '12px 0 0' } }, 'Den lilla bokstaven under varje ruta är koden. Skriv in vilken bokstav du tror att den står för – alla rutor med samma kod fylls i samtidigt.'),
+        board, fb,
+        el('div', { class: 'row center' },
+          el('button', { class: 'btn', onclick: hint }, '💡 Visa en bokstav'),
+          el('button', { class: 'btn ok', onclick: () => check(true) }, '✔ Kontrollera'),
+          el('button', { class: 'btn ghost', onclick: clearAll }, '🧹 Rensa')),
+        el('p', { class: 'muted center', style: { fontSize: '13px' } }, 'Tips: korta ord som ”är”, ”en”, ”och” och ”men” är bra att börja med. 100 poäng per löst krypto (−15 per extra bokstav).')));
+
+      function load(i) {
+        idx = (i + DATA.krypto.length) % DATA.krypto.length;
+        plain = DATA.krypto[idx].t.toLocaleUpperCase('sv-SE');
+        const enc = makeKey(); dec = {}; for (const k in enc) dec[enc[k]] = k;
+        cipher = Hub.kryptoEncode(plain, enc);
+        guess = {}; fixed = new Set(); hints = 0; solved = false;
+        // Avslöja några bokstäver från start beroende på målgrupp
+        const letters = [...new Set([...cipher].filter(ch => dec[ch]))];
+        Hub.shuffle(letters).slice(0, Math.min(REVEAL[Hub.audience], letters.length - 2)).forEach(c => { guess[c] = dec[c]; fixed.add(c); });
+        build(); refresh(); fb.textContent = ''; fb.className = 'feedback';
+        info.textContent = `🔐 Krypto ${idx + 1} av ${DATA.krypto.length}` + (Hub.isSolved('krypto', DATA.krypto[idx].id) ? ' · löst ✓' : '');
+      }
+      function build() {
+        board.innerHTML = '';
+        cipher.split(' ').forEach(word => {
+          const w = el('div', { class: 'kword' });
+          [...word].forEach(ch => {
+            if (dec[ch]) {
+              const inp = el('input', { type: 'text', inputmode: 'text', autocomplete: 'off', autocapitalize: 'characters', spellcheck: 'false', maxlength: '2', 'data-c': ch, 'aria-label': 'Kodbokstav ' + ch });
+              inp.addEventListener('input', onInput); inp.addEventListener('keydown', onKey); inp.addEventListener('focus', onFocus); Hub.selectOnFocus(inp);
+              w.append(el('div', { class: 'kcell' }, inp, el('small', null, ch)));
+            } else w.append(el('span', { class: 'kpunct' }, ch));
+          });
+          board.append(w);
+        });
+      }
+      const inputs = () => [...board.querySelectorAll('input')];
+      function refresh() {
+        const used = {}; for (const c in guess) if (guess[c]) used[guess[c]] = (used[guess[c]] || 0) + 1;
+        inputs().forEach(inp => {
+          const c = inp.dataset.c; inp.value = guess[c] || '';
+          inp.classList.toggle('fixed', fixed.has(c)); inp.readOnly = fixed.has(c) || solved;
+          inp.classList.toggle('dupe', !!guess[c] && used[guess[c]] > 1);
+        });
+      }
+      function onFocus(e) { const c = e.target.dataset.c; inputs().forEach(i => i.classList.toggle('match', i.dataset.c === c)); }
+      function onInput(e) {
+        const inp = e.target, c = inp.dataset.c;
+        if (fixed.has(c)) { refresh(); return; }
+        const v = Hub.lastLetter(e, inp);
+        guess[c] = v; refresh();
+        if (v) { moveNext(inp); check(false); }
+      }
+      function onKey(e) {
+        const inp = e.target, c = inp.dataset.c, all = inputs(), k = all.indexOf(inp);
+        if (e.key === 'Backspace' && !inp.value && k > 0) { e.preventDefault(); all[k - 1].focus(); }
+        else if (e.key === 'Backspace' || e.key === 'Delete') { if (!fixed.has(c)) { guess[c] = ''; refresh(); } e.preventDefault(); }
+        else if (e.key === 'ArrowRight' && k < all.length - 1) all[k + 1].focus();
+        else if (e.key === 'ArrowLeft' && k > 0) all[k - 1].focus();
+      }
+      function moveNext(inp) {
+        const all = inputs(), k = all.indexOf(inp);
+        const nxt = all.slice(k + 1).concat(all.slice(0, k)).find(i => !guess[i.dataset.c]);
+        if (nxt) nxt.focus();
+      }
+      function hint() {
+        if (solved) return;
+        const open = [...new Set([...cipher].filter(ch => dec[ch] && guess[ch] !== dec[ch]))];
+        if (!open.length) return;
+        const c = open[Hub.rand(open.length)];
+        for (const k in guess) if (guess[k] === dec[c] && k !== c) guess[k] = '';
+        guess[c] = dec[c]; fixed.add(c); hints++; refresh();
+        fb.className = 'feedback info'; fb.textContent = `Bokstaven ${c} betyder ${dec[c]}.`;
+        check(false);
+      }
+      function clearAll() { for (const k in guess) if (!fixed.has(k)) guess[k] = ''; refresh(); fb.textContent = ''; }
+      function check(manual) {
+        if (solved) return;
+        const letters = [...new Set([...cipher].filter(ch => dec[ch]))];
+        const filled = letters.every(c => guess[c]);
+        const right = letters.every(c => guess[c] === dec[c]);
+        if (right) {
+          solved = true; refresh();
+          const pts = Hub.solveItem('krypto', DATA.krypto[idx].id, Math.max(20, 100 - hints * 15));
+          fb.className = 'feedback ok';
+          fb.textContent = `🎉 Rätt! ”${DATA.krypto[idx].t}” ` + (pts ? `+${pts} poäng` : '(redan löst tidigare)');
+          if (pts) { Hub.confetti(60); Hub.toast(`+${pts} poäng!`, 'ok'); }
+          info.textContent = `🔐 Krypto ${idx + 1} av ${DATA.krypto.length} · löst ✓`;
+          fb.append(el('div', { style: { marginTop: '10px' } }, el('button', { class: 'btn primary', onclick: () => load(idx + 1) }, 'Nästa krypto →')));
+        } else if (manual) {
+          const wrong = letters.filter(c => guess[c] && guess[c] !== dec[c]).length;
+          fb.className = 'feedback bad';
+          fb.textContent = !filled && !wrong ? 'Inga fel än så länge – fortsätt!' : `${wrong} ${wrong === 1 ? 'bokstav är fel' : 'bokstäver är fel'}` + (filled ? '.' : ' och några saknas.');
+          if (!wrong) fb.className = 'feedback info';
+        }
+      }
+      load(idx);
+    },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/gator.js ==== */
+Hub.register({
+  id: 'gator', title: 'Gåtor', emoji: '🤔', section: 'ord', c1: '#ff9a3d', c2: '#ff5d8f',
+  desc: 'Kluriga gåtor att lösa. Skriv svaret – ta en ledtråd om det kör ihop sig.',
+  progress: () => ({ done: Hub.forAudience(DATA.gator).filter(x => Hub.isSolved('gator', x.id)).length, of: Hub.forAudience(DATA.gator).length }),
+  mount: Hub.answerGame({ id: 'gator', items: DATA.gator, basePoints: 30, hintCost: 8, label: 'Gåta',
+    render: (it) => Hub.el('div', { class: 'prompt' }, it.q) }),
+});
+
+</script>
+<script>
+/* ==== js/games/rebusar.js ==== */
+Hub.register({
+  id: 'rebusar', title: 'Rebusar', emoji: '🧩', section: 'ord', c1: '#22c1c3', c2: '#3a7bd5',
+  desc: 'Emoji-rebusar för svenska ord, ordspråk och uttryck. Vad står det?',
+  progress: () => ({ done: Hub.forAudience(DATA.rebusar).filter(x => Hub.isSolved('rebusar', x.id)).length, of: Hub.forAudience(DATA.rebusar).length }),
+  mount: Hub.answerGame({ id: 'rebusar', items: DATA.rebusar, basePoints: 25, hintCost: 7, label: 'Rebus',
+    render: (it) => Hub.el('div', { class: 'rebus', role: 'img', 'aria-label': 'Rebus: ' + it.e }, it.e) }),
+});
+
+</script>
+<script>
+/* ==== js/games/korsord.js ==== */
+/* Korsord – små svenska korsord med klickbara rutor och ledtrådar */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  Hub.register({
+    id: 'korsord', title: 'Korsord', emoji: '✏️', section: 'ord', c1: '#ff5d8f', c2: '#b06bff',
+    desc: 'Tre tematiska korsord med svenska ord. Klicka på en ruta och börja skriva.',
+    progress: () => ({ done: Object.keys(KORSORD_DATA).filter(k => Hub.isSolved('korsord', k)).length, of: Object.keys(KORSORD_DATA).length }),
+    mount(root) {
+      const ids = Object.keys(KORSORD_DATA);
+      let pid = ids.find(k => !Hub.isSolved('korsord', k)) || ids[0];
+      let cw, words, cells, cur = null, dir = 'across', reveals = 0, done = false;
+      const tabs = el('div', { class: 'seg', role: 'group', 'aria-label': 'Välj korsord' });
+      const grid = el('div', { class: 'cw-grid' });
+      const curClue = el('div', { class: 'cw-current', 'aria-live': 'polite' });
+      const cluesEl = el('div', { class: 'cw-clues' });
+      const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+      root.append(
+        el('div', { class: 'row center', style: { marginBottom: '14px' } }, tabs),
+        el('div', { class: 'cw-layout' },
+          el('div', null, curClue, grid, fb,
+            el('div', { class: 'row center' },
+              el('button', { class: 'btn ok', onclick: check }, '✔ Kontrollera'),
+              el('button', { class: 'btn', onclick: revealCell }, '💡 Visa bokstav'),
+              el('button', { class: 'btn', onclick: revealWord }, '🔍 Visa ord'),
+              el('button', { class: 'btn ghost', onclick: () => load(pid) }, '🧹 Börja om'))),
+          cluesEl));
+
+      function renderTabs() {
+        tabs.replaceChildren(...ids.map(k => el('button', { type: 'button', 'aria-pressed': String(k === pid), onclick: () => load(k) },
+          KORSORD_DATA[k].title + (Hub.isSolved('korsord', k) ? ' ✓' : ''))));
+      }
+      function load(k) {
+        pid = k; cw = KORSORD_DATA[k]; reveals = 0; done = false; cur = null; fb.textContent = ''; fb.className = 'feedback';
+        renderTabs();
+        // Numrering i läsordning
+        const starts = {}; let num = 0;
+        words = cw.placed.map(p => ({ ...p, cells: [...p.word].map((_, i) => p.dir === 'across' ? [p.row, p.col + i] : [p.row + i, p.col]) }));
+        words.slice().sort((a, b) => a.row - b.row || a.col - b.col).forEach(w => { const key = w.row + ',' + w.col; if (!starts[key]) starts[key] = ++num; w.num = starts[key]; });
+        cells = {};
+        words.forEach(w => w.cells.forEach(([r, c], i) => { const key = r + ',' + c; cells[key] = cells[key] || { r, c, ch: w.word[i], words: [] }; cells[key].words.push(w); }));
+        grid.style.gridTemplateColumns = `repeat(${cw.cols}, 1fr)`;
+        grid.innerHTML = '';
+        for (let r = 0; r < cw.rows; r++) for (let c = 0; c < cw.cols; c++) {
+          const cell = cells[r + ',' + c];
+          if (!cell) { grid.append(el('div', { class: 'cw-cell' })); continue; }
+          const inp = el('input', { type: 'text', maxlength: '2', autocomplete: 'off', autocapitalize: 'characters', spellcheck: 'false', 'aria-label': `Ruta rad ${r + 1} kolumn ${c + 1}` });
+          const n = starts[r + ',' + c];
+          cell.inp = inp;
+          cell.box = el('div', { class: 'cw-cell on' }, n ? el('span', { class: 'n' }, n) : null, inp);
+          inp.addEventListener('mousedown', () => { if (cur === cell) dir = dir === 'across' ? 'down' : 'across'; });
+          inp.addEventListener('focus', () => select(cell));
+          inp.addEventListener('click', () => select(cell));
+          inp.addEventListener('input', (e) => onInput(cell, e));
+          Hub.selectOnFocus(inp);
+          inp.addEventListener('keydown', (e) => onKey(e, cell));
+          grid.append(cell.box);
+        }
+        cluesEl.innerHTML = '';
+        for (const [d, t] of [['across', 'Vågrätt →'], ['down', 'Lodrätt ↓']]) {
+          cluesEl.append(el('h3', null, t), el('ol', null, words.filter(w => w.dir === d).sort((a, b) => a.num - b.num).map(w => {
+            w.li = el('li', { onclick: () => { dir = w.dir; const first = w.cells.map(([r, c]) => cells[r + ',' + c]).find(x => !x.inp.value) || cells[w.cells[0].join(',')]; first.inp.focus(); select(first, w); } },
+              el('b', null, w.num + '.'), ' ', w.clue, el('span', { class: 'muted' }, ` (${w.word.length})`));
+            return w.li;
+          })));
+        }
+        curClue.textContent = 'Klicka på en ruta eller en ledtråd för att börja. Klicka två gånger för att byta riktning.';
+      }
+      function wordOf(cell) { return cell.words.find(w => w.dir === dir) || cell.words[0]; }
+      function select(cell, forced) {
+        cur = cell; const w = forced || wordOf(cell); dir = w.dir;
+        Object.values(cells).forEach(x => x.box.classList.remove('word', 'cur'));
+        words.forEach(x => x.li.classList.remove('active'));
+        w.cells.forEach(([r, c]) => cells[r + ',' + c].box.classList.add('word'));
+        cell.box.classList.add('cur'); w.li.classList.add('active');
+        curClue.textContent = `${w.num} ${w.dir === 'across' ? 'vågrätt' : 'lodrätt'}: ${w.clue} (${w.word.length} bokstäver)`;
+      }
+      function step(cell, delta) {
+        const w = wordOf(cell); const i = w.cells.findIndex(([r, c]) => r === cell.r && c === cell.c);
+        const nx = w.cells[i + delta]; if (nx) cells[nx.join(',')].inp.focus();
+      }
+      function onInput(cell, e) {
+        const v = Hub.lastLetter(e, cell.inp);
+        cell.inp.value = v; cell.box.classList.remove('bad', 'good');
+        if (v) { step(cell, 1); autoDone(); }
+      }
+      function onKey(e, cell) {
+        const moves = { ArrowRight: [0, 1, 'across'], ArrowLeft: [0, -1, 'across'], ArrowDown: [1, 0, 'down'], ArrowUp: [-1, 0, 'down'] };
+        if (e.key === 'Backspace' && !cell.inp.value) { e.preventDefault(); step(cell, -1); }
+        else if (moves[e.key]) {
+          e.preventDefault(); const [dr, dc, d] = moves[e.key];
+          if (cell.words.some(w => w.dir === d)) dir = d;
+          const nx = cells[(cell.r + dr) + ',' + (cell.c + dc)]; if (nx) nx.inp.focus(); else select(cell);
+        } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dir = dir === 'across' ? 'down' : 'across'; select(cell); }
+      }
+      function check() {
+        let wrong = 0, empty = 0;
+        Object.values(cells).forEach(x => {
+          x.box.classList.remove('bad', 'good');
+          if (!x.inp.value) empty++; else if (x.inp.value !== x.ch) { wrong++; x.box.classList.add('bad'); } else x.box.classList.add('good');
+        });
+        words.forEach(w => w.li.classList.toggle('done', w.cells.every(([r, c]) => cells[r + ',' + c].inp.value === cells[r + ',' + c].ch)));
+        if (!wrong && !empty) return win();
+        fb.className = wrong ? 'feedback bad' : 'feedback info';
+        fb.textContent = (wrong ? `${wrong} fel bokstäver (röda).` : 'Inga fel!') + (empty ? ` ${empty} rutor kvar att fylla i.` : '');
+      }
+      function autoDone() {
+        words.forEach(w => w.li.classList.toggle('done', w.cells.every(([r, c]) => cells[r + ',' + c].inp.value === cells[r + ',' + c].ch)));
+        if (Object.values(cells).every(x => x.inp.value === x.ch)) win();
+      }
+      function revealCell() {
+        if (!cur || done) { fb.className = 'feedback info'; fb.textContent = 'Välj först en ruta.'; return; }
+        if (cur.inp.value !== cur.ch) { cur.inp.value = cur.ch; reveals++; cur.box.classList.add('good'); }
+        step(cur, 1); autoDone();
+      }
+      function revealWord() {
+        if (!cur || done) { fb.className = 'feedback info'; fb.textContent = 'Välj först ett ord.'; return; }
+        wordOf(cur).cells.forEach(([r, c]) => { const x = cells[r + ',' + c]; if (x.inp.value !== x.ch) { x.inp.value = x.ch; reveals++; x.box.classList.add('good'); } });
+        autoDone();
+      }
+      function win() {
+        if (done) return; done = true;
+        Object.values(cells).forEach(x => { x.box.classList.add('good'); x.inp.readOnly = true; });
+        const pts = Hub.solveItem('korsord', pid, Math.max(20, 150 - reveals * 8));
+        renderTabs();
+        fb.className = 'feedback ok';
+        fb.textContent = '🎉 Korsordet är löst! ' + (pts ? `+${pts} poäng` : '(redan löst tidigare – inga nya poäng)');
+        if (pts) { Hub.confetti(80); Hub.toast(`+${pts} poäng!`, 'ok'); }
+        const next = ids.find(k => !Hub.isSolved('korsord', k));
+        if (next) fb.append(el('div', { style: { marginTop: '10px' } }, el('button', { class: 'btn primary', onclick: () => load(next) }, 'Nästa korsord →')));
+      }
+      load(pid);
+    },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/ordblandning.js ==== */
+/* Ordblandning – bokstäverna är blandade, bygg rätt ord */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const ROUND = 8;
+  Hub.register({
+    id: 'ordblandning', title: 'Ordblandning', emoji: '🔤', section: 'ord', c1: '#ffd23f', c2: '#ff8a3d',
+    desc: 'Bokstäverna har hamnat huller om buller. Hitta det svenska ordet!',
+    mount(root) {
+      let words, i, score, word, tiles, slots, hintsUsed, locked;
+      const stage = el('div', { class: 'stage' });
+      root.append(stage);
+      start();
+      function start() {
+        words = Hub.shuffle(Hub.forAudience(DATA.ord)).slice(0, ROUND); i = 0; score = 0; show();
+      }
+      function scramble(w) { let s; let n = 0; do { s = Hub.shuffle([...w]); n++; } while (s.join('') === w && n < 20); return s; }
+      function show() {
+        const it = words[i]; word = it.w; hintsUsed = 0; locked = false;
+        tiles = scramble(word).map((ch, k) => ({ ch, k, used: false }));
+        slots = Array(word.length).fill(null); // index till tiles eller {fixed:ch}
+        stage.replaceChildren(
+          el('div', { class: 'row' }, el('span', { class: 'pill' }, `Ord ${i + 1} / ${words.length}`), el('span', { class: 'pill warn' }, `🏷️ ${it.c}`), el('span', { class: 'spacer' }), el('span', { class: 'pill' }, `⭐ ${score} p`)),
+          el('div', { class: 'scr-slots', id: 'slots' }), el('div', { class: 'scr-tiles', id: 'tiles' }),
+          el('div', { class: 'feedback', id: 'fb', 'aria-live': 'polite' }),
+          el('div', { class: 'row center' },
+            el('button', { class: 'btn small', onclick: reshuffle }, '🔀 Blanda om'),
+            el('button', { class: 'btn small', onclick: clear }, '↩ Töm'),
+            el('button', { class: 'btn small', onclick: hint }, '💡 Ledtråd (−5)'),
+            el('button', { class: 'btn small ghost', onclick: skip }, '⏭ Hoppa över')),
+          el('p', { class: 'muted center', style: { fontSize: '13px' } }, 'Tryck på bokstäverna i rätt ordning – eller skriv på tangentbordet. Tryck på en placerad bokstav för att ta bort den.'));
+        draw();
+      }
+      function draw() {
+        const sEl = stage.querySelector('#slots'), tEl = stage.querySelector('#tiles');
+        sEl.replaceChildren(...slots.map((s, k) => {
+          if (s && s.fixed) return el('div', { class: 'slot filled fixed' }, s.fixed);
+          if (s != null) return el('button', { class: 'slot filled', type: 'button', onclick: () => { tiles[s].used = false; slots[k] = null; draw(); } }, tiles[s].ch);
+          return el('div', { class: 'slot' });
+        }));
+        tEl.replaceChildren(...tiles.map((t, k) => el('button', { class: 'ltile' + (t.used ? ' used' : ''), type: 'button', onclick: () => place(k), 'aria-label': 'Bokstav ' + t.ch }, t.ch)));
+      }
+      function place(k) {
+        if (locked || tiles[k].used) return;
+        const pos = slots.findIndex(s => s == null); if (pos < 0) return;
+        slots[pos] = k; tiles[k].used = true; draw();
+        if (slots.every(s => s != null)) evaluate();
+      }
+      function current() { return slots.map(s => s && s.fixed ? s.fixed : tiles[s].ch).join(''); }
+      function evaluate() {
+        const fb = stage.querySelector('#fb');
+        if (current() === word) {
+          locked = true; const pts = Math.max(5, 20 - hintsUsed * 5); score += pts;
+          fb.className = 'feedback ok'; fb.textContent = `Rätt! ${word} · +${pts} poäng`;
+          stage.querySelectorAll('.slot').forEach(s => s.classList.add('fixed'));
+          setTimeout(next, 1100);
+        } else {
+          fb.className = 'feedback bad'; fb.textContent = 'Inte rätt ord – försök igen!';
+          const s = stage.querySelector('#slots'); s.classList.remove('shake'); void s.offsetWidth; s.classList.add('shake');
+        }
+      }
+      function reshuffle() { if (locked) return; const free = tiles.filter(t => !t.used); const sh = Hub.shuffle(free.map(t => t.ch)); free.forEach((t, k) => t.ch = sh[k]); draw(); }
+      function clear() { if (locked) return; slots = slots.map(s => (s && s.fixed) ? s : null); tiles.forEach(t => t.used = false); slots.forEach(s => { if (s && s.fixed) { const t = tiles.find(t => !t.used && t.ch === s.fixed); if (t) t.used = true; } }); draw(); }
+      function hint() {
+        if (locked) return;
+        clear();
+        const pos = slots.findIndex(s => !(s && s.fixed)); if (pos < 0) return;
+        const t = tiles.find(t => !t.used && t.ch === word[pos]); if (!t) return;
+        t.used = true; slots[pos] = { fixed: word[pos] }; hintsUsed++; draw();
+        if (slots.every(s => s != null)) evaluate();
+      }
+      function skip() { if (locked) return; locked = true; const fb = stage.querySelector('#fb'); fb.className = 'feedback info'; fb.textContent = 'Ordet var: ' + word; setTimeout(next, 1400); }
+      function next() { if (!document.body.contains(stage)) return; if (++i >= words.length) end(); else show(); }
+      function end() {
+        const record = Hub.finishRound('ordblandning', score);
+        stage.replaceChildren(Hub.resultView({ emoji: '🔤', title: 'Omgången är klar!', text: `Du fick ${score} av ${words.length * 20} möjliga poäng.`, points: score, record, onAgain: start }));
+      }
+      function key(e) {
+        if (!document.body.contains(stage) || locked || !tiles || e.ctrlKey || e.metaKey) return;
+        if (e.key === 'Backspace') { const k = slots.map((s, n) => (s != null && !s.fixed) ? n : -1).filter(n => n >= 0).pop(); if (k != null) { tiles[slots[k]].used = false; slots[k] = null; draw(); } e.preventDefault(); return; }
+        const ch = e.key.length === 1 ? e.key.toLocaleUpperCase('sv-SE') : '';
+        const k = tiles.findIndex(t => !t.used && t.ch === ch); if (k >= 0) place(k);
+      }
+      window.addEventListener('keydown', key);
+      this._cleanup = () => window.removeEventListener('keydown', key);
+    },
+    unmount() { this._cleanup && this._cleanup(); },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/memory.js ==== */
+/* Memory – vänd korten och hitta paren */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const EMOJI = ['🍓', '🐟', '🌲', '🦊', '🐻', '🍰', '☕', '⛄', '🦔', '🌻', '🚲', '⛵', '🍄', '🦉', '🎈'];
+  const SIZES = { 8: { cols: 4, name: '16 kort' }, 12: { cols: 6, name: '24 kort' } };
+  Hub.register({
+    id: 'memory', title: 'Memory', emoji: '🃏', section: 'sma', c1: '#ff5d8f', c2: '#ff9a3d',
+    desc: 'Vänd två kort i taget och hitta alla par med så få drag som möjligt.',
+    mount(root) {
+      let pairs = Hub.audience === 'vuxen' ? 12 : 8, cards, open, moves, found, t0, timer, lock;
+      const seg = el('div', { class: 'seg', role: 'group', 'aria-label': 'Antal kort' });
+      const info = el('span', { class: 'pill' });
+      const board = el('div', { class: 'mem' });
+      const fb = el('div', { class: 'feedback' });
+      root.append(el('div', { class: 'row center' }, seg, info, el('button', { class: 'btn small', onclick: () => start() }, '🔄 Ny omgång')), board, fb);
+      function renderSeg() { seg.replaceChildren(...Object.entries(SIZES).map(([p, s]) => el('button', { type: 'button', 'aria-pressed': String(+p === pairs), onclick: () => { pairs = +p; renderSeg(); start(); } }, s.name))); }
+      function start() {
+        const set = Hub.shuffle(EMOJI).slice(0, pairs);
+        cards = Hub.shuffle([...set, ...set]).map(e => ({ e, state: 'down' }));
+        open = []; moves = 0; found = 0; t0 = null; lock = false; clearInterval(timer); fb.innerHTML = '';
+        const cols = SIZES[pairs].cols;
+        board.style.gridTemplateColumns = `repeat(${window.innerWidth < 560 && cols === 6 ? 4 : cols}, 1fr)`;
+        board.replaceChildren(...cards.map((c, k) => {
+          c.btn = el('button', { class: 'mcard', type: 'button', 'aria-label': 'Dolt kort', onclick: () => flip(k) },
+            el('div', { class: 'in' }, el('div', { class: 'f' }), el('div', { class: 'b' }, c.e)));
+          return c.btn;
+        }));
+        upd();
+      }
+      function upd() { info.textContent = `👆 ${moves} drag · ✅ ${found}/${pairs} par · ⏱️ ${Hub.fmtTime(t0 ? (Date.now() - t0) / 1000 : 0)}`; }
+      function flip(k) {
+        const c = cards[k]; if (lock || c.state !== 'down') return;
+        if (!t0) { t0 = Date.now(); timer = setInterval(upd, 1000); }
+        c.state = 'up'; c.btn.classList.add('flip'); c.btn.setAttribute('aria-label', 'Kort: ' + c.e); open.push(c);
+        if (open.length === 2) {
+          moves++; const [a, b] = open; open = [];
+          if (a.e === b.e) { a.state = b.state = 'done'; setTimeout(() => { a.btn.classList.add('matched'); b.btn.classList.add('matched'); }, 300); found++; if (found === pairs) win(); }
+          else { lock = true; setTimeout(() => { [a, b].forEach(x => { x.state = 'down'; x.btn.classList.remove('flip'); x.btn.setAttribute('aria-label', 'Dolt kort'); }); lock = false; }, 850); }
+        }
+        upd();
+      }
+      function win() {
+        clearInterval(timer); upd();
+        const s = (Date.now() - t0) / 1000;
+        const pts = Math.max(20, Math.round(pairs * 25 - (moves - pairs) * 4 - s * 0.3));
+        const record = Hub.finishRound('memory', pts);
+        setTimeout(() => fb.replaceChildren(Hub.resultView({ emoji: '🃏', title: 'Alla par hittade!', text: `${moves} drag på ${Hub.fmtTime(s)}.`, points: pts, record, onAgain: start })), 600);
+      }
+      this._cleanup = () => clearInterval(timer);
+      renderSeg(); start();
+    },
+    unmount() { this._cleanup && this._cleanup(); },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/snake.js ==== */
+/* Snake – styr ormen och ät äpplen */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const N = 18;
+  const SPEED = { familj: 170, ungdom: 130, vuxen: 105 };
+  Hub.register({
+    id: 'snake', title: 'Snake', emoji: '🐍', section: 'sma', c1: '#16b17e', c2: '#7bd36a',
+    desc: 'Styr ormen, ät äpplen och undvik väggarna och din egen svans.',
+    mount(root) {
+      let snake, dirV, nextDir, food, score, loop, state = 'ready', speed;
+      const cv = el('canvas', { width: 540, height: 540, 'aria-label': 'Spelplan för Snake', role: 'img' });
+      const ctx = cv.getContext('2d');
+      const scoreEl = el('span', { class: 'pill' });
+      const btn = el('button', { class: 'btn primary', onclick: toggle }, '▶ Starta');
+      const fb = el('div', { class: 'feedback' });
+      const dbtn = (cls, t, d) => el('button', { class: cls, type: 'button', 'aria-label': t, onpointerdown: (e) => { e.preventDefault(); turn(d); } }, t === 'Upp' ? '▲' : t === 'Ner' ? '▼' : t === 'Vänster' ? '◀' : '▶');
+      root.append(el('div', { class: 'snake-wrap' },
+        el('div', { class: 'row center' }, scoreEl, btn),
+        cv,
+        el('div', { class: 'dpad' }, dbtn('u', 'Upp', [0, -1]), dbtn('l', 'Vänster', [-1, 0]), dbtn('d', 'Ner', [0, 1]), dbtn('r', 'Höger', [1, 0])),
+        fb,
+        el('p', { class: 'muted center', style: { fontSize: '13px', margin: 0 } }, 'Styr med piltangenterna eller WASD, svep på spelplanen eller använd knapparna. Mellanslag pausar. 10 poäng per äpple.')));
+      function reset() {
+        snake = [[8, 9], [7, 9], [6, 9]]; dirV = [1, 0]; nextDir = [1, 0]; score = 0; speed = SPEED[Hub.audience]; placeFood(); upd(); draw();
+      }
+      function placeFood() { do { food = [Hub.rand(N), Hub.rand(N)]; } while (snake.some(([x, y]) => x === food[0] && y === food[1])); }
+      function upd() { scoreEl.textContent = `🍎 ${score / 10} · ⭐ ${score} p · 🏆 ${Hub.game('snake').best} p`; }
+      function toggle() {
+        btn.blur();
+        if (state === 'running') { state = 'paused'; clearTimeout(loop); btn.textContent = '▶ Fortsätt'; drawText('Paus'); }
+        else { if (state === 'over' || state === 'ready') { reset(); fb.innerHTML = ''; } state = 'running'; btn.textContent = '⏸ Paus'; tick(); }
+      }
+      function turn(d) {
+        if (state === 'ready' || state === 'over') { toggle(); }
+        if (d[0] === -dirV[0] && d[1] === -dirV[1]) return; nextDir = d;
+      }
+      function tick() {
+        dirV = nextDir;
+        const head = [snake[0][0] + dirV[0], snake[0][1] + dirV[1]];
+        const hitsSelf = snake.slice(0, -1).some(([x, y]) => x === head[0] && y === head[1]);
+        if (head[0] < 0 || head[1] < 0 || head[0] >= N || head[1] >= N || hitsSelf) return over();
+        snake.unshift(head);
+        if (head[0] === food[0] && head[1] === food[1]) { score += 10; speed = Math.max(60, speed - 3); placeFood(); upd(); }
+        else snake.pop();
+        draw();
+        loop = setTimeout(tick, speed);
+      }
+      function over() {
+        state = 'over'; clearTimeout(loop); btn.textContent = '🔄 Spela igen'; drawText('Game over!');
+        const record = Hub.finishRound('snake', score); upd();
+        fb.replaceChildren(Hub.resultView({ emoji: '🐍', title: 'Ormen krockade!', text: `Du åt ${score / 10} äpplen.`, points: score, record, onAgain: () => { fb.innerHTML = ''; state = 'ready'; toggle(); } }));
+      }
+      function draw() {
+        const s = cv.width / N;
+        ctx.fillStyle = '#1a1446'; ctx.fillRect(0, 0, cv.width, cv.height);
+        for (let x = 0; x < N; x++) for (let y = 0; y < N; y++) if ((x + y) % 2) { ctx.fillStyle = '#211a55'; ctx.fillRect(x * s, y * s, s, s); }
+        ctx.font = `${s * 0.85}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('🍎', food[0] * s + s / 2, food[1] * s + s / 2 + 2);
+        snake.forEach(([x, y], k) => {
+          const t = k / snake.length; ctx.fillStyle = `hsl(${150 - t * 60}, 70%, ${55 - t * 15}%)`;
+          const p = k === 0 ? 1 : 3; roundRect(x * s + p, y * s + p, s - p * 2, s - p * 2, s * 0.3); ctx.fill();
+        });
+        const [hx, hy] = snake[0]; ctx.fillStyle = '#fff';
+        const ex = dirV[1] !== 0 ? [0.3, 0.7] : [0.5, 0.5], ey = dirV[0] !== 0 ? [0.3, 0.7] : [0.5, 0.5];
+        for (let k = 0; k < 2; k++) { ctx.beginPath(); ctx.arc((hx + ex[k] + dirV[0] * 0.15) * s, (hy + ey[k] + dirV[1] * 0.15) * s, s * 0.1, 0, 7); ctx.fill(); }
+      }
+      function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+      function drawText(t) { ctx.fillStyle = 'rgba(10,6,40,.6)'; ctx.fillRect(0, 0, cv.width, cv.height); ctx.fillStyle = '#fff'; ctx.font = 'bold 48px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(t, cv.width / 2, cv.height / 2); }
+      function key(e) {
+        if (!document.body.contains(cv)) return;
+        const m = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0], w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0] }[e.key.length === 1 ? e.key.toLowerCase() : e.key];
+        if (m) { e.preventDefault(); turn(m); } else if (e.key === ' ') { e.preventDefault(); toggle(); }
+      }
+      let sx, sy;
+      cv.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+      cv.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
+      cv.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+        if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) { if (state !== 'running') toggle(); return; }
+        turn(Math.abs(dx) > Math.abs(dy) ? [Math.sign(dx), 0] : [0, Math.sign(dy)]);
+      });
+      cv.addEventListener('click', () => { if (state === 'ready' || state === 'paused') toggle(); });
+      window.addEventListener('keydown', key);
+      this._cleanup = () => { clearTimeout(loop); window.removeEventListener('keydown', key); };
+      cv._debug = () => ({ snake: snake.map(p => p.slice()), dir: dirV.slice(), state });
+      reset(); drawText('Tryck på Starta');
+    },
+    unmount() { this._cleanup && this._cleanup(); },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/mullvad.js ==== */
+/* Slå mullvaden – snabbt reaktionsspel */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const DUR = 30;
+  const TEMPO = { familj: { up: 1100, gap: 700 }, ungdom: { up: 850, gap: 550 }, vuxen: { up: 700, gap: 450 } };
+  Hub.register({
+    id: 'mullvad', title: 'Slå mullvaden', emoji: '🔨', section: 'sma', c1: '#8a6143', c2: '#5fae45',
+    desc: '30 sekunder! Klicka på mullvadarna – guldmullvaden ger extra, men akta dig för bomberna.',
+    mount(root) {
+      let score, left, running = false, timers = [], hits, tickI;
+      const info = el('span', { class: 'pill' });
+      const btn = el('button', { class: 'btn primary', onclick: start }, '▶ Starta');
+      const holes = el('div', { class: 'holes' });
+      const fb = el('div', { class: 'feedback' });
+      const moles = [];
+      for (let k = 0; k < 9; k++) {
+        const m = el('div', { class: 'mole' });
+        const h = el('button', { class: 'hole', type: 'button', 'aria-label': 'Hål ' + (k + 1), onpointerdown: (e) => { e.preventDefault(); whack(k); } }, m);
+        moles.push({ el: m, kind: null, up: false }); holes.append(h);
+      }
+      root.append(el('div', { class: 'stage' }, el('div', { class: 'row center' }, info, btn), holes, fb,
+        el('p', { class: 'muted center', style: { fontSize: '13px' } }, 'Brun mullvad: +10 · Guldmullvad: +30 · Bomb: −20')));
+      function upd() { info.textContent = `⏱️ ${Math.ceil(left ?? DUR)} s · ⭐ ${score ?? 0} p · 🏆 ${Hub.game('mullvad').best} p`; }
+      function start() {
+        if (running) return; running = true; score = 0; hits = 0; left = DUR; fb.innerHTML = ''; btn.disabled = true;
+        const t0 = Date.now();
+        tickI = setInterval(() => { left = DUR - (Date.now() - t0) / 1000; upd(); if (left <= 0) end(); }, 200);
+        spawn(); setTimeout(spawn, 400); upd();
+      }
+      function spawn() {
+        if (!running) return;
+        const T = TEMPO[Hub.audience], speedUp = 1 - Math.min(0.35, (DUR - left) / DUR * 0.35);
+        const free = moles.map((m, k) => k).filter(k => !moles[k].up);
+        if (free.length) {
+          const k = free[Hub.rand(free.length)], m = moles[k], r = Math.random();
+          m.kind = r < 0.12 ? 'gold' : r < 0.27 ? 'bomb' : 'mole'; m.up = true;
+          m.el.className = 'mole ' + (m.kind === 'mole' ? '' : m.kind);
+          m.el.innerHTML = m.kind === 'bomb' ? '💣' : '<div class="body"><div class="nose"></div></div>';
+          requestAnimationFrame(() => m.el.classList.add('up'));
+          timers.push(setTimeout(() => down(k), T.up * speedUp * (m.kind === 'gold' ? 0.7 : 1)));
+        }
+        timers.push(setTimeout(spawn, (T.gap + Math.random() * T.gap) * speedUp));
+      }
+      function down(k) { const m = moles[k]; m.up = false; m.el.classList.remove('up'); }
+      function whack(k) {
+        const m = moles[k]; if (!running || !m.up || m.el.classList.contains('hit')) return;
+        const pts = m.kind === 'gold' ? 30 : m.kind === 'bomb' ? -20 : 10;
+        score = Math.max(0, score + pts); if (pts > 0) hits++;
+        m.el.classList.add('hit'); m.el.append(el('span', { class: 'stars' }, pts > 0 ? '💫' : '💥'));
+        setTimeout(() => down(k), 180); upd();
+      }
+      function end() {
+        running = false; clearInterval(tickI); timers.forEach(clearTimeout); timers = []; moles.forEach((m, k) => down(k));
+        left = 0; btn.disabled = false; btn.textContent = '🔄 Spela igen';
+        const record = Hub.finishRound('mullvad', score); upd();
+        fb.replaceChildren(Hub.resultView({ emoji: '🔨', title: 'Tiden är ute!', text: `Du träffade ${hits} gånger.`, points: score, record, onAgain: start }));
+      }
+      this._cleanup = () => { running = false; clearInterval(tickI); timers.forEach(clearTimeout); };
+      upd();
+    },
+    unmount() { this._cleanup && this._cleanup(); },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/menu.js ==== */
+/* Startmeny */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const SECTIONS = [
+    ['ord', '📚 Ord och kunskap'],
+    ['logik', '🧠 Logik och pussel'],
+    ['sma', '⚡ Snabba småspel'],
+  ];
+  Hub.renderMenu = function (app) {
+    const st = Hub.stats();
+    const played = Hub.games.filter(g => Hub.game(g.id).plays > 0 || Hub.game(g.id).solved.length > 0).length;
+    app.append(
+      el('section', { class: 'hero' },
+        el('h1', null, 'Välkommen till ', el('span', { class: 'grad' }, 'ORDAGRANT')),
+        el('p', null, 'Quiz, gåtor, rebusar, korsord, sudoku och småspel – på svenska, för hela familjen. Samla poäng och slå dina egna rekord!')),
+      el('div', { class: 'dash' },
+        tile(Hub.fmt(st.total), 'Totalpoäng'),
+        tile(Hub.totalSolved(), 'Lösta uppgifter'),
+        tile(st.rounds, 'Spelade omgångar'),
+        tile(`${played}/${Hub.games.length}`, 'Testade spel')),
+      audienceBox(),
+      ...SECTIONS.map(([key, title]) => {
+        const games = Hub.games.filter(g => g.section === key);
+        return el('div', null, el('h2', { class: 'section-title' }, title),
+          el('div', { class: 'cards' }, games.map((g, k) => card(g, k))));
+      }),
+      Hub.persistent ? null : el('p', { class: 'center', style: { color: 'rgba(255,255,255,.75)', fontSize: '14px', marginTop: '22px' } }, 'ℹ️ Webbläsaren tillåter inte lagring här, så poängen sparas bara tills sidan stängs.'),
+      el('div', { class: 'menu-actions' }, el('button', { class: 'btn btn-danger', onclick: reset }, '🗑️ Nollställ alla poäng')));
+  };
+  function tile(v, l) { return el('div', { class: 'dtile' }, el('div', { class: 'v' }, v), el('div', { class: 'l' }, l)); }
+  function audienceBox() {
+    const opts = Object.values(Hub.AUDIENCES).map(a => el('button', {
+      class: 'aud-opt', type: 'button', 'aria-pressed': String(Hub.audience === a.id),
+      onclick: () => { Hub.setAudience(a.id); Hub.toast(`${a.emoji} Målgrupp: ${a.name}`); const app = document.getElementById('app'); const y = window.scrollY; app.innerHTML = ''; Hub.renderMenu(app); window.scrollTo(0, y); }
+    }, el('span', { class: 'e' }, a.emoji), el('span', null, el('b', null, a.name), el('small', null, a.desc))));
+    return el('section', { class: 'aud-box', 'aria-labelledby': 'aud-h' },
+      el('h2', { id: 'aud-h' }, 'Vem spelar?'),
+      el('p', { class: 'sub' }, 'Välj målgrupp – frågor, gåtor, rebusar, ordblandning och svårighetsgrader anpassas efter valet. Allt innehåll passar alla åldrar.'),
+      el('div', { class: 'aud-options', role: 'group', 'aria-label': 'Målgrupp' }, opts));
+  }
+  function card(g, k) {
+    const s = Hub.game(g.id);
+    const p = g.progress ? g.progress() : null;
+    return el('a', { class: 'card', href: '#/' + g.id, style: { '--c1': g.c1, '--c2': g.c2, animationDelay: (k * 0.05) + 's' }, 'aria-label': `${g.title}: ${g.desc}` },
+      el('div', { class: 'emoji', 'aria-hidden': 'true' }, g.emoji),
+      el('h3', null, g.title),
+      el('p', null, g.desc),
+      p ? el('div', { class: 'bar', title: `${p.done} av ${p.of} lösta` }, el('i', { style: { width: (p.of ? p.done / p.of * 100 : 0) + '%' } })) : null,
+      el('div', { class: 'meta' },
+        el('span', null, p ? `✅ ${p.done}/${p.of} lösta` : `🎮 ${s.plays} ${s.plays === 1 ? 'omgång' : 'omgångar'}`),
+        el('span', null, `🏆 ${Hub.fmt(s.best)} p`)));
+  }
+  async function reset() {
+    if (await Hub.confirm('Nollställa allt?', 'Alla poäng, rekord och lösta uppgifter raderas från den här webbläsaren. Det går inte att ångra.', 'Ja, nollställ')) {
+      Hub.reset(); Hub.toast('Alla poäng är nollställda.');
+      const app = document.getElementById('app'); app.innerHTML = ''; Hub.renderMenu(app);
+    }
+  }
+  Hub.start();
+})();
+
+</script>
+</body>
+</html>
