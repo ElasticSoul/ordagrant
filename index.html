@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1b1446">
-<meta name="description" content="ORDAGRANT – quiz, pussel, sudoku, gåtor, rebusar, korsord och småspel på svenska.">
+<meta name="description" content="ORDAGRANT – Dagens ord, ordjakt, hänga gubbe, quiz, sudoku, gåtor, rebusar, korsord och småspel på svenska.">
 <title>ORDAGRANT – ordlekar, pussel och småspel på svenska</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ff5d8f'/%3E%3Ctext x='50' y='72' font-size='64' text-anchor='middle' font-family='Arial' font-weight='900' fill='white'%3EO%3C/text%3E%3C/svg%3E">
 <style>
@@ -285,6 +285,67 @@ main{position:relative;z-index:1;flex:1;width:100%;max-width:1180px;margin:0 aut
 .mole .stars{position:absolute;top:-8%;font-size:22px}
 @media (max-width:560px){.dash{grid-template-columns:repeat(2,1fr);gap:8px}.dash .dtile{padding:10px 12px}.dash .dtile .v{font-size:22px}}
 
+/* ===== Gemensamt svenskt skärmtangentbord ===== */
+.kbd{display:flex;flex-direction:column;gap:6px;width:100%;max-width:520px;margin:12px auto 0;user-select:none;-webkit-user-select:none}
+.kbd-row{display:flex;gap:4px;justify-content:center}
+.kbd button{flex:1 1 0;min-width:0;height:clamp(44px,12vw,54px);border:0;border-radius:8px;background:#e4e0f5;font-weight:800;font-size:clamp(14px,4vw,18px);color:var(--ink);padding:0;transition:background .15s,transform .08s}
+.kbd button:active{transform:scale(.94)}
+.kbd button.wide{flex:1.6 1 0;font-size:clamp(11px,3vw,14px)}
+.kbd button.correct{background:#16b17e;color:#fff}
+.kbd button.present{background:#f2b53a;color:#fff}
+.kbd button.absent{background:#8b87a6;color:#fff}
+.kbd button.used-ok{background:#16b17e;color:#fff}
+.kbd button.used-bad{background:#c9c5d9;color:#8b87a6}
+.kbd button:disabled{cursor:default}
+
+/* ===== Dagens ord ===== */
+.wd-board{display:grid;gap:6px;width:min(100%,330px);margin:8px auto}
+.wd-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.wd-row.shake{animation:shake .4s}
+.wd-cell{aspect-ratio:1;border:2px solid #d9d4ee;border-radius:10px;display:grid;place-items:center;font-weight:900;font-size:clamp(22px,7vw,32px);text-transform:uppercase;background:#fff;color:var(--ink)}
+.wd-cell.filled{border-color:#8b87a6;animation:pop .15s}
+.wd-cell.correct,.wd-cell.present,.wd-cell.absent{color:#fff;border-color:transparent;animation:flip .5s ease both}
+.wd-cell.correct{background:#16b17e}.wd-cell.present{background:#f2b53a}.wd-cell.absent{background:#8b87a6}
+@keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+.wd-info{text-align:center;font-size:14px;color:var(--muted);min-height:20px}
+.legend{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:4px}
+
+/* ===== Ordjakt ===== */
+.wj-grid{display:grid;gap:3px;width:100%;max-width:min(520px,calc(100vh - 260px));min-width:260px;margin:8px auto;touch-action:none;user-select:none;-webkit-user-select:none;background:#efeaff;padding:6px;border-radius:14px}
+.wj-cell{aspect-ratio:1;display:grid;place-items:center;font-weight:800;border-radius:7px;background:#fff;color:var(--ink);transition:background .1s,color .1s}
+.wj-cell.sel{background:#ffd23f}
+.wj-cell.found{color:#fff}
+.wj-cell.anchor{outline:3px solid var(--brand2);outline-offset:-3px}
+.wj-words{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0}
+.wj-words span{padding:5px 10px;border-radius:999px;background:var(--panel2);font-weight:700;font-size:14px}
+.wj-words span.found{text-decoration:line-through;color:#fff}
+
+/* ===== Hänga gubbe ===== */
+.hg-wrap{display:grid;place-items:center}
+.hg-svg{width:min(100%,300px);height:auto;display:block}
+.hg-svg .balloon{transform-box:fill-box;transform-origin:center;transition:transform .3s ease,opacity .3s}
+.hg-svg .balloon.pop{transform:scale(1.5);opacity:0}
+.hg-svg .rise{transition:transform 1.4s ease-in}
+.hg-word{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0 4px}
+.hg-word span{width:clamp(22px,7vw,34px);height:clamp(32px,9vw,44px);border-bottom:3px solid var(--ink);display:grid;place-items:center;font-weight:900;font-size:clamp(18px,5.5vw,26px)}
+.hg-word span.show{animation:pop .3s}
+.hg-word span.miss{color:var(--bad)}
+
+/* ===== Ordspråksluckan ===== */
+.os-text{font-size:clamp(20px,4.4vw,27px);font-weight:800;text-align:center;line-height:1.4;margin:16px 0}
+.os-gap{display:inline-block;min-width:3.4em;border-bottom:3px dashed var(--brand2);color:var(--brand2);padding:0 .2em}
+.os-gap.ok{border-bottom-style:solid;border-color:var(--ok);color:var(--ok)}
+.os-gap.bad{border-color:var(--bad);color:var(--bad)}
+
+/* ===== Vem är jag? ===== */
+.vj-clues{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.vj-clue{background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px;font-size:16.5px;display:flex;gap:10px;align-items:flex-start;animation:rise .35s ease both}
+.vj-clue b{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--brand2);color:#fff;font-size:14px}
+.vj-clue.locked{background:var(--panel2);color:var(--muted);border-style:dashed}
+.vj-clue.locked b{background:#c9c5d9}
+.vj-worth{font-weight:900;color:var(--brand2)}
+
 </style>
 </head>
 <body>
@@ -355,6 +416,7 @@ main{position:relative;z-index:1;flex:1;width:100%;max-width:1180px;margin:0 aut
       save(); renderTopbar();
       return first ? points : 0;
     },
+    markSolved(id, itemId) { const s = g(id); if (!s.solved.includes(itemId)) { s.solved.push(itemId); save(); renderTopbar(); return true; } return false; },
     isSolved(id, itemId) { return g(id).solved.includes(itemId); },
     addPoints(id, points) { const s = g(id); s.points += points; state.total += points; save(); renderTopbar(); },
     reset() { const a = state.audience; state = { total: 0, rounds: 0, audience: a, games: {} }; save(); renderTopbar(); },
@@ -457,6 +519,30 @@ main{position:relative;z-index:1;flex:1;width:100%;max-width:1180px;margin:0 aut
         Hub.el('button', { class: 'btn primary', onclick: onAgain }, '🔄 Spela igen'),
         Hub.el('a', { class: 'btn', href: '#/' }, '🏠 Till menyn')));
   };
+
+  /** Deterministisk slump (mulberry32) */
+  Hub.seeded = function (seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; };
+  /** Lokalt datum som 'ÅÅÅÅ-MM-DD' och dagnummer */
+  Hub.today = function (d) { d = d || new Date(); const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); return { key: k, day: Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000) }; };
+  /** Svenskt skärmtangentbord. opts: { onKey(letter), onEnter, onBack } */
+  Hub.keyboard = function (opts) {
+    const rows = ['QWERTYUIOPÅ', 'ASDFGHJKLÖÄ', 'ZXCVBNM'];
+    const keys = {};
+    const box = Hub.el('div', { class: 'kbd', role: 'group', 'aria-label': 'Tangentbord' });
+    rows.forEach((r, i) => {
+      const row = Hub.el('div', { class: 'kbd-row' });
+      if (i === 2 && opts.onEnter) row.append(Hub.el('button', { type: 'button', class: 'wide', onclick: () => opts.onEnter(), 'aria-label': 'Enter' }, 'ENTER'));
+      for (const ch of r) { const b = Hub.el('button', { type: 'button', 'data-k': ch, onclick: () => opts.onKey(ch) }, ch); keys[ch] = b; row.append(b); }
+      if (i === 2 && opts.onBack) row.append(Hub.el('button', { type: 'button', class: 'wide', onclick: () => opts.onBack(), 'aria-label': 'Radera' }, '⌫'));
+      box.append(row);
+    });
+    box.setKey = (ch, cls, disable) => { const b = keys[ch]; if (!b) return; b.className = cls || ''; b.disabled = !!disable; };
+    box.reset = () => Object.values(keys).forEach(b => { b.className = ''; b.disabled = false; });
+    box.keys = keys;
+    return box;
+  };
+  /** Bokstav från fysiskt tangentbord (A–Ö) eller '' */
+  Hub.keyLetter = function (e) { if (e.ctrlKey || e.metaKey || e.altKey || !e.key || e.key.length !== 1) return ''; const k = e.key.toLocaleUpperCase('sv-SE'); return /^[A-ZÅÄÖ]$/.test(k) ? k : ''; };
 
   /* ---------- Topbar ---------- */
   function renderTopbar() {
@@ -897,6 +983,126 @@ window.KORSORD_DATA = {
 
 </script>
 <script>
+/* ==== js/data2.js ==== */
+/* ORDAGRANT – innehåll för Ordjakt, Hänga gubbe, Ordspråksluckan och Vem är jag?  lvl: 1 = familj, 2 = ungdom, 3 = vuxen */
+
+/* ---------- Ordjakt: teman ---------- */
+DATA.ordjakt = [
+  { id: 'djur', name: 'Djur', emoji: '🦊', words: ['KATT', 'HUND', 'HÄST', 'RÄV', 'ÄLG', 'UGGLA', 'BJÖRN', 'VARG', 'EKORRE', 'IGELKOTT', 'LODJUR', 'GRODA', 'FJÄRIL', 'HARE', 'KANIN', 'SÄL', 'ÖRN', 'HUMLA'] },
+  { id: 'mat', name: 'Mat och fika', emoji: '🍰', words: ['BULLE', 'KAKA', 'GLASS', 'SOPPA', 'GRÖT', 'SMÖR', 'OST', 'SILL', 'LAX', 'PASTA', 'PIZZA', 'TÅRTA', 'SAFT', 'KAFFE', 'MJÖLK', 'PANNKAKA', 'LINGON', 'POTATIS'] },
+  { id: 'natur', name: 'Natur', emoji: '🌲', words: ['SKOG', 'SJÖ', 'HAV', 'FJÄLL', 'ÄNG', 'MOSSE', 'BERG', 'STRAND', 'ÖAR', 'BÄCK', 'ÄLV', 'GRAN', 'TALL', 'BJÖRK', 'SVAMP', 'BLÅBÄR', 'VASS', 'KLIPPA'] },
+  { id: 'sport', name: 'Sport', emoji: '⚽', words: ['FOTBOLL', 'BANDY', 'GOLF', 'TENNIS', 'SIMNING', 'SLALOM', 'SKIDOR', 'JUDO', 'RIDNING', 'CURLING', 'HANDBOLL', 'SEGLING', 'BOXNING', 'LÖPNING', 'KANOT', 'DYKNING', 'HOCKEY', 'DANS'] },
+  { id: 'skola', name: 'Skolan', emoji: '🎒', words: ['LÄRARE', 'BOK', 'PENNA', 'SUDD', 'LINJAL', 'RAST', 'LÄXA', 'PROV', 'KLASS', 'MATTE', 'SLÖJD', 'GYMPA', 'MUSIK', 'BETYG', 'TAVLA', 'BÄNK', 'LUNCH', 'SVENSKA'] },
+  { id: 'hogtid', name: 'Högtider', emoji: '🎄', words: ['JUL', 'PÅSK', 'LUCIA', 'NYÅR', 'ADVENT', 'VALBORG', 'MIDSOMMAR', 'TOMTE', 'GRAN', 'KLAPP', 'SEMLA', 'ÄGG', 'PÅSKRIS', 'BRASA', 'FYRVERKERI', 'KRÄFTOR', 'NUBBE', 'LJUS'] },
+  { id: 'vader', name: 'Väder', emoji: '⛅', words: ['REGN', 'SNÖ', 'SOL', 'BLÅST', 'ÅSKA', 'DIMMA', 'HAGEL', 'STORM', 'MOLN', 'FROST', 'SKUR', 'BLIXT', 'DIS', 'RIMFROST', 'REGNBÅGE', 'VIND', 'TÖVÄDER', 'SNÖSTORM'] },
+];
+
+/* ---------- Hänga gubbe: kategori -> [ord, nivå] ---------- */
+DATA.hanga = {
+  'Djur': [['KATT', 1], ['HUND', 1], ['KANIN', 1], ['ELEFANT', 1], ['GIRAFF', 1], ['PINGVIN', 1], ['EKORRE', 1], ['DELFIN', 1],
+    ['SKÖLDPADDA', 2], ['IGELKOTT', 2], ['FJÄRIL', 2], ['FLODHÄST', 2], ['KROKODIL', 2], ['BÄVER', 2], ['NOSHÖRNING', 3], ['ORMVRÅK', 3], ['LODJUR', 3], ['SALAMANDER', 3]],
+  'Mat': [['PANNKAKA', 1], ['PIZZA', 1], ['GLASS', 1], ['POTATIS', 1], ['JORDGUBBE', 1], ['BANAN', 1],
+    ['KÖTTBULLAR', 2], ['SMÖRGÅS', 2], ['KNÄCKEBRÖD', 2], ['LINGONSYLT', 2], ['ÄRTSOPPA', 2], ['BLÅBÄRSSOPPA', 3], ['SURSTRÖMMING', 3], ['RÄKSMÖRGÅS', 3], ['PRINSESSTÅRTA', 3]],
+  'Länder': [['SVERIGE', 1], ['NORGE', 1], ['DANMARK', 1], ['FINLAND', 1], ['TYSKLAND', 1], ['SPANIEN', 1], ['ITALIEN', 1], ['JAPAN', 1],
+    ['ISLAND', 2], ['FRANKRIKE', 2], ['ÖSTERRIKE', 2], ['GREKLAND', 2], ['BRASILIEN', 2], ['AUSTRALIEN', 2], ['PORTUGAL', 2],
+    ['SCHWEIZ', 3], ['NEDERLÄNDERNA', 3], ['ARGENTINA', 3], ['KAZAKSTAN', 3]],
+  'Yrken': [['LÄRARE', 1], ['POLIS', 1], ['LÄKARE', 1], ['BAGARE', 1], ['BRANDMAN', 1], ['PILOT', 1], ['BONDE', 1],
+    ['SNICKARE', 2], ['FRISÖR', 2], ['VETERINÄR', 2], ['ELEKTRIKER', 2], ['SJUKSKÖTERSKA', 3], ['ARKITEKT', 3], ['BIBLIOTEKARIE', 3], ['JOURNALIST', 3], ['RÖRMOKARE', 3]],
+  'Sport': [['FOTBOLL', 1], ['HANDBOLL', 1], ['SIMNING', 1], ['TENNIS', 1], ['ISHOCKEY', 2], ['SLALOM', 2], ['BANDY', 2], ['INNEBANDY', 2], ['FRIIDROTT', 2],
+    ['ORIENTERING', 3], ['BROTTNING', 3], ['CURLING', 3], ['SKIDSKYTTE', 3]],
+  'Musik': [['GITARR', 1], ['PIANO', 1], ['TRUMMA', 1], ['FIOL', 1], ['FLÖJT', 2], ['DRAGSPEL', 2], ['NYCKELHARPA', 3], ['TROMBON', 3], ['KLARINETT', 3]],
+  'Natur': [['SKOG', 1], ['FJÄLL', 1], ['REGNBÅGE', 1], ['VATTENFALL', 2], ['SKÄRGÅRD', 2], ['ÅSKVÄDER', 2], ['NORRSKEN', 2], ['MYRMARK', 3], ['GLACIÄR', 3]],
+  'I hemmet': [['SOFFA', 1], ['LAMPA', 1], ['KUDDE', 1], ['SPEGEL', 1], ['KYLSKÅP', 2], ['DAMMSUGARE', 2], ['TANDBORSTE', 2], ['DISKMASKIN', 3], ['BOKHYLLA', 2], ['BRÖDROST', 3]],
+};
+
+/* ---------- Ordspråksluckan: t = ordspråk med ___, a = rätt ord, alt = godkända varianter, w = felaktiga alternativ, m = betydelse ---------- */
+DATA.ordsprak = [
+  { lvl: 1, t: 'Borta bra men hemma ___.', a: 'bäst', w: ['bra', 'mysigt', 'varmt'], m: 'Det är roligt att resa, men skönast att komma hem.' },
+  { lvl: 1, t: 'Bättre sent än ___.', a: 'aldrig', w: ['tidigt', 'snabbt', 'ofta'], m: 'Det är bättre att något blir gjort sent än inte alls.' },
+  { lvl: 1, t: 'Lagom är ___.', a: 'bäst', w: ['tråkigt', 'nog', 'svårt'], m: 'Inte för mycket och inte för lite.' },
+  { lvl: 1, t: 'Övning ger ___.', a: 'färdighet', w: ['trötthet', 'glädje', 'styrka'], m: 'Den som övar blir duktig.' },
+  { lvl: 1, t: 'Morgonstund har ___ i mund.', a: 'guld', w: ['gröt', 'sol', 'silver'], m: 'Det lönar sig att gå upp tidigt.' },
+  { lvl: 1, t: 'Det är ingen ko på ___.', a: 'isen', w: ['ängen', 'vägen', 'taket'], m: 'Det är ingen fara och ingen brådska.' },
+  { lvl: 1, t: 'Det finns inget dåligt väder, bara dåliga ___.', a: 'kläder', w: ['skor', 'paraplyer', 'dagar'], m: 'Klär du dig rätt kan du vara ute i alla väder.' },
+  { lvl: 1, t: 'Små grytor har också ___.', a: 'öron', w: ['lock', 'ögon', 'handtag'], m: 'Barn hör mer än man tror.' },
+  { lvl: 1, t: 'Tala är silver, tiga är ___.', a: 'guld', w: ['brons', 'koppar', 'järn'], m: 'Ibland är det klokare att vara tyst.' },
+  { lvl: 1, t: 'Man ska inte gråta över spilld ___.', a: 'mjölk', w: ['saft', 'soppa', 'vatten'], m: 'Det är ingen idé att sörja över det som redan har hänt.' },
+  { lvl: 1, t: '___ byggdes inte på en dag.', a: 'Rom', w: ['Paris', 'Stockholm', 'Athen'], m: 'Stora saker tar tid.' },
+  { lvl: 1, t: 'Lättare sagt än ___.', a: 'gjort', w: ['sjunget', 'skrivet', 'tänkt'], m: 'Det är lätt att prata om något men svårare att göra det.' },
+  { lvl: 2, t: 'Äpplet faller inte långt från ___.', a: 'trädet', w: ['marken', 'korgen', 'grenen'], m: 'Barn liknar ofta sina föräldrar.' },
+  { lvl: 2, t: 'Den som väntar på något gott väntar aldrig för ___.', a: 'länge', w: ['lite', 'ofta', 'sent'], m: 'Tålamod lönar sig.' },
+  { lvl: 2, t: 'Bättre en fågel i handen än tio i ___.', a: 'skogen', w: ['luften', 'boet', 'trädet'], m: 'Det säkra är bättre än det osäkra.' },
+  { lvl: 2, t: 'Man ska inte döma hunden efter ___.', a: 'håren', alt: ['håret'], w: ['svansen', 'skället', 'nosen'], m: 'Man ska inte döma någon efter utseendet.' },
+  { lvl: 2, t: 'Allt är inte guld som ___.', a: 'glimmar', alt: ['glimrar', 'glänser'], w: ['lyser', 'blänker', 'skiner'], m: 'Det som ser fint ut är inte alltid bra.' },
+  { lvl: 2, t: 'Lika barn leka ___.', a: 'bäst', w: ['mest', 'ofta', 'gärna'], m: 'De som liknar varandra trivs bra ihop.' },
+  { lvl: 2, t: 'Många bäckar små gör en stor ___.', a: 'å', w: ['sjö', 'flod', 'pöl'], m: 'Många små bidrag blir till slut mycket.' },
+  { lvl: 2, t: 'Ju fler kockar, desto sämre ___.', a: 'soppa', alt: ['soppan'], w: ['mat', 'gröt', 'sås'], m: 'När för många blandar sig i blir resultatet sämre.' },
+  { lvl: 2, t: 'Ingen rök utan ___.', a: 'eld', w: ['brand', 'vind', 'grill'], m: 'Rykten har ofta något sant i sig.' },
+  { lvl: 2, t: 'Lögnen har korta ___.', a: 'ben', w: ['armar', 'öron', 'dagar'], m: 'Lögner brukar avslöjas snart.' },
+  { lvl: 2, t: 'Gammal kärlek ___ aldrig.', a: 'rostar', w: ['glöms', 'slutar', 'försvinner'], m: 'Gamla känslor finns ofta kvar.' },
+  { lvl: 2, t: 'Man lär så länge man ___.', a: 'lever', w: ['läser', 'orkar', 'vill'], m: 'Man blir aldrig för gammal för att lära sig nytt.' },
+  { lvl: 3, t: 'Man ska inte sälja skinnet förrän ___ är skjuten.', a: 'björnen', w: ['älgen', 'räven', 'vargen'], m: 'Räkna inte med något innan det är klart.' },
+  { lvl: 3, t: 'Den som gapar efter mycket mister ofta hela ___.', a: 'stycket', w: ['kakan', 'biten', 'brödet'], m: 'Den som vill ha för mycket kan förlora allt.' },
+  { lvl: 3, t: 'Man ska inte gå över ___ efter vatten.', a: 'ån', w: ['bron', 'sjön', 'berget'], m: 'Krångla inte till det – det enkla finns ofta nära.' },
+  { lvl: 3, t: 'När katten är borta dansar ___ på bordet.', a: 'råttorna', alt: ['råttor'], w: ['mössen', 'barnen', 'hundarna'], m: 'När ingen håller koll gör man som man vill.' },
+  { lvl: 3, t: 'Bränt barn skyr ___.', a: 'elden', w: ['vattnet', 'solen', 'spisen'], m: 'Den som har gjort en dålig erfarenhet blir försiktig.' },
+  { lvl: 3, t: 'Liten tuva stjälper ofta stort ___.', a: 'lass', w: ['lager', 'träd', 'skepp'], m: 'Små saker kan få stora följder.' },
+  { lvl: 3, t: 'Även en blind höna hittar ett ___ ibland.', a: 'korn', w: ['ägg', 'frö', 'mask'], m: 'Även den som inte är så skicklig kan ha tur.' },
+  { lvl: 3, t: 'Skomakare, bliv vid din ___.', a: 'läst', w: ['sko', 'kniv', 'stol'], m: 'Håll dig till det du kan.' },
+  { lvl: 3, t: 'Ont ___ förgås inte.', a: 'krut', w: ['gräs', 'blod', 'mjöl'], m: 'Den som är seg och tålig klarar sig (sägs ofta på skämt).' },
+  { lvl: 3, t: 'Kärt barn har många ___.', a: 'namn', w: ['vänner', 'leksaker', 'kläder'], m: 'Något man tycker om får ofta många smeknamn.' },
+  { lvl: 3, t: 'Den som spar, han ___.', a: 'har', w: ['får', 'vinner', 'sparar'], m: 'Den som sparar har något när det behövs.' },
+  { lvl: 3, t: 'Tomma tunnor skramlar ___.', a: 'mest', w: ['högst', 'ofta', 'alltid'], m: 'De som kan minst pratar ofta mest.' },
+  { lvl: 3, t: 'Man ska smida medan järnet är ___.', a: 'varmt', w: ['nytt', 'hårt', 'blankt'], m: 'Passa på när tillfället finns.' },
+  { lvl: 3, t: 'Var sak har sin ___.', a: 'tid', w: ['plats', 'ägare', 'färg'], m: 'Allt ska göras när det passar.' },
+  { lvl: 3, t: 'Ändamålet helgar ___.', a: 'medlen', w: ['målet', 'pengarna', 'resultatet'], m: 'Tanken att ett gott mål ursäktar vilka metoder som helst.' },
+  { lvl: 3, t: 'Nöden har ingen ___.', a: 'lag', w: ['gräns', 'nåd', 'tid'], m: 'I en nödsituation får man göra det som krävs.' },
+];
+
+/* ---------- Vem är jag? c = ledtrådar från svår till lätt, a = godkända svar ---------- */
+DATA.vem = [
+  { id: 'v1', lvl: 1, kat: 'Djur', a: ['älg', 'älgen', 'älgar', 'älgko', 'älgtjur'], c: ['Jag kan simma långa sträckor och dyka efter vattenväxter.', 'Hanen fäller sina horn varje vinter.', 'Jag är Sveriges största landlevande däggdjur.', 'Det finns varningsskyltar för mig längs vägarna.', 'Jag kallas ofta skogens konung.'] },
+  { id: 'v2', lvl: 1, kat: 'Djur', a: ['igelkott', 'igelkotten', 'igelkottar'], c: ['Jag är mest aktiv på natten.', 'Jag äter gärna sniglar, maskar och skalbaggar.', 'Jag går i ide på vintern.', 'Jag har tusentals taggar på ryggen.', 'Jag rullar ihop mig till en taggig boll när jag blir rädd.'] },
+  { id: 'v3', lvl: 1, kat: 'Djur', a: ['isbjörn', 'isbjörnen', 'isbjörnar'], c: ['Min hud under pälsen är svart.', 'Jag kan simma i flera timmar i iskallt vatten.', 'Jag jagar främst säl.', 'Jag bor runt Nordpolen, i Arktis.', 'Jag är en stor vit björn.'] },
+  { id: 'v4', lvl: 1, kat: 'Djur', a: ['pingvin', 'pingvinen', 'pingviner', 'kejsarpingvin'], c: ['Jag lever nästan bara på södra halvklotet.', 'Kejsarpingvinen är den största arten av mig.', 'Jag kan inte flyga men simmar mycket snabbt.', 'Jag ser ut att ha på mig frack.', 'Jag är en svartvit fågel som vaggar fram på isen.'] },
+  { id: 'v5', lvl: 1, kat: 'Djur', a: ['giraff', 'giraffen', 'giraffer'], c: ['Min tunga är mörk och ungefär en halv meter lång.', 'Jag har sju halskotor – lika många som en människa.', 'Jag äter gärna löv från akaciaträd.', 'Jag bor på savannen i Afrika.', 'Jag är världens högsta djur, med en väldigt lång hals.'] },
+  { id: 'v6', lvl: 1, kat: 'Mat', a: ['banan', 'bananen', 'bananer'], c: ['Botaniskt räknas jag som ett bär.', 'Jag växer i stora klasar på en jätteört.', 'Många av mig som säljs i Sverige kommer från Ecuador och Colombia.', 'Apor i serier äter ofta mig.', 'Jag är en gul, böjd frukt som man skalar.'] },
+  { id: 'v7', lvl: 1, kat: 'Sak', a: ['paraply', 'paraplyet', 'paraplyer', 'parasoll'], c: ['Jag har ofta ekrar av metall.', 'Jag kan vara hopfällbar och få plats i en väska.', 'Jag har ett handtag, ofta böjt som en krok.', 'Man spänner upp mig över huvudet.', 'Jag skyddar dig mot regnet.'] },
+  { id: 'v8', lvl: 1, kat: 'Sak', a: ['cykel', 'cykeln', 'cyklar', 'velociped'], c: ['Jag har ofta en kedja.', 'Jag kan ha en ringklocka och en pakethållare.', 'Man ska ha hjälm när man använder mig.', 'Jag har pedaler och styre.', 'Jag har två hjul och man trampar för att åka.'] },
+  { id: 'v9', lvl: 1, kat: 'Sak', a: ['snögubbe', 'snögubben', 'snögubbar', 'snögumma'], c: ['Jag har ofta kol eller stenar som ögon.', 'Jag kan ha en hink eller mössa på huvudet.', 'Jag har ofta en morot som näsa.', 'Jag smälter när det blir varmt.', 'Barn bygger mig av snöbollar på vintern.'] },
+  { id: 'v10', lvl: 1, kat: 'Plats', a: ['månen', 'måne', 'mån'], c: ['Jag påverkar tidvattnet i haven.', 'Jag har inget eget ljus – jag lyser med solens ljus.', 'Neil Armstrong gick på mig 1969.', 'Jag kan vara full, halv eller ny.', 'Jag syns på natthimlen och kretsar runt jorden.'] },
+  { id: 'v11', lvl: 2, kat: 'Plats', a: ['gotland', 'gotlands'], c: ['Raukar står längs mina stränder.', 'Färjor går hit från Nynäshamn och Oskarshamn.', 'Här firas Medeltidsveckan varje sommar.', 'Min största stad, Visby, har en ringmur från medeltiden.', 'Jag är Sveriges största ö.'] },
+  { id: 'v12', lvl: 2, kat: 'Person', a: ['pippi', 'pippi långstrump', 'långstrump'], c: ['Min pappa är kung på en ö i Söderhavet.', 'Jag har en väska full med guldpengar.', 'Min apa heter Herr Nilsson.', 'Jag bor i Villa Villekulla med min häst.', 'Jag är världens starkaste flicka och har röda flätor.'] },
+  { id: 'v13', lvl: 2, kat: 'Plats', a: ['eiffeltornet', 'eiffeltorn', 'eiffel tower', 'eiffel'], c: ['Jag byggdes till världsutställningen 1889.', 'Jag målas om ungefär vart sjunde år.', 'Jag är byggd av järn och är ungefär 330 meter hög.', 'Jag är uppkallad efter ingenjören Gustave Eiffel.', 'Jag är ett berömt torn i Paris.'] },
+  { id: 'v14', lvl: 2, kat: 'Plats', a: ['stockholm', 'sthlm'], c: ['Jag är byggd på fjorton öar.', 'Nobelfesten hålls i mitt stadshus.', 'Gamla stan är min äldsta del.', 'Kungliga slottet ligger här.', 'Jag är Sveriges huvudstad.'] },
+  { id: 'v15', lvl: 2, kat: 'Mat', a: ['kanelbulle', 'kanelbullen', 'kanelbullar', 'bulle'], c: ['Jag har en egen dag den 4 oktober.', 'Det finns ofta kardemumma i min deg.', 'Pärlsocker strös ofta över mig.', 'Jag är vriden och har en fyllning av smör, socker och kanel.', 'Jag är Sveriges populäraste fikabröd.'] },
+  { id: 'v16', lvl: 2, kat: 'Person', a: ['lucia', 'sankta lucia', 'lucian', 'luciatåget'], c: ['Enligt legenden kom jag från Syrakusa på Sicilien.', 'Jag går först i ett tåg med tärnor, stjärngossar och tomtar.', 'Jag bär vit särk och ett rött band om midjan.', 'Jag har en krona med ljus på huvudet.', 'Jag firas den 13 december.'] },
+  { id: 'v17', lvl: 2, kat: 'Sak', a: ['dalahäst', 'dalahästen', 'dalahästar', 'dalahast'], c: ['Jag tillverkas bland annat i Nusnäs.', 'Jag är snidad i trä.', 'Jag är ofta röd med kurbitsmålning.', 'Jag kommer från Dalarna.', 'Jag är en berömd svensk trähäst.'] },
+  { id: 'v18', lvl: 2, kat: 'Person', a: ['zlatan', 'zlatan ibrahimović', 'zlatan ibrahimovic', 'ibrahimović', 'ibrahimovic'], c: ['Jag växte upp i Rosengård i Malmö.', 'Jag har spelat för bland annat Ajax, Juventus och Milan.', 'Jag är herrlandslagets främste målskytt genom tiderna.', 'Jag gjorde ett berömt cykelsparksmål mot England 2012.', 'Jag är en svensk fotbollsstjärna som ofta kallas bara vid förnamnet.'] },
+  { id: 'v19', lvl: 2, kat: 'Person', a: ['astrid lindgren', 'lindgren', 'astrid'], c: ['Jag föddes 1907 på gården Näs vid Vimmerby.', 'Jag arbetade som sekreterare innan jag blev känd.', 'Jag skrev om Ronja Rövardotter och Mio.', 'Jag skrev om Emil i Lönneberga.', 'Jag skapade Pippi Långstrump.'] },
+  { id: 'v20', lvl: 3, kat: 'Person', a: ['alfred nobel', 'nobel'], c: ['Jag föddes i Stockholm 1833.', 'Jag hade fler än 350 patent.', 'Jag ägde vapenfabriken Bofors.', 'Jag uppfann dynamiten.', 'Ett berömt pris bär mitt namn.'] },
+  { id: 'v21', lvl: 3, kat: 'Person', a: ['greta thunberg', 'thunberg', 'greta'], c: ['Jag föddes i Stockholm 2003.', 'Jag seglade över Atlanten till ett klimatmöte i New York 2019.', 'Tidskriften Time utsåg mig till Årets person 2019.', 'Jag började skolstrejka för klimatet utanför riksdagen 2018.', 'Jag är en känd svensk klimataktivist.'] },
+  { id: 'v22', lvl: 3, kat: 'Person', a: ['carl von linné', 'linné', 'carl linnaeus', 'linnaeus', 'carl linné', 'carl von linne'], c: ['Jag föddes 1707 i Råshult i Småland.', 'Jag reste till Lappland 1732.', 'Jag var professor i Uppsala.', 'Jag kallas ibland ”Blomsterkungen”.', 'Jag införde systemet med två latinska namn för växter och djur.'] },
+  { id: 'v23', lvl: 3, kat: 'Plats', a: ['kebnekaise', 'kebne'], c: ['Min sydtopp var länge högst, men den krymper när glaciären smälter.', 'Jag ligger i Kiruna kommun.', 'Vid min fot finns en fjällstation.', 'Jag är drygt 2 000 meter hög.', 'Jag är Sveriges högsta berg.'] },
+  { id: 'v24', lvl: 3, kat: 'Grupp', a: ['abba'], c: ['Vi gjorde comeback med albumet ”Voyage” 2021.', 'Musikalen ”Mamma Mia!” bygger på våra låtar.', 'Två av oss heter Björn och Benny.', 'Vi vann Eurovision 1974 med ”Waterloo”.', 'Vi är Sveriges mest kända popgrupp, med fyra medlemmar.'] },
+  { id: 'v25', lvl: 3, kat: 'Person', a: ['selma lagerlöf', 'lagerlöf', 'selma'], c: ['Jag växte upp på Mårbacka i Värmland.', 'Jag var den första kvinnan i Svenska Akademien.', 'Jag skrev ”Gösta Berlings saga”.', 'Jag fick Nobelpriset i litteratur 1909.', 'Jag skrev om Nils Holgersson och hans resa med vildgässen.'] },
+  { id: 'v26', lvl: 3, kat: 'Händelse', a: ['vasaloppet', 'vasalopp'], c: ['Jag hölls första gången 1922.', 'Vid målet står det ”I fäders spår för framtids segrar”.', 'Jag är ungefär 90 kilometer långt.', 'Starten går i Sälen och målet ligger i Mora.', 'Jag är världens mest kända långlopp på skidor.'] },
+  { id: 'v27', lvl: 3, kat: 'Person', a: ['ingvar kamprad', 'kamprad', 'ingvar'], c: ['Jag föddes 1926 i Småland.', 'Som barn sålde jag tändstickor till grannarna.', 'Två bokstäver i mitt företagsnamn kommer från gården Elmtaryd och byn Agunnaryd.', 'Mina initialer finns i ett världsberömt företagsnamn.', 'Jag grundade IKEA.'] },
+];
+
+</script>
+<script>
+/* ==== js/ordlista.js ==== */
+/* ORDAGRANT – ordlistor för Dagens ord.
+   GISSNINGAR: svenska ord med 5 bokstäver, hämtade ur Hunspell-ordlistan sv_SE (LibreOffice, LGPL/MPL)
+   samt ordformer ur en svensk frekvenslista, kontrollerade mot samma ordlista. SVAR: handplockade vanliga ord. */
+window.ORDLISTA = {
+  svar: ["ÄPPLE", "BJÖRN", "SKOLA", "FÅGEL", "GLASS", "BULLE", "HÄLSA", "KAFFE", "HUVUD", "VÄRLD", "STARK", "ÄLSKA", "MUSIK", "LUNCH", "MÅNAD", "TANKE", "BYGGA", "FLYGA", "TUSEN", "SKEPP", "LISTA", "RÄKNA", "KRAFT", "GRUPP", "ÅLDER", "POÄNG", "ÖPPEN", "ROLIG", "ORSAK", "MINNE", "FRISK", "MOBIL", "DATOR", "TRYCK", "VAKEN", "SAKTA", "SNABB", "KLASS", "VÄSKA", "SAKNA", "SAMLA", "MATCH", "SPARA", "PACKA", "VUXEN", "SPRÅK", "STYRA", "FAKTA", "ENKEL", "MODIG", "LEDIG", "MÄRKE", "PRINS", "MJÖLK", "TUNGA", "PUNKT", "TJUGO", "SIMMA", "TRÄNA", "PIZZA", "RADIO", "BYXOR", "GODIS", "LÖFTE", "ÄNGEL", "KÄLLA", "SEGER", "PAKET", "SPÖKE", "REGEL", "BAKÅT", "TORKA", "JACKA", "KYRKA", "PENNA", "KARTA", "DRAKE", "VIDEO", "STORM", "HUMOR", "BANAN", "CYKEL", "BETYG", "TÅRTA", "KANIN", "RUNDA", "SPORT", "RÅTTA", "PILOT", "DUSCH", "FRUKT", "ROBOT", "LEJON", "STUGA", "VÄDER", "VÄRME", "KLIVA", "SLOTT", "KNAPP", "BINGO", "FISKA", "SUGEN", "BLIXT", "FROST", "HAGEL", "DIMMA", "SVAMP", "ROSOR", "UGGLA", "ZEBRA", "TIGER", "PANDA", "KOALA", "GRODA", "MYGGA", "HUMLA", "MÖSSA", "VANTE", "TRÖJA", "PASTA", "SOPPA", "TACOS", "KAKOR", "JUICE", "MELON", "PÄRON", "MANGO", "DRUVA", "KROPP", "DANSA", "SPELA", "SEGLA", "HOPPA", "GUNGA", "SKIDA", "PULKA", "SNÄLL", "TRÖTT", "STOLT", "ÄRLIG", "LYCKA", "TRYGG", "DOCKA", "RAKET", "BUTIK", "AFFÄR", "BRUNN", "BACKE", "FJÄLL", "VECKA", "TIMME", "MINUT", "APRIL", "KVÄLL", "PIANO", "FLÖJT", "KONST", "SAGOR", "LAMPA", "SOFFA", "KUDDE", "TÄCKE", "HYLLA", "TAVLA", "DISKA", "STÄDA", "TVÄTT", "KANNA", "PANNA", "GRYTA", "SKÄRM", "HJÄLP", "FRÅGA", "CHANS", "PLATS", "BÖRJA", "ÖPPNA", "VINNA", "KUSIN", "SLÄKT", "KLUBB", "START", "NATUR", "TÄVLA", "VINST", "DATUM", "KANAL", "SKATT", "KVART", "ROMAN", "HJORT", "KOSSA", "ANKOR", "KRÅKA", "SVALA", "TRAST", "PIRAT", "SEGEL", "KANOT", "SPADE", "KANEL", "GURKA", "TOMAT", "MOROT", "BÖNOR", "ÄRTOR", "KAKAO"],
+  gissningar: 'ABBOT ABORT ABSID ACCIS ACKJA ADELN ADEPT ADLIG ADULT AEROB AFASI AFFIN AFFIX AFFÄR AFTON AGAPE AGAVE AGENS AGENT AGERA AGMYR AGONI AGRAR AIOLI AJOUR AJÖSS AKRYL AKTAD AKTAR AKTEN AKTER AKTIE AKTIV AKTRA AKTRE AKTÖR AKUTA ALARM ALBAN ALBUM ALERT ALEXI ALFAN ALGER ALIAS ALIBI ALIKA ALKIS ALKOV ALLAS ALLOM ALLRA ALPBY ALPIN ALROT ALTAN ALTAR ALTER ALUMN ALVER AMBRA AMMAN AMMAR AMORF AMOUR AMPEL AMPER AMÖBA ANADE ANBUD ANDAN ANDAR ANDAS ANDEL ANDEN ANDES ANDRA ANDRE ANEMI ANFÖR ANGAV ANGER ANGES ANGLA ANGÅR ANIME ANING ANKAN ANKAR ANKEL ANKOR ANKRA ANLAG ANMÄL ANNAN ANNAT ANNEX ANOMI ANRIK ANROP ANSAR ANSER ANSES ANSLÅ ANSTÅ ANSÅG ANTAG ANTAL ANTAR ANTAS ANTIK ANTOG AORTA APANS APART APATI APBRA APBUR APDYR APFUL APHUS APPAR APPEN APRIL APTIT AREAL ARENA ARGON ARIER ARISK ARKAD ARKEN ARKIV ARMAR ARMEN ARMOD ARRAK ARTAR ARTEN ARTER ARTIG ARTON ARTÄR ARVET ASBRA ASDYR ASFET ASFIN ASFUL ASGAM ASGOD ASHÖG ASIAT ASKAN ASKAR ASKEN ASKES ASKET ASKUL ASONT ASPEN ASSÖT ASTER ASTMA ATAXI ATLAS ATLET ATOLL ATONI ATTAN ATYPI AULAN AVANS AVART AVBÖN AVDÖD AVDÖM AVENY AVGAS AVGAV AVGER AVGUD AVGÅR AVGÖR AVIGA AVISA AVKLÄ AVKOK AVLAD AVLAR AVLAT AVLED AVROP AVSER AVSKY AVSLÅ AVSTÅ AVSÅG AVTAL AVTAR AVTOG AVTÅG AVUND AVVEK AVÄTA AVÄTS AXELN AXIAL AXIOM AXLAR AZTEK BABYN BACKA BACKE BACON BADAR BADAT BADDA BADEN BADET BAGAR BAGEL BAGEN BAGGE BAGIS BAHAI BAJSA BAKAD BAKAR BAKAT BAKEN BAKIS BAKOM BAKPÅ BAKRE BAKUT BAKÅT BALEN BALER BALJA BALLA BALLE BALLT BAMBU BAMSE BANAL BANAN BANAR BANCO BANDA BANDS BANDY BANER BANGA BANJO BANKA BANKO BANKS BANNA BANNE BANOR BANTA BAREN BARER BARKA BARNS BARON BARRA BARSK BASAL BASAR BASEN BASER BASIS BASTA BASTU BASUN BASÅR BATIK BAXNA BEACH BEATS BEBBE BEBIS BEBOP BECKS BEDER BEDJA BEDRA BEDÖM BEFÄL BEGAV BEGER BEGÄR BEGÅR BEGÅS BEHAG BEHOV BEHÅN BEIGE BEIGT BEKLÄ BEKOM BELAG BENEN BENET BENIG BENSO BERED BEROR BERSÅ BERÅD BERÖM BERÖR BESKA BESLÅ BESTÅ BESÖK BETAR BETER BETET BETOG BETRO BETSA BETYG BEVIS BEVÅG BIBBA BIBEL BIDAL BIDAR BIDRA BIHUS BIKTA BILAR BILDA BILEN BILKÖ BIMBO BINDA BINGE BINGO BINOM BINÄR BIOKÖ BIRAS BISAK BISON BISTÅ BITAR BITAS BITCH BITEN BITER BITIT BITNA BITON BITSK BITTI BIVAX BIYTA BJUDA BJUDS BJÄBB BJÄFS BJÄRT BJÖDS BJÖRK BJÖRN BLACK BLAHA BLAND BLANK BLASK BLAST BLECK BLEKA BLEKT BLICK BLIDA BLIGA BLIND BLING BLINI BLINK BLINT BLIPP BLIVA BLIXT BLOCK BLODA BLOGG BLOND BLONT BLOSS BLOTT BLUES BLUFF BLUND BLYGA BLYGD BLÄCK BLÄNK BLÅNA BLÅSA BLÅST BLÅTT BLÖDA BLÖJA BLÖTA BLÖTT BOARD BOBIN BOCKA BODDE BODEN BOETT BOGEY BOGGI BOHAG BOHEM BOJAN BOJAR BOJEN BOJOR BOKAD BOKAR BOKAT BOKEN BOKÅR BOLAG BOLLA BOLMA BOLÅN BOMBA BOMMA BONAD BONDE BONUS BOOMA BOOMS BOOST BOOTA BOOTS BORAX BORDA BORDE BORDS BOREN BORGA BORRA BORST BORTA BOTAD BOTAR BOTAS BOTAT BOTEN BOTOX BOULE BOVAR BOVEN BOWLA BOXAS BOXEN BOXER BOYTA BRAGD BRAGT BRAJA BRAKA BRAND BRANN BRANT BRASA BRASS BRAST BRATS BRAVO BREAK BREDA BREDD BRETT BRIGG BRINK BRINN BRIST BRITS BRITT BROAR BRODD BROMS BRONS BRORS BROSK BROTT BRUKA BRUNA BRUNN BRUNT BRUSA BRYDD BRYGD BRYNA BRYSK BRYTA BRYTS BRYTT BRÄDA BRÄDD BRÄDE BRÄKA BRÄND BRÄNN BRÄNT BRÄSS BRÅCK BRÅKA BRÅTE BRÅTT BRÖLA BRÖST BRÖTS BUDEN BUDET BUFFA BUGAR BUGGA BUKEN BUKIG BUKTA BULAN BULLA BULLE BULOR BULTA BUMPA BUNKE BUNTA BURAR BURAS BURAT BUREN BURIT BURKA BUROP BURQA BURRA BUSAR BUSEN BUSHS BUSIG BUSKE BUSSA BUTAN BUTIK BYBOR BYDEL BYGEL BYGGA BYGGD BYGGE BYGGS BYGGT BYLTA BYLTE BYRÅD BYRÅN BYTAS BYTEN BYTER BYTET BYTTA BYTTE BYTTS BYVÄG BYXAN BYXIS BYXOR BÄBIS BÄDDA BÄDDS BÄGGE BÄLGA BÄLTA BÄLTE BÄNDA BÄNKA BÄRAS BÄREN BÄRGA BÄRIG BÄRSA BÄSTA BÄSTE BÄVAR BÄVER BÅDAR BÅDAS BÅGAR BÅGEN BÅGIG BÅGNA BÅLEN BÅLET BÅREN BÅSEN BÅSET BÅTAR BÅTEN BÖDEL BÖJDA BÖJDE BÖJER BÖKIG BÖLJA BÖNAN BÖNAR BÖNEN BÖNER BÖNOR BÖRDA BÖRJA BÖSSA BÖTER BÖVEL CACHE CAJUN CAMEO CAMPA CANTO CARTE CEDER CELLI CELLO CELLS CENTS CERAT CHANS CHARK CHARM CHATT CHECK CHEFA CHEFS CHICA CHICK CHILI CHILL CHIPP CHIPS CHOCK CHOKA CHOKE CHUCK CIDER CILIE CIRKA CITAT CITYS CIVIL CLIPS CLOWN COACH COOLA COOLT COVER CRACK CRAWL CRAZY CREDO CROSS CULPA CUPEN CURLA CURRY CYKEL CYKLA CYSTA DABBA DADDA DADEL DAGAR DAGEN DAGER DAGIS DALAR DALEN DALER DALTA DAMEN DAMER DAMIG DAMMA DAMPA DANAS DANDY DANSA DANSK DARRA DASKA DATAS DATIV DATJA DATOR DATUM DEBET DEBIL DEBUT DEFFA DEGEL DEGEN DEGIG DEISM DEIST DEJTA DEKAD DEKAL DEKAN DEKIS DEKOR DELAD DELAR DELAS DELAT DELEN DELGE DELTA DEMON DENIM DENNA DENNE DEPPA DEPÅN DERAS DERBY DESSA DESTO DETTA DEVIS DEVOT DIFFA DIGER DIGGA DIGNA DIKEN DIKET DIKTA DILDO DILLA DILLE DIMMA DIMPA DINAR DINGO DIPPA DISCO DISIG DISKA DISKO DISSA DITIN DITÅT DIVAN DIVIG DIXIE DJINN DJONK DJUPA DJUPE DJUPT DJURS DJÄRV DOBBS DOCKA DOFTA DOJOR DOLDA DOLDE DOLMA DOLME DOLSK DOLUS DOMAR DOMEN DOMER DOMNA DOMÄN DONNA DOPAD DOPET DOPPA DOSEN DOSER DRACK DRAFT DRAGA DRAGG DRAKE DRAMA DRAPA DREJA DRESS DREVA DREVS DRICK DRIFT DRILL DRINK DRIVA DRIVE DRIVS DROGA DROGS DRONT DROPP DRUID DRUVA DRYAD DRYCK DRYGA DRYGT DRYPA DRÄGG DRÄKT DRÄLL DRÄNG DRÄNK DRÄPA DRÄPT DRÅSA DRÖJA DRÖJT DRÖMT DRÖNA DRÖSA DUBBA DUCKA DUELL DUETT DUGER DUGGA DUKAD DUKAR DUKAT DUKEN DUMAN DUMMA DUMME DUMMY DUMPA DUNGE DUNIG DUNKA DUNSA DUNST DURRA DUSCH DUSÖR DUTTA DUVAN DUVOR DVALA DVÄRG DYGNA DYKER DYLIK DYNGA DYPÖL DYRKA DYVÅT DÄCKA DÄDAN DÄMMA DÄMME DÄMPA DÄNGA DÄRAN DÄRAV DÄROM DÄRPÅ DÄRUR DÄRÅT DÄVEN DÄVNA DÄXEL DÅDET DÅLIG DÅRAR DÅREN DÅSIG DÅTID DÖDAD DÖDAR DÖDAS DÖDAT DÖDEN DÖDES DÖING DÖLJA DÖLJS DÖMAS DÖMDA DÖMDE DÖMER DÖMTS DÖPAS DÖPER DÖPTA DÖPTE DÖTID EAGLE EARLS EBOLA EDENS EDIKT EFTER EGGAR EGGEN EHURU EJDER EKFAT EKLUT EKLÖV EKOBY EKOXE EKSEM ELAKA ELAKE ELAKT ELBAS ELBIL ELBÅT ELDAR ELDEN ELDIG ELEGI ELFEL ELFTE ELLER ELLOK ELNÄT ELOGE ELRÖR ELTÅG ELUGN ELVÄG EMALJ EMFAS EMOJI EMPIR ENADE ENATS ENBÄR ENDIV ENFAS ENHET ENIGA ENKEL ENKLA ENKOM ENKÄT ENORM ENRIS ENRUM ENSAK ENSAM ENTAL ENVAR ENVIG ENVIS ENZYM ENÖGD EOCEN EPISK EPOXI ERFAR ERFOR ESPRI ESSAY ESSEN ESSET ESTER ESTET ETAGE ETAPP ETERN ETISK ETTAN ETTER ETTOR EVENT EVIGA EVIGE EVIGT EXAKT EXFRU EXMAN EXMÄN EXTAS EXTRA FABEL FACIL FACIT FACTO FADER FADÄS FAGER FAGRA FAKIR FAKTA FALLA FALLS FALNA FALSA FALSK FAMLA FAMNA FAMÖS FANAN FANER FANNS FANOR FARAN FARAO FAREN FARIN FARIT FARMA FARMS FAROR FARSA FARSI FASAD FASAN FASAR FASAT FASEN FASER FASON FASOR FASTA FATAL FATEN FATET FATTA FATWA FATÖL FAUNA FAVVO FAVÖR FAXAR FAXEN FAXET FEBER FEGAR FEGIS FEJKA FEKAL FELAR FELAS FELAT FELEN FELET FEMMA FEMTE FEMTI FENOL FENOR FENYL FERIE FESTA FETAD FETAL FETMA FIBER FIBRO FICKA FIFTY FIGHT FIGUR FIKAR FIKET FIKON FIKUS FILEA FILEN FILER FILMA FILMS FILTA FILUR FIMPA FINAL FINGE FINKA FINNA FINNE FINNS FINSK FINTA FINÖL FIRAR FIRAS FIRAT FIRMA FIRRE FISAR FISER FISIG FISIT FISKA FISKE FIXAD FIXAR FIXAS FIXAT FJANT FJORD FJUTT FJÄLL FJÄRA FJÄRD FJÄRE FJÄRT FJÄSK FLABB FLACK FLAGA FLAGG FLAMS FLANE FLANK FLARN FLATA FLAXA FLERA FLEST FLEXA FLIKA FLINA FLINK FLINT FLIRT FLISA FLOCK FLOPP FLORA FLOTT FLUFF FLUGA FLUKT FLUOR FLUSH FLUSS FLYDD FLYER FLYGA FLYGS FLYKT FLYNA FLYTA FLYTT FLÄCK FLÄKA FLÄKT FLÄMT FLÄNS FLÄRD FLÄRP FLÄSK FLÄTA FLÅSA FLÖDA FLÖDE FLÖGS FLÖJT FLÖRT FLÖTE FNASA FNATT FNISS FNYSA FOCKA FODER FODRA FOGAR FOGDE FOKAL FOKUS FOLIE FOLIO FOLKS FONEM FORCE FORMA FORNA FORSA FORTA FORUM FOTAD FOTAR FOTEN FOTON FOTOT FRACK FRAKT FRANC FRANK FRANS FRASA FREAK FREDA FREDS FREON FRESK FRETT FRIAD FRIAR FRIAS FRIAT FRIGE FRISK FRIST FRITA FRITT FRIÅR FROMT FRONT FROST FRUAR FRUGA FRUKT FRUNS FRYNA FRYSA FRYST FRÄCK FRÄLS FRÄNT FRÄSA FRÄTA FRÅGA FRÖET FRÖJD FRÖNA FRÖSÅ FUCKA FUDGE FUKTA FULLA FULLO FULLT FULÖL FUMLA FUNKA FUNNA FUNNE FURIE FURIR FURST FUSKA FUTIL FUTTA FYLKA FYLKE FYLLA FYLLD FYLLO FYLLS FYLLT FYNDA FYRAN FYRAR FYRAT FYREN FYROP FYROR FYRTI FYSIK FÄBOD FÄDER FÄFOT FÄGNA FÄHUS FÄKTA FÄLAD FÄLLA FÄLLD FÄLLE FÄLLS FÄLLT FÄRDE FÄRGA FÄRJA FÄRLA FÄRRE FÄRSK FÄSTA FÄSTE FÅGEL FÅLLA FÅNAR FÅNEN FÅNGA FÅNGE FÅNGÖ FÅNIG FÅRAD FÅREN FÅRET FÅRIG FÅTAL FÖDAN FÖDAS FÖDDA FÖDDE FÖDER FÖLJA FÖLJD FÖLJE FÖLJS FÖLJT FÖRAR FÖRAS FÖRBI FÖRDA FÖRDE FÖREN FÖRGÅ FÖRMÅ FÖRNA FÖRRA FÖRRE FÖRSE FÖRST FÖRTA FÖRTI FÖRTS FÖRTY FÖRUT FÖRÅT FÖSER FÖSTE FÖTTS GADDA GAGGA GAGNA GALAN GALAX GALEJ GALEN GALET GALGE GALIT GALLA GALNA GALNE GALON GALVA GALÄR GAMAR GAMBA GAMEN GAMES GAMET GAMLA GAMLE GAMMA GAPAR GAPET GAPIG GARAM GARDE GARVA GASAD GASAR GASEN GASER GASIG GASKA GASOL GASSA GASTA GATAN GATEN GATES GATOR GAVEL GEBIT GECKO GEGGA GEHÖR GEIST GELEA GEMAK GEMEN GEMYT GEMÅL GENAR GENEN GENER GENES GENIE GENOM GENRE GENTA GENUS GETEN GETTO GETTS GEVÄR GIFTA GIFTE GIGET GILLA GILLE GILLS GILLT GINGE GINST GIPPA GIPSA GIPYR GIRAR GIRIG GISSA GITTA GITTE GIVAR GIVEN GIVER GIVET GIVIT GIVNA GJORD GJORT GJUSE GJUTA GLADA GLADD GLADE GLANS GLAPP GLASA GLASS GLATT GLESA GLIDA GLIMT GLIOM GLIPA GLOSA GLUGG GLUPA GLUTT GLYTT GLÄDS GLÄFS GLÄNT GLÖDA GLÖGG GLÖMD GLÖMS GLÖMT GNABB GNAGA GNAGT GNATA GNEJS GNETA GNIDA GNOLA GNÄGG GNÄLL GNÖLA GODAN GODAS GODIS GODTA GOLAR GOLFA GOLVA GONAD GORMA GOSIG GOSSE GOTEN GOTER GOTIK GOTTA GOUDA GRAAL GRABB GRACE GRAMS GRAND GRANN GRANT GRAVA GRAVT GREEN GREJA GRENA GREPP GREPS GREVE GRIFT GRILL GRINA GRIND GRIPA GRIPS GRISA GRODA GRODD GROGG GROLL GROSS GROTT GROVA GROVE GROVT GRUFF GRUMS GRUND GRUNT GRUPP GRUSA GRUVA GRYMT GRYTA GRÄLA GRÄLL GRÄMA GRÄND GRÄNG GRÄNS GRÄVA GRÄVT GRÅAL GRÅBO GRÅNA GRÅTA GRÅTT GRÖDA GRÖNA GRÖNT GRÖPA GRÖTA GUANO GUAVA GUBBE GUBBS GUDAR GUDEN GUDOM GUIDA GUIDE GULLA GULNA GUMMA GUMMI GUMSE GUNGA GUNST GUPPA GUPPY GURKA GURUN GUTEN GUTÅR GYLTA GYMMA GYMPA GYNNA GÄCKA GÄDDA GÄLAR GÄLDA GÄLLA GÄLLT GÄNGA GÄRDA GÄRDE GÄRNA GÄSPA GÄSTA GÅNGS GÅSEN GÅTAN GÅTOR GÅVAN GÅVOR GÖDER GÖKAR GÖKBO GÖKUR GÖMDA GÖMDE GÖMMA GÖMME GÖRAS HABIL HACKA HADES HAFFA HAFSA HAGEL HAGEN HAGGA HAGLA HAIKU HAJAR HAJEN HAJKA HAJPA HAKAN HAKAR HAKAT HAKEN HAKET HAKIG HALAL HALKA HALLÅ HALSA HALTA HALTE HALVA HALVT HALVÖ HAMBO HAMNA HAMPA HAMRA HANAR HANDS HANEN HANKA HANNE HARAR HAREM HAREN HARIG HARMA HARPA HARTS HARVA HASCH HASPA HASTA HATAD HATAR HATAT HATET HATTA HAVEN HAVER HAVET HAVRE HEAVY HEDEN HEDER HEDRA HEJAR HEJDA HEJDÅ HEJIG HEKTO HELAD HELAN HELAR HELAS HELAT HELGA HELGD HELIG HELIX HELST HELÅR HEMBY HEMMA HEMSK HEMUL HEMÅT HENNA HENNE HERDE HERRE HERRN HERTZ HETAT HETER HETSA HETTA HETTE HETÄR HICKA HIJAB HIMLA HINDI HINDU HINKA HINNA HINNS HINTA HIPPA HISNA HISSA HITIN HITOM HITTA HITÅT HJORD HJORT HJULA HJULS HJÄLM HJÄLP HOBBY HOJAR HOJEN HOJTA HOKUS HOLKA HOLME HONAN HONOM HONOR HOOKS HOPAD HOPAR HOPER HOPPA HOPPS HOSOR HOSTA HOTAD HOTAR HOTAS HOTAT HOTEN HOTET HOTTA HOUSE HOVAR HOVET HOVRA HSDPA HSUPA HUBOT HUDEN HUGAD HUGGA HUGGS HUKAR HULKA HUMAN HUMLA HUMLE HUMMA HUMOR HUMÖR HUNDS HUNSA HURRA HURSÅ HURTS HUSAN HUSAR HUSEN HUSET HUSSE HUVAN HUVEN HUVOR HUVUD HYDDA HYDRA HYENA HYFSA HYGGE HYLLA HYLLE HYLSA HYMEN HYMLA HYNDA HYRAN HYRDA HYRDE HYROR HYSCH HYSER HYSKA HYSTA HYSTE HYTTA HYVEL HYVLA HÄCKA HÄDAN HÄDAR HÄFTA HÄFTE HÄGER HÄGNA HÄGRA HÄKTA HÄKTE HÄLAR HÄLEN HÄLFT HÄLLA HÄLLT HÄLSA HÄLTA HÄMMA HÄMNA HÄMND HÄMTA HÄNDA HÄNDE HÄNGA HÄNGD HÄNGE HÄNGS HÄNGT HÄPEN HÄPNA HÄRAD HÄRAV HÄRDA HÄREN HÄRJA HÄRMA HÄROM HÄRPÅ HÄRUR HÄRVA HÄRÅT HÄTSK HÄTTA HÄVDA HÄVDE HÄVER HÄXAN HÄXAS HÄXOR HÅGAD HÅKEN HÅLAN HÅLAR HÅLEN HÅLET HÅLIG HÅLLA HÅLLS HÅLOR HÅNAD HÅNAR HÅNLE HÅRDA HÅREN HÅRET HÅRIG HÅRÖM HÅVAR HÖBAL HÖFTA HÖGAN HÖGAR HÖGEN HÖGER HÖGGS HÖGRA HÖGRE HÖGST HÖJAS HÖJDA HÖJDE HÖJER HÖJTS HÖKAR HÖKEN HÖLJA HÖLJE HÖLLS HÖNAN HÖNOR HÖNÄT HÖRAS HÖRDA HÖRDE HÖRDU HÖRNA HÖRRU HÖRTS HÖSTA HÖTTA HÖVAN ICING IDDES IDEAL IDIOM IDIOT IDKAR IDYLL IFALL IFATT IFJOL IFJOR IFRED IFRÅN IFÖRA IFÖRD IGLAR IGLOO IGÅNG IHJÄL IKAPP IKULL ILAND ILBUD ILLER ILSKA ILSKT IMAGE IMAGO IMFRI IMMIG IMMUN IMPAD IMRÖR INATT INBOX INCEL INDEX INDIE INERT INFAM INFIX INFON INFÖR INGEN INGER INGET INGÅR INKÖP INLED INLÅN INNAN INNER INPUT INRIM INROP INSER INSJÖ INSUG INSYN INSÅG INTAG INTAR INTET INTIM INTOG INTRO INTYG INTÅG INUIT INUTI INVAL INVID INVIT INÄGA INÖVA IRISK IRONI IRRAR ISBAD ISBIT ISBLÅ ISDÖS ISFRI ISGRÅ ISHAV ISKUB ISLAG ISLAM ISPIK ISSJÖ ISTER ISTID ISVAK ISVÄG ISYDD ISYTA ISYXA ISÄLV ITUTA IVRAR IVRIG JABBA JACKA JAGAD JAGAR JAGAS JAGAT JAGET JAMAR JAMEN JAMMA JAMSA JAPAN JAZZA JEANS JENKA JEPPE JIHAD JIPPI JIPPO JOBBA JOGGA JOINT JOJKA JOKER JOLLE JORDA JOULE JOXIG JUBEL JUBLA JUCKA JUDAR JUDEN JUDES JUICE JULAR JULAS JULEN JULIG JULÖL JUMBO JUNTA JURIS JURTA JURYN JUSTA JUSTE JUVEL JUVER JYCKE JYMPA JÄDRA JÄKEL JÄKLA JÄKTA JÄMKA JÄMNA JÄMNT JÄMRA JÄMTE JÄNTA JÄRPE JÄSIG JÄTTE JÄVIG JÖKEL JÖSSE KABAL KABEL KABIN KABLA KACKA KADER KAFFE KAGGE KAJAK KAJAL KAJBO KAJEN KAJKA KAKAN KAKAO KAKEL KAKLA KAKOR KALAS KALIF KALKA KALLA KALLE KALLT KALVA KAMEL KAMIN KAMMA KANAL KANEL KANIK KANIN KANJI KANNA KANON KANOT KANTA KANYL KAPAD KAPAR KAPAT KAPPA KAPUN KARAT KARDA KAREN KARET KARGA KARLN KARLS KARMA KARSK KARTA KARVA KASSA KASSE KASST KASTA KASUS KATET KATIG KATOD KATTA KAVAJ KAVAT KAVEL KAVLA KAXIG KAZAK KAZOO KBYTE KEBAB KEDJA KEFIR KELEN KELET KELIG KELIM KEMIN KENDO KERAM KERUB KETCH KETON KETOS KEXEN KHANS KHMER KICKA KIKAR KIKAT KIKNA KILAD KILAR KILLA KILLE KILON KILOS KILOT KINES KININ KINKA KINKY KIOSK KIRRA KISAR KISEL KISSA KISSE KISTA KITTA KIVAS KJUSA KLABB KLACK KLADD KLAFF KLAFS KLAGA KLANG KLANT KLAPP KLARA KLART KLASE KLASS KLATT KLAVE KLEGG KLEMA KLENA KLENT KLERK KLETA KLIAR KLIBB KLICK KLIMP KLING KLINK KLINT KLIPP KLIRR KLIVA KLOAK KLOKA KLOKT KLONA KLOSS KLOTS KLUBB KLUCK KLUDD KLUMP KLUNK KLUNS KLURA KLYKA KLYVA KLYVS KLÄDD KLÄDE KLÄGG KLÄMD KLÄMS KLÄMT KLÄPP KLÄTT KLÅDA KLÅPA KLÅTT KLÖSA KNACK KNAKA KNALL KNAPP KNARK KNARR KNASA KNAST KNATA KNEGA KNEKT KNIPA KNIRK KNIRR KNIXA KNOCK KNODD KNOGA KNOGE KNOPP KNORR KNOTA KNOTT KNUFF KNUTA KNYCK KNYST KNYTA KNYTE KNÄCK KNÄET KNÄNA KNÄPP KNÅDA KNÅPA KNÖKA KNÖLA KOALA KOBBE KOBRA KOCKA KODAD KODAT KODEK KODEN KODER KODEX KOFOT KOFTA KOGER KOHUD KOJAN KOJAR KOJAT KOKAR KOKAS KOKAT KOKOS KOKTA KOLAN KOLAR KOLET KOLIK KOLIT KOLJA KOLLA KOLLI KOLLO KOLON KOMAN KOMBI KOMBO KOMET KOMIK KOMMA KOMPA KONER KONKA KONST KONTO KOPEK KOPIA KOPPA KORAL KORAN KORDA KORKA KORNA KORSA KORTA KORTS KORUM KORUS KORVA KOSSA KOSTA KOTTE KOÖGA KOÖGD KPIST KRAFS KRAFT KRAGE KRAKE KRAMA KRAMP KRAMS KRANK KRANS KRASA KRASS KRAXA KREDD KREOL KRETI KRETS KRIGA KRIGS KRILL KRING KRISA KRITA KROAT KROCK KROKA KROKI KROMA KRONA KROPP KROSS KRUBB KRUKA KRULL KRUMT KRUPP KRUSA KRUTA KRYMP KRYPA KRYSS KRÄKS KRÄLA KRÄMA KRÄVA KRÄVS KRÄVT KRÅKA KRÅMA KRÖKA KRÖKT KRÖNA KRÖNT KUBAN KUBEN KUBIK KUCKU KUDDE KUGGA KUGGE KULAK KULAN KULEN KULIG KULLA KULLE KULOR KULÖR KUNDE KUNGS KUNNA KUPAN KUPAR KUPIG KUPOL KUPOR KUPPA KUREN KURIR KURRA KURSA KURVA KUSIN KUSKA KUTAR KUTIG KUTYM KUVAD KUVÖS KVACK KVALA KVALD KVALM KVARG KVARN KVART KVASS KVAST KVAVT KVICK KVIDA KVIGA KVINT KVIST KVITT KVÄDA KVÄDE KVÄKA KVÄLL KVÄSA KVÄVA KVÄVD KVÄVE KVÄVS KVÄVT KYFFE KYLAN KYLAR KYLEN KYLER KYLES KYLIG KYMIG KYNNE KYRKA KYSSA KYSST KÄFTA KÄGLA KÄKAR KÄKAT KÄKEN KÄKET KÄLKE KÄLLA KÄMPA KÄMPE KÄNDA KÄNDE KÄNGA KÄNNA KÄNNS KÄNTS KÄRAR KÄRIL KÄRNA KÄRRA KÄRVA KÄRVE KÄRVT KÄTTE KÅDIS KÅKEN KÅNKA KÅRAR KÅRAS KÅREN KÅSÖR KÅSÖS KÖADE KÖDAG KÖKET KÖKSA KÖKSÖ KÖLEN KÖLNA KÖNEN KÖNET KÖPAS KÖPER KÖPET KÖPTA KÖPTE KÖPTS KÖRAS KÖRDA KÖRDE KÖREN KÖRET KÖRIG KÖRTS KÖTID LABBA LABIL LACKA LADAN LADDA LADES LADOR LAFSA LAGAD LAGAR LAGAS LAGAT LAGDA LAGEN LAGER LAGET LAGGA LAGOM LAGRA LAGTS LAGUN LAJVA LAKAN LAKEJ LAKES LAKUN LALLA LAMPA LANDA LANDS LANDÅ LANGA LAPPA LARGO LARMA LARVA LASER LASSA LASSO LASTA LASYR LATER LATEX LATIN LATTE LAVAN LAVIN LAVYR LAXAR LAXEN LEASA LEDAD LEDAR LEDAS LEDDA LEDDE LEDEN LEDER LEDET LEDIG LEGAL LEGAT LEGIO LEJDA LEJDE LEJER LEJON LEKAR LEKEN LEKER LEKIS LEKTE LEMMA LEMUR LENAS LEPRA LERAN LERIG LETAR LETAT LEVAT LEVDE LEVER LEVRA LEXEM LIDEN LIDER LIDIT LIERA LIFTA LIGAN LIGGA LIGHT LIKAR LIKEN LIKET LIKNA LIKÖR LILJA LILLA LILLE LIMBO LIMIT LIMMA LIMPA LINAN LINDA LINJE LINKA LINNE LINOR LIPAR LIPEN LIPIG LIRAR LIRKA LISMA LISTA LITAR LITAT LITEN LITER LITET LIVAD LIVAR LIVAT LIVEN LIVET LJUDA LJUGA LJUMT LJUNG LJUSA LJUSE LJUST LJUTA LJUVA LJUVT LOBBA LOBBY LOCKA LODIS LOGEN LOGGA LOGIK LOJAL LOKAL LOKET LOMMA LOOPS LOPPA LORDS LORTA LOSER LOSKA LOSSA LOTSA LOTTA LOTTO LOTUS LOVAD LOVAR LOVAT LOVEN LOVET LUBBA LUCIA LUCKA LUDDA LUDEN LUDER LUFFA LUFSA LUFTA LUGGA LUGNA LUGNT LUKTA LULLA LUMEN LUNCH LUNGA LUNKA LUNTA LUPIN LUPIT LUPUS LURAD LURAR LURAS LURAT LUREN LURIG LUSEN LUSIG LUSKA LUSSA LUSTA LUTAD LUTAR LUVAN LUVEN LYCKA LYCRA LYDDE LYDER LYDIG LYFTA LYFTE LYFTS LYKTA LYMFA LYNNE LYRAN LYRIK LYSEN LYSER LYSET LYSTE LYXEN LYXIG LYXÅK LÄCKA LÄCKT LÄDER LÄGEN LÄGER LÄGET LÄGGA LÄGGS LÄGRA LÄGRE LÄGST LÄKAS LÄKER LÄKTA LÄKTE LÄMNA LÄMPA LÄNET LÄNGA LÄNGD LÄNGE LÄNGS LÄNKA LÄNSA LÄRAN LÄRAS LÄRDA LÄRDE LÄRFT LÄRKA LÄROR LÄSAS LÄSER LÄSES LÄSKA LÄSPA LÄSRO LÄSTE LÄSÅR LÄTEN LÄTTA LÄXAN LÄXAR LÄXAT LÄXOR LÅDAN LÅDOR LÅGAN LÅGOR LÅNAD LÅNAR LÅNAT LÅNEN LÅNET LÅNGA LÅNGE LÅNGT LÅNTA LÅREN LÅRET LÅSAS LÅSEN LÅSER LÅSES LÅSET LÅSTA LÅSTE LÅTAR LÅTEN LÅTER LÅTIT LÅTSA LÖDIG LÖFTE LÖKAR LÖKEN LÖKIG LÖMSK LÖNAR LÖNAT LÖNEN LÖNER LÖPER LÖPTE LÖSAN LÖSAS LÖSEN LÖSER LÖSES LÖSGE LÖSTA LÖSTE LÖSTS LÖVAD LÖVEN MACHO MACKA MADAM MAGAR MAGEN MAGER MAGIK MAGIN MAGMA MAGRA MAJOR MAKAR MAKEN MAKES MAKRO MALAJ MALAR MALDE MALEN MALER MALLA MALVA MALÖR MAMBA MAMBO MAMMA MANAD MANAR MANEN MANER MANET MANGA MANGO MANKE MANNA MANUS MANÅR MAORI MARIG MARIN MARKS MARSK MASKA MASSA MATAD MATAR MATAS MATAT MATCH MATEN MATIG MATKÖ MATOS MATRO MATTA MATTE MAUVE MAXAD MAXIM MECKA MEDAN MEDEL MEDGE MEDIA MEDLA MEDTA MEJKA MEJLA MELLO MELON MENAD MENAR MENAS MENAT MENED MENIG MENYN MERIT MESAR MESEN MESIG MESON MESSA MESTA METAN METER METOD METRO METYL MIDJA MIFFO MIKRA MIKRO MILAN MILDA MILDE MILEN MILIS MILJÖ MIMIK MINAN MINEN MINER MINNE MINNS MINOR MINST MINUS MINUT MISSA MISSE MISTA MISTE MISÄR MITOS MITRA MIXED MIXEN MIXER MJUGG MJUKA MJUKT MJÄLL MJÖLA MJÖLK MOBBA MOBIL MOCKA MODAL MODDA MODEM MODER MODET MODIG MODUL MODUS MOGEN MOGET MOGNA MOGUL MOJNA MONGO MOONA MOPED MOPPA MOPPE MOPSA MORAL MORAN MORAS MORNA MOROT MORRA MORSA MORSE MORSK MORÄN MOSAD MOSAR MOSAT MOSET MOSIG MOSSA MOSSE MOTIG MOTIV MOTOR MOTSE MOTTA MOTTO MUCKA MUFTI MULAN MULEN MULLA MULNA MULOR MULTE MUMIE MUMLA MUMMA MUMSA MUNGO MUNTA MURAL MURAR MURAT MUREN MUSCH MUSEN MUSIK MUSTA MUTAD MUTAN MUTAR MUTAS MUTAT MUTOR MUZAK MYCEL MYGEL MYGGA MYGLA MYLLA MYLTA MYNNA MYNTA MYOPI MYRAN MYROR MYRRA MYSER MYSIG MYSKO MYTEN MYTER MÄKLA MÄKTA MÄNGD MÄRKA MÄRKE MÄRKS MÄRKT MÄRLA MÄSKA MÄSSA MÄTAS MÄTER MÄTTA MÄTTE MÅBÄR MÅDDE MÅLAD MÅLAR MÅLAS MÅLAT MÅLEN MÅLET MÅLIS MÅLLA MÅNAD MÅNAR MÅNDE MÅNEN MÅNGA MÅNGT MÅNNE MÅNÅR MÅSAR MÅSTE MÅTTA MÅTTE MÅTTO MÖBEL MÖDAN MÖDOM MÖGEL MÖGIG MÖGLA MÖLLA MÖNJA MÖRDA MÖRKA MÖRKE MÖRKT MÖSSA MÖTAS MÖTEN MÖTER MÖTES MÖTET MÖTTE MÖTTS NACKA NACKE NADIR NAFSA NAFTA NAGEL NAGGA NAGLA NAIVA NAIVT NAJAD NAJSA NAKEN NAKET NAKNA NAKNE NALLA NALLE NAMNA NAMNE NAPPA NARIG NARRA NASAL NASSE NATIV NATTA NATTS NATUR NAVEL NAVET NEDAN NEDER NEDOM NEDPÅ NEDRE NEDTA NEDÅT NEHEJ NEKAD NEKAR NEKAS NEKAT NEROM NERPÅ NERÅT NETTO NICKA NICKS NIECE NIGER NIGIT NINJA NIQAB NISCH NISSE NITAR NITTI NIVÅN NJUGG NJURE NJUTA NOBBA NOBEL NOBLA NOBLE NOGAV NOJIG NOJSA NOLLA NOMAD NOPPA NORPA NORRA NORSK NOSAR NOSEN NOSIG NOTAN NOTAT NOTER NOTIS NOVIS NUBBE NUCKA NUDDA NUDEL NUMER NUMRO NUNNA NUPIT NUTID NYANS NYARE NYBIL NYFIS NYHET NYING NYKÄR NYKÖP NYLIG NYLLE NYLON NYNNA NYORD NYPER NYPON NYRIK NYSER NYSNÖ NYSTA NYTER NYTTA NYVAL NÄMEN NÄMNA NÄMND NÄMNS NÄMNT NÄNNS NÄNTS NÄPEN NÄPPE NÄPSA NÄRDE NÄRIG NÄRMA NÄSAN NÄSET NÄSOR NÄSTA NÄSTE NÄTEN NÄTET NÄTTA NÄVAR NÄVEN NÄVER NÅBAR NÅDDE NÅDEN NÅDIG NÅGON NÅGOT NÅGRA NÅLAR NÅLEN NÅVÄL NÖDEN NÖDGA NÖDIG NÖDÅR NÖJDA NÖJDE NÖJEN NÖJER NÖJES NÖJET NÖTEN NÖTIG OANAD OBEDD OBLAT OBLID OBLYG OBYGD OBÖJD OCEAN OCKER OCKRA OCKSÅ ODENS ODIÖS ODJUR ODLAD ODLAR ODLAS ODLAT ODRYG ODYGD ODÅGA ODÖMD ODÖPT ODÖRT OELEK OENIG OENSE OFFER OFFRA OFINT OFLYT OFRED OFÄRD OFÄRG OFÖDD OGIFT OGILL OGRÄS OHYRA OHÄGN OHÖRD OJUST OJÄMN OJÄST OKAPI OKBEN OKEJA OKLAR OKLOK OKOKT OKTAL OKTAN OKTAV OKYLD OKYSK OKÄND OKÄNT OLAGA OLIKA OLIKT OLJAN OLJAR OLJAS OLJIG OLJOR OLJUD OLLON OLUST OLVON OLÄKT OLÄRD OLÄST OLÅST OLÖST OMAKA OMBUD OMDOP OMEGA OMGER OMGES OMGIV OMILD OMKOK OMKOM OMKÖP OMLÅN OMSYN OMTAG OMTAL OMVAL OMVÄG OMÅKT ONANI ONDAS ONKEL ONÖJD OPEPP OPERA OPIAT OPIET OPIUM OPTIK ORALT ORDEN ORDER ORDET ORDNA OREDA ORENA ORENT ORERA ORGAN ORGEL ORGIE ORIGO ORKAN ORKAR ORKAT ORMAR ORMBO ORMEN ORNAT OROAD OROAR OROAS OROAT ORSAK ORTEN ORTER ORÄDD ORÄTT ORÖJD ORÖKT ORÖRD ORÖRT OSAGD OSAGT OSAMS OSANN OSANT OSEDD OSFRI OSKÖN OSMAN OSMOS OSTAN OSTAR OSTEN OSTIG OSUND OSUNT OSÄLL OSÅDD OSÅLD OSÖKT OTACK OTAKT OTALT OTIUM OTTAN OTUKT OTYDD OTÄCK OVALA OVANA OVANT OVASS OVETT OVIGD OVISS OVÄGD OVÄLD OXBÄR OXHUD OXTÖM OXÖGA OÄDEL OÄKTA OÄKTE OÄTEN OÄVEN OÖVAD PACKA PADDA PAGOD PAJAR PAJAS PAJAT PAJEN PAJER PAKET PALLA PALTA PANDA PANEL PANGA PANIK PANKA PANNA PANNÅ PANTA PANTS PAPPA PAPPS PARAD PARAR PARAS PARAT PAREN PARES PARET PARIA PARKS PARTA PARTI PARTS PARTY PASHA PASSA PASTA PATCH PATOS PAUSA PAXAR PAXAT PEDAL PEELA PEJLA PEKAR PEKAT PENCE PENNA PENNY PEPPA PERUK PESOS PESTO PETAD PETAR PETAT PETIG PIAFF PIANO PICKA PIFFA PIGAN PIGGA PIKAR PIKET PILAR PILEN PILKA PILLA PILOT PIMPA PINAL PINJE PINKA PINNA PINNE PIPAN PIPER PIPET PIPIG PIPIT PIPOR PIPPI PIRAT PIREN PIROG PIRRA PISKA PIXEL PIZZA PJOSK PJUCK PJÄXA PJÅSK PLACK PLAGE PLAGG PLANA PLANK PLANS PLANT PLASK PLAST PLATS PLATT PLATÅ PLAYA PLETI PLIGG PLIKT PLING PLINT PLIRA PLITA PLOCK PLOGA PLOMB PLOPP PLUGG PLUMP PLUMS PLUPP PLUTA PLUTT PLYMÅ PLYTE PLÄTT PLÅGA PLÅNA PLÅTA PLÖJA POCKA POESI POJKE POKAL POKER POKUS POLAR POLEN POLIO POLIS POLKA POLSK POLYP POLÄR POMPA PONKE PONNY POPPA POPÅR PORER PORLA PORTA PORTO PORÖS POSTA POSTO POSÖR POTTA POTTS POÄNG PRAKT PRAOA PRATA PREJA PRESS PRICK PRIMA PRINS PRION PRIOR PRISA PROGG PROPP PROPÅ PROSA PROST PROVA PRUTA PRUTT PRYDA PRYDD PRÄNT PRÄST PRÅLA PRÅNG PRÖJS PRÖVA PSALM PSYKA PSYKE PUBAR PUBEN PUCKO PUDEL PUDER PUDRA PUFFA PULKA PULPA PULSA PUMAN PUMLA PUMOR PUMPA PUMPS PUNDA PUNDS PUNGA PUNKA PUNKT PUPPA PUREA PURJO PURRA PUSHA PUSSA PUSTA PUTIG PUTSA PUTTA PUTTE PYLON PYNTA PYRET PYSEN PYSER PYTON PYTSA PÄLSA PÄRLA PÄRON PÅBRÅ PÅBUD PÅGÅR PÅLAD PÅLAR PÅLEN PÅLLE PÅROP PÅSAR PÅSEN PÅSIG PÅSTE PÅSTÅ PÅSYN PÅTOG PÅTÅR PÅVEN PÅVER PÅÖKT PÖBEL PÖLAR PÖLEN PÖLSA PÖLSE PÖRTE PÖSIG QUEER QUORN RABBI RACER RACET RACKA RADAR RADDA RADEN RADER RADIE RADIO RADON RADSÅ RAFSA RAGGA RAGLA RAKAD RAKAR RAKAS RAKAT RAKEN RAKET RAKIT RALLY RAMAR RAMEN RAMLA RAMMA RAMSA RANCH RANDA RANKA RANKT RANTA RAPAR RAPPA RASAR RASAT RASEN RASER RASET RASKA RASKT RASPA RASTA RATAD RATTA RAVIN READE REALA REBUS REDAN REDAS REDDE REDER REDIG REELL REFUG REGAL REGEL REGGA REGIM REGIS REGLA REGNA REHAB REJÄL REKAR REKYL RELIK RELÄA REMIX REMSA RENAD RENAR RENAS RENAT RENEN RENKO RENSA REPAR REPAS REPAT REPEN REPET REPIG REPOR RESAN RESER RESON RESOR RESTE RESÅR RETAD RETAR RETAS RETAT RETRO RETUR REVAN REVEN REVET REVIR REVÄR RIBBA RICIN RIDEN RIDER RIDIT RIDÅN RIGGA RIGGS RIGID RIGLA RIKAS RIKEN RIKET RIKTA RIMMA RINGA RINGS RINGT RINNA RIOJA RIPPA RISET RISIG RISKA RISPA RISTA RISTE RITAR RITAS RITAT RITEN RITER RIVAL RIVAS RIVEN RIVER RIVIG RIVIT ROADE ROBOT ROCKA ROCKS RODDA RODDE RODEL RODEO RODER RODNA ROFFA ROLIG ROLLA ROLLS ROLÖS ROMAN ROMSK RONDO ROPAR ROPAS ROPAT ROPET ROSAS ROSEN ROSIG ROSOR ROSTA ROTAD ROTAR ROTAT ROTEL ROTEN ROTIG ROTOR ROUGE ROVOR RUBBA RUBEL RUBIN RUCKA RUDIS RUFFA RUFSA RUGBY RUGGA RULLA RULLE RULTA RUMBA RUMLA RUMMA RUMPA RUMÄN RUNDA RUNGA RUNOR RUPIE RURAL RUSAR RUSAT RUSCH RUSET RUSHA RUSIG RUSKA RUSTA RUTAN RUTAR RUTAT RUTER RUTET RUTIG RUTIN RUTOR RUVAR RYANS RYCKA RYCKS RYCKT RYGGA RYKER RYKTA RYKTE RYMDE RYMMA RYNKA RYSCH RYSER RYSKA RYSKE RYSKT RYTER RÄCKA RÄCKE RÄCKT RÄDAS RÄDDA RÄDEN RÄDER RÄFSA RÄFST RÄKAN RÄKNA RÄKOR RÄLIG RÄMNA RÄNDE RÄNNA RÄNTA RÄTTA RÄTTE RÄVAR RÄVEN RÅBRA RÅDDA RÅDDE RÅDEN RÅDER RÅDET RÅDIG RÅEGG RÅFIL RÅGAD RÅGET RÅGLO RÅHET RÅHUD RÅKAR RÅKAS RÅKAT RÅKUL RÅNAD RÅNAR RÅNAS RÅNAT RÅNEN RÅNET RÅRIS RÅSOP RÅTTA RÖDAS RÖDLO RÖJDE RÖJER RÖKEN RÖKER RÖKIG RÖKTA RÖKTE RÖRAN RÖRAS RÖRDA RÖRDE RÖREN RÖRES RÖRET RÖRIG RÖSTA RÖSTI RÖVAR RÖVAT SABBA SABEL SABLA SACKA SADEL SADES SADLA SAFIR SAFTA SAGAN SAGDA SAGGA SAGLA SAGOR SAGTS SAKEN SAKER SAKNA SAKTA SALAR SALDO SALEN SALIG SALIV SALSA SALTA SALTE SALUT SALVA SAMBA SAMBO SAMLA SAMMA SAMME SANDA SANDS SANKT SANNA SANNE SANSA SARGA SARIN SATAR SATEN SATIN SATIR SATSA SATTA SATTE SATTS SATYR SAUNA SAVIG SAXAR SAXEN SCARF SCHAH SCHAL SCHAS SCHÄS SCOOP SCOUT SEANS SEBAR SEDAN SEDDA SEDEL SEDEN SEDER SEDUM SEEDA SEFIR SEFYR SEGEL SEGER SEGLA SEGNA SEGRA SEKEL SEKIN SELEN SELOT SEMIT SEMLA SENAP SENAT SENIG SENIL SENOR SEPIA SERAF SEREN SERIE SERUM SERVA SERVE SERVO SESAM SESSA SETTS SEXAN SEXET SEXIG SEXOR SEXTI SFINX SHAKE SHEJK SHIIT SHIMS SHOWA SHUNT SIARE SIDAN SIDEN SIDOR SIFON SIGNA SIKEL SIKTA SIKTE SILAR SILAS SILKE SILON SIMMA SINAR SINKA SINNE SINOM SINUS SIOUX SIPPA SIPPT SIRAP SIRAT SIREN SISAL SISTA SISTE SITAR SITTA SJASA SJUAN SJUBB SJUDA SJUKA SJUKE SJUKT SJUNG SJUNK SJUOR SJYST SJÄLS SJÄLV SJÅPA SJÖAR SJÖIS SJÖKO SJÖNG SJÖNK SJÖNS SJÖSS SKABB SKADA SKAFT SKAKA SKALA SKALD SKALK SKALL SKALM SKALP SKALV SKANS SKAPA SKAPT SKARA SKARE SKARP SKARS SKARV SKATA SKATE SKATT SKAVA SKEDA SKEDD SKEDE SKEET SKELA SKENA SKEPP SKETT SKEVA SKEVT SKICK SKIDA SKIFT SKIKT SKILD SKILJ SKILS SKILT SKINA SKINN SKIPA SKIRA SKISS SKITA SKIVA SKJUL SKJUT SKOCK SKODD SKOGS SKOJA SKOJS SKOLA SKOLK SKONA SKOPA SKORV SKOTT SKRAJ SKRAL SKRAP SKRED SKREK SKREV SKRIA SKRIK SKRIN SKRIV SKROT SKROV SKRUD SKRUV SKRYT SKRÄM SKRÄN SKRÄP SKRÅL SKRÖT SKUFF SKULD SKULL SKULT SKUMT SKUNK SKURA SKURK SKUTA SKUTT SKVAL SKVIS SKYAR SKYDD SKYGD SKYGG SKYIG SKYLA SKYLD SKYLL SKYLT SKYMF SKYMT SKYTT SKÄCK SKÄGG SKÄLL SKÄLM SKÄMD SKÄMS SKÄMT SKÄNK SKÄRA SKÄRM SKÄRP SKÄRS SKÄRT SKÄRV SKÅDA SKÅLA SKÅPA SKÅRA SKÖKA SKÖLD SKÖLJ SKÖNA SKÖNT SKÖRA SKÖRD SKÖRT SKÖTA SKÖTE SKÖTS SKÖTT SLABB SLADD SLAFA SLAFS SLAGG SLAGS SLAKA SLAKT SLANA SLANG SLANK SLANT SLAPP SLARV SLASK SLATT SLAVA SLEJF SLEMT SLETS SLEVA SLICK SLIDA SLINT SLIPA SLIPP SLIPS SLIRA SLISK SLITA SLITS SLOGS SLOKA SLOPA SLOTT SLUGA SLUGT SLUKA SLUMP SLURK SLUSK SLUSS SLUTA SLUTS SLÄCK SLÄDE SLÄKT SLÄNG SLÄNT SLÄPA SLÄPP SLÄTA SLÄTT SLÅSS SLÖJA SLÖJD SLÖSA SLÖTT SMACK SMAKA SMALA SMALL SMALT SMART SMASH SMASK SMEKA SMETA SMIDA SMIDD SMIDE SMILA SMINK SMISK SMITA SMITT SMOCK SMOLK SMORD SMORT SMULA SMURF SMUTS SMUTT SMYGA SMÄCK SMÄDA SMÄLL SMÄLT SMÄRT SMÅBY SMÅLE SMÅTT SMÅÅT SMÖRA SMÖRJ SNABB SNACK SNAGG SNAPS SNARA SNARK SNART SNASK SNAVA SNEDA SNETT SNIBB SNIDA SNIFF SNIPA SNITS SNITT SNOBB SNODD SNOKA SNORA SNOTT SNUDD SNURR SNUSA SNUSK SNUTT SNUVA SNYGG SNYTA SNÄLL SNÄPP SNÄRT SNÄSA SNÄVA SNÄVT SNÅLA SNÅLT SNÖAR SNÖAT SNÖBY SNÖIG SNÖPA SNÖRA SNÖRE SOBEL SOBER SOCKA SOFFA SOFTA SOLAR SOLEL SOLEN SOLID SOLIG SOLKA SOLON SOLUR SOLÅR SOMNA SONAD SONAR SONAT SONEN SOPAN SOPAR SOPAT SOPIG SOPOR SOPPA SORLA SORTI SORTS SOSSE SOTAR SOTIG SOTIS SOUND SOVEL SOVER SOVIT SOVRA SPADE SPAET SPAKA SPAKT SPALT SPANA SPANN SPANT SPARA SPARK SPARV SPASM SPEED SPEJA SPELA SPENE SPETA SPETS SPETT SPEXA SPIGG SPIKA SPILL SPINN SPION SPIRA SPISA SPJUT SPLIT SPOLA SPOLE SPORT SPOTT SPRAY SPRED SPREJ SPRID SPRIT SPRUT SPRÅK SPRÖD SPRÖT SPURT SPYAN SPYOR SPYTT SPÄCK SPÄDA SPÄKA SPÄND SPÄNN SPÄNT SPÄRR SPÅDD SPÅNA SPÅNG SPÅRA SPÖAD SPÖAR SPÖAT SPÖET SPÖKA SPÖKE SPÖNA SPÖRS STACK STADD STADS STAGA STAKA STAKE STALL STALS STAMP STANK STANS STARE STARK STARR START STASS STATS STATY STAVA STEGA STEGE STEGS STEKA STEKT STELA STELT STENA STEPP STICK STIFT STIGA STILA STILL STING STINN STINS STJÄL STOCK STOFF STOFT STOJA STOLT STOMI STOPP STORA STORE STORK STORM STORT STORY STRAM STRAX STRED STRID STRIL STROF STRUL STRUT STRYK STRYP STRÄV STRÅK STRÅN STRÅT STRÖK STRÖM STRÖP STRÖR STUBB STUCK STUDS STUFF STUGA STUKA STUMP STUMT STUND STUNS STUPA STUSS STUVA STYCK STYGG STYGN STYLA STYNG STYRA STYRD STYRE STYRS STYRT STYVA STÄDA STÄLL STÄMD STÄMT STÄNG STÄNK STÄPP STÄVA STÅND STÅNG STÅNK STÅTA STÅTT STÖDA STÖDD STÖDS STÖKA STÖLD STÖNA STÖPA STÖRA STÖRD STÖRS STÖRT STÖTA STÖTT SUCKA SUDDA SUGAR SUGAS SUGEN SUGER SUGET SUGGA SUGIT SUGNA SUKTA SULAN SULAR SULKY SUMAK SUMMA SUMPA SUNDA SUNNI SUPER SUPIG SUPIT SUPUT SURAR SURFA SURNA SURRA SURÖL SUSAR SUSEN SUSHI SUSSA SUTUR SVABB SVADA SVAGA SVAGT SVAJA SVALA SVALD SVALG SVALL SVALT SVAMP SVANG SVANK SVANS SVARA SVARS SVART SVARV SVEAR SVEDA SVEDD SVEJS SVENS SVEPA SVEPT SVETS SVETT SVIDA SVIKA SVIKS SVIKT SVINA SVING SVIRA SVÄLJ SVÄLT SVÄNG SVÄRA SVÄRD SVÄRM SVÄVA SVÅRA SVÅRT SWING SYDDE SYFTA SYFTE SYLAR SYLTA SYNAR SYNAS SYNDA SYNEN SYNER SYNES SYNKA SYNOD SYNSK SYNTS SYNÅL SYRAD SYRAN SYREN SYRET SYRRA SYRSA SYRUM SÄCKA SÄDEN SÄGAS SÄGEN SÄGER SÄJER SÄKER SÄKRA SÄLAR SÄLJA SÄLJS SÄLLA SÄLLE SÄLTA SÄMJA SÄMRE SÄMST SÄNDA SÄNDE SÄNDS SÄNGS SÄNKA SÄNKE SÄNKS SÄNKT SÄNTS SÄRAR SÄRBO SÄTEN SÄTET SÄTTA SÄTTS SÅBAR SÅDAN SÅDDA SÅDDE SÅDÄR SÅGAR SÅGEN SÅHÄR SÅLDA SÅLDE SÅLLA SÅLTS SÅNÄR SÅPAD SÅPAR SÅPAS SÅPIG SÅRAD SÅRAR SÅRAS SÅRAT SÅREN SÅRET SÅRIG SÅSEN SÅSER SÅSIG SÅSOM SÅVÄL SÖDER SÖDRA SÖKER SÖKES SÖKTE SÖLAR SÖLIG SÖMNS SÖNER SÖRJA SÖRJD SÖRJS SÖRJT SÖTIS SÖTMA SÖVDE SÖVER TABBA TABBE TABLÅ TACKA TACOS TADEL TADLA TAFSA TAGEL TAGEN TAGER TAGET TAGGA TAGIT TAGLA TAGNA TAIGA TAJGA TAJMA TAJTA TAJTS TAKEN TAKET TAKTA TAKÅS TALAN TALAR TALAS TALAT TALEN TALET TALJA TALKA TAMIL TANGA TANGO TANIG TANKA TANKE TANKS TAPAS TAPET TAPIR TAPPA TAPPT TAPTO TAROT TARVA TASSA TATAR TAVLA TAXAT TAXIN TEAMS TEDDY TEFAT TEGEL TEHUS TEISM TEJPA TELEX TEMAN TEMAT TEMPI TEMPO TEMPS TEMYS TENOR TENTA TEORB TEORI TESIL TESTA TETRA TEVEN TEXTA TIARA TICKA TIDEN TIDER TIDIG TIDUR TIGER TIGGA TIGGT TIGHT TIGIT TILJA TILLS TILTA TIMER TIMID TIMMA TIMME TIMRA TINAR TINAS TINAT TINGA TINNE TIPPA TIPSA TIRAD TISHA TITAN TITEL TITTA TJABB TJACK TJAFS TJALK TJALL TJATA TJECK TJEJS TJENA TJING TJOCK TJOHO TJUGA TJUGO TJURA TJUSA TJUTA TJUVA TJÄLE TJÄLL TJÄNA TJÄRA TJÄRN TJÖTA TOAKÖ TOAST TOBAK TOBIS TODDY TOKAR TOKEN TOKER TOKIG TOLFT TOLKA TOLVA TOMAT TOMMA TOMTE TONAL TONAR TONEN TONER TONIC TONÅR TOPAS TOPPA TOPSA TORDE TORKA TORNA TORRA TORRT TORSK TORSO TORVA TOSIG TOSSA TOTAL TOTEM TOUCH TOVIG TOXIN TRAKT TRALL TRAMP TRAMS TRANA TRANS TRAPP TRASA TRAST TRATT TRAVA TRAVE TREAN TREND TREOR TREVA TRIAD TRICK TRIKÅ TRIND TRIOD TRIOL TRION TRIPP TRISS TRIST TRIVS TRIXA TROLL TROMB TRONA TRONS TROPP TROSA TROSS TROTS TROTT TRUCK TRUGA TRUMF TRUNK TRUPP TRUST TRUTA TRYCK TRYGG TRYMÅ TRYNA TRYNE TRYTA TRÄCK TRÄDA TRÄET TRÄFF TRÄIG TRÄLA TRÄNA TRÄNG TRÄNS TRÄSK TRÄTA TRÄTT TRÅKA TRÅLA TRÅNA TRÅNG TRÖGA TRÖGT TRÖJA TRÖST TRÖTT TUBBA TUBEN TUBER TUFFA TUFFT TUGGA TUKAN TUKTA TULLA TULTA TUMLA TUMMA TUMME TUMÖR TUNGA TUNGT TUNNA TUPPA TURAS TURBO TUREN TURER TURKS TUSAN TUSCH TUSEN TUSSA TUTAN TUTAR TUTAT TUTSI TUTTA TUTTE TUTTI TUVAD TUVAR TUVAT TUVIG TVANG TVEKA TVINA TVING TVIST TVÄRS TVÄRT TVÄTT TVÅAN TVÅLA TVÅNG TVÅOR TWEED TWIST TYCKA TYCKE TYCKS TYCKT TYDDE TYDER TYFON TYFUS TYGEL TYGER TYGET TYGLA TYKEN TYNAR TYNGA TYNGD TYPAD TYPEN TYPER TYSKA TYSKE TYSKT TYSTA TYSTE TÄCKA TÄCKE TÄCKS TÄCKT TÄLJA TÄLTA TÄMJA TÄMJT TÄNDA TÄNDE TÄNDS TÄNJA TÄNKA TÄNKT TÄPPA TÄPPT TÄRNA TÄTEN TÄTNA TÄVLA TÅBEN TÅGAR TÅGEN TÅGET TÅGKÖ TÅLDE TÅLED TÅLIG TÅRAD TÅRAR TÅRAS TÅRNA TÅRTA TÅSKO TÖLTA TÖMDA TÖMDE TÖMMA TÖMTS TÖNTA TÖRAS TÖRNA TÖRNE TÖRST TÖSEN TÖSNÖ UDDEN UDDIG UGGLA UGNAR UGNEN UIGUR ULLIG ULTRA UMAMI UMBAR UMBRA UMEBO UMGÅS UNDAN UNDER UNDFÅ UNDGÅ UNDRA UNDRE UNGAR UNGEN UNGES UNGMÖ UNIKA UNIKT UNION UNKEN UNKET UNKNA UNNAR UPPGE UPPGÅ UPPNÅ UPPTA UPPÅT URBAN URBRA URDUM UREMI URFIN URGOD URHAV URHEM URKOK URKUL URMYT URNAN UROXE URSÖT URTID URTYP URVAL USELT USLIG UTBUD UTBYT UTDÖD UTDÖM UTFÖR UTGAV UTGER UTGÅR UTGÖR UTHUS UTKIK UTKÖP UTLED UTLÅN UTLÖS UTMED UTOPI UTROP UTRUM UTRYM UTSER UTSES UTSPY UTSTÅ UTSUG UTSÅG UTSÖG UTTAG UTTAL UTTAR UTTAS UTTER UTTOG UTTÅG UTVIK UTVÄG UTÄNG UTÖKA UTÖSA UTÖVA UZBEK VABBA VADAN VADAR VADEN VADER VADET VAFAN VAGEL VAGGA VAJAR VAJER VAKAN VAKAR VAKAT VAKEN VAKET VAKNA VAKTA VALAR VALDA VALDE VALEN VALET VALKA VALLA VALPA VALSA VALTS VALÅR VALÖR VANAN VANDA VANDE VANKA VANNA VANOR VANTE VAPEN VARAN VARAR VARAT VARAV VARDA VARDE VARIA VARIG VARIT VARJE VARMA VARMT VARNA VAROM VAROR VARPA VARPÅ VARSE VARUR VARVA VARÅT VASEN VASKA VASSA VASST VAXAR VAXET VECKA VEDEN VEGAN VEKNA VELAT VELIG VEMOD VENEN VENER VENÖS VERKA VEROP VERSA VERTS VESIR VESPA VETAT VETET VETJA VETTA VETTE VEVAR VICKA VIDEO VIDGA VIDGÅ VIDJA VIDTA VIFTA VIGAS VIGDE VIGER VIGGA VIGÖR VIKEN VIKER VIKIT VIKNA VIKTA VILAN VILAR VILAT VILDA VILDE VILJA VILJE VILKA VILLA VILLE VILSE VIMLA VIMSA VINDA VINER VINET VINGE VINKA VINNA VINST VINYL VINÅR VIOLA VIPKÖ VIPPA VIRAK VIRAL VIRAR VIRIL VIRKA VIRKE VIRRA VIRUS VISAD VISAN VISAR VISAS VISAT VISES VISET VISIR VISIT VISKA VISOR VISPA VISSA VISSO VISST VISUM VITAL VITAS VITNA VITSA VIVÖR VOBBA VODKA VOILE VOKAL VOLTA VOLTS VOLYM VOTUM VOVVE VRAKA VREDA VREDE VRIDA VRIST VRÄKA VRÄKT VRÅLA VRÅNG VULGO VULVA VURMA VURPA VUXEN VUXET VUXIT VUXNA VYSSA VÄCKA VÄCKS VÄCKT VÄDER VÄDJA VÄDRA VÄDUR VÄGAR VÄGDE VÄGEN VÄGER VÄGRA VÄLDE VÄLJA VÄLJS VÄLLA VÄLSK VÄLTA VÄLTE VÄLVA VÄLVD VÄMJS VÄNDA VÄNDE VÄNDS VÄNJA VÄNJS VÄNTA VÄNTS VÄPNA VÄRDA VÄRDE VÄRJA VÄRKA VÄRLD VÄRMA VÄRME VÄRMS VÄRMT VÄRNA VÄRPA VÄRRE VÄRST VÄRVA VÄSEN VÄSER VÄSKA VÄSSA VÄSTE VÄTTE VÄVER VÄXEL VÄXER VÄXLA VÄXTE VÅGAD VÅGAR VÅGAT VÅGEN VÅGIG VÅGOR VÅLLA VÅNDA VÅPIG VÅRAN VÅRAS VÅRAT VÅRDA VÅREN VÅRIS VÅRTA VÅTÅR VÖLVA VÖRDA WAILA WATTS WHIST WICCA WRAPS XENON XHTML XYLOS YACHT YARDS YLADE YMNIG YNGEL YNGLA YNGRE YNGST YOGAN YPPIG YRADE YRHET YRKAR YRKEN YRKET YRSEL YRSNÖ YSTER YTLIG YTTER YTTRA YTTRE YTVED YXEGG YXMAN YXMÄN ZAPPA ZEBRA ZELOT ZENIT ZIPPA ZLOTY ZONAL ZONEN ZONER ZOOMA ZUMBA ZYGOT ÄCKEL ÄCKLA ÄDELT ÄGARE ÄGDES ÄGGEN ÄGGET ÄGGUL ÄGNAD ÄGNAR ÄGNAT ÄKTAR ÄLDRE ÄLDST ÄLGAR ÄLGEN ÄLGKO ÄLSKA ÄLTAR ÄLVAN ÄLVEN ÄLVOR ÄMBAR ÄMNAD ÄMNAR ÄMNAT ÄMNEN ÄMNET ÄNDAN ÄNDAR ÄNDAT ÄNDEN ÄNDER ÄNDRA ÄNGAR ÄNGEL ÄNGEN ÄNKAN ÄNKOR ÄNTRA ÄPPLE ÄRADE ÄRANS ÄRBAR ÄRGIG ÄRLIG ÄRMAR ÄRMEN ÄRRAD ÄRREN ÄRRET ÄRRIG ÄRTAN ÄRTER ÄRTIG ÄRTOR ÄRVDE ÄRVER ÄSSJA ÄTBAR ÄTLIG ÄTTEN ÄVLAN ÄVLAS ÄXING ÅBÄKA ÅBÄKE ÅDERN ÅDRIG ÅDROG ÅDROR ÅDÖMA ÅHÖRA ÅKANT ÅKARE ÅKBAR ÅKDON ÅKERI ÅKERN ÅKRAR ÅKTID ÅKTUR ÅLADE ÅLAGD ÅLAGT ÅLDER ÅNGAN ÅNGAR ÅNGAT ÅNGER ÅNGOR ÅNGRA ÅRENS ÅRETS ÅRLIG ÅRPAR ÅRTAG ÅRTAL ÅSATT ÅSIDO ÅSIKT ÅSKAN ÅSKAR ÅSKBY ÅSKIG ÅSNAN ÅSNOR ÅSTAD ÅSYNA ÅTAGA ÅTAGS ÅTALA ÅTLÖD ÅTRÅR ÅTTAN ÅTTIO ÅTTOR ÅVILA ÖARNA ÖBÅGE ÖDEBY ÖDETS ÖDLAN ÖDLOR ÖDSLA ÖGLAN ÖKADE ÖKNAR ÖKNEN ÖKÄND ÖKÄNT ÖLBIL ÖLFAT ÖLHAK ÖLKYL ÖLPUB ÖLTYP ÖMHET ÖMKAN ÖMMAR ÖMSAR ÖMSOM ÖNSKA ÖPPEN ÖPPET ÖPPNA ÖRFIL ÖRIKE ÖRING ÖRNAR ÖRNBO ÖRNEN ÖRTER ÖRTIG ÖRTTE ÖSKAR ÖSTAN ÖSTAT ÖSTER ÖSTRA ÖVADE ÖVERS ÖVLIG ÖVRIG'.split(' '),
+};
+
+</script>
+<script>
 /* ==== js/games/answer-game.js ==== */
 /* Gemensam motor för gåtor och rebusar (textsvar + ledtrådar) */
 (function () {
@@ -992,7 +1198,7 @@ window.KORSORD_DATA = {
   const { el } = Hub;
   const ROUND = 10, TIME = 20;
   Hub.register({
-    id: 'quiz', title: 'Quiz', emoji: '❓', section: 'ord', c1: '#7b5cff', c2: '#b06bff',
+    id: 'quiz', title: 'Quiz', emoji: '❓', section: 'kunskap', c1: '#7b5cff', c2: '#b06bff',
     desc: '10 frågor om Sverige och allmänbildning. Svara snabbt för bonuspoäng!',
     mount(root) {
       let timerOn = Hub.lsGet('ordagrant:quiztimer') !== '0';
@@ -1353,7 +1559,7 @@ window.KORSORD_DATA = {
   Hub.kryptoEncode = (text, enc) => [...text.toLocaleUpperCase('sv-SE')].map(ch => enc[ch] || ch).join('');
 
   Hub.register({
-    id: 'krypto', title: 'Ord-Krypto', emoji: '🔐', section: 'ord', c1: '#3a7bd5', c2: '#00d2ff',
+    id: 'krypto', title: 'Ord-Krypto', emoji: '🔐', section: 'ordlek', c1: '#3a7bd5', c2: '#00d2ff',
     desc: 'Knäck koden! Varje bokstav i ett svenskt ordspråk har bytts ut mot en annan.',
     progress: () => ({ done: DATA.krypto.filter(x => Hub.isSolved('krypto', x.id)).length, of: DATA.krypto.length }),
     mount(root) {
@@ -1469,7 +1675,7 @@ window.KORSORD_DATA = {
 <script>
 /* ==== js/games/gator.js ==== */
 Hub.register({
-  id: 'gator', title: 'Gåtor', emoji: '🤔', section: 'ord', c1: '#ff9a3d', c2: '#ff5d8f',
+  id: 'gator', title: 'Gåtor', emoji: '🤔', section: 'kunskap', c1: '#ff9a3d', c2: '#ff5d8f',
   desc: 'Kluriga gåtor att lösa. Skriv svaret – ta en ledtråd om det kör ihop sig.',
   progress: () => ({ done: Hub.forAudience(DATA.gator).filter(x => Hub.isSolved('gator', x.id)).length, of: Hub.forAudience(DATA.gator).length }),
   mount: Hub.answerGame({ id: 'gator', items: DATA.gator, basePoints: 30, hintCost: 8, label: 'Gåta',
@@ -1480,7 +1686,7 @@ Hub.register({
 <script>
 /* ==== js/games/rebusar.js ==== */
 Hub.register({
-  id: 'rebusar', title: 'Rebusar', emoji: '🧩', section: 'ord', c1: '#22c1c3', c2: '#3a7bd5',
+  id: 'rebusar', title: 'Rebusar', emoji: '🧩', section: 'kunskap', c1: '#22c1c3', c2: '#3a7bd5',
   desc: 'Emoji-rebusar för svenska ord, ordspråk och uttryck. Vad står det?',
   progress: () => ({ done: Hub.forAudience(DATA.rebusar).filter(x => Hub.isSolved('rebusar', x.id)).length, of: Hub.forAudience(DATA.rebusar).length }),
   mount: Hub.answerGame({ id: 'rebusar', items: DATA.rebusar, basePoints: 25, hintCost: 7, label: 'Rebus',
@@ -1495,7 +1701,7 @@ Hub.register({
   'use strict';
   const { el } = Hub;
   Hub.register({
-    id: 'korsord', title: 'Korsord', emoji: '✏️', section: 'ord', c1: '#ff5d8f', c2: '#b06bff',
+    id: 'korsord', title: 'Korsord', emoji: '✏️', section: 'ordlek', c1: '#ff5d8f', c2: '#b06bff',
     desc: 'Tre tematiska korsord med svenska ord. Klicka på en ruta och börja skriva.',
     progress: () => ({ done: Object.keys(KORSORD_DATA).filter(k => Hub.isSolved('korsord', k)).length, of: Object.keys(KORSORD_DATA).length }),
     mount(root) {
@@ -1635,7 +1841,7 @@ Hub.register({
   const { el } = Hub;
   const ROUND = 8;
   Hub.register({
-    id: 'ordblandning', title: 'Ordblandning', emoji: '🔤', section: 'ord', c1: '#ffd23f', c2: '#ff8a3d',
+    id: 'ordblandning', title: 'Ordblandning', emoji: '🔤', section: 'ordlek', c1: '#ffd23f', c2: '#ff8a3d',
     desc: 'Bokstäverna har hamnat huller om buller. Hitta det svenska ordet!',
     mount(root) {
       let words, i, score, word, tiles, slots, hintsUsed, locked;
@@ -1943,15 +2149,611 @@ Hub.register({
 
 </script>
 <script>
+/* ==== js/games/dagensord.js ==== */
+/* Dagens ord – svensk ordgåta med fem bokstäver (A–Ö) */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const MAX = { familj: 7, ungdom: 6, vuxen: 6 };
+  let VALID = null, ORDER = null;
+  function lists() {
+    if (!VALID) {
+      VALID = new Set(ORDLISTA.gissningar);
+      ORDLISTA.svar.forEach(w => VALID.add(w));
+      // Fast blandad ordning så att dagens ord inte följer alfabetet
+      const r = Hub.seeded(20261011); ORDER = ORDLISTA.svar.slice();
+      for (let i = ORDER.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [ORDER[i], ORDER[j]] = [ORDER[j], ORDER[i]]; }
+    }
+  }
+  /** Dagens svar för ett datum (samma för alla) */
+  Hub.dagensOrd = function (d) { lists(); const t = Hub.today(d); return ORDER[((t.day % ORDER.length) + ORDER.length) % ORDER.length]; };
+  /** Färglägg en gissning – hanterar dubbla bokstäver korrekt */
+  function score(guess, answer) {
+    const res = Array(5).fill('absent'), left = {};
+    for (let i = 0; i < 5; i++) { if (guess[i] === answer[i]) res[i] = 'correct'; else left[answer[i]] = (left[answer[i]] || 0) + 1; }
+    for (let i = 0; i < 5; i++) if (res[i] !== 'correct' && left[guess[i]] > 0) { res[i] = 'present'; left[guess[i]]--; }
+    return res;
+  }
+  Hub.dagensOrdScore = score;
+  const RANK = { absent: 1, present: 2, correct: 3 };
+
+  Hub.register({
+    id: 'dagensord', title: 'Dagens ord', emoji: '🟩', section: 'ordlek', c1: '#16b17e', c2: '#f2b53a',
+    desc: 'Gissa dagens ord på fem bokstäver! Nytt ord varje dag – och fritt spel när du vill.',
+    meta: () => { const t = Hub.today().key; const st = load(t); return st && st.done ? (st.won ? '📅 Dagens ord löst ✓' : '📅 Dagens ord spelat') : '📅 Dagens ord väntar'; },
+    mount(root) {
+      lists();
+      const self = this;
+      let mode = 'dag', answer, guesses, cur, done, max, dateKey;
+      const seg = el('div', { class: 'seg', role: 'group', 'aria-label': 'Spelläge' });
+      const info = el('div', { class: 'wd-info', 'aria-live': 'polite' });
+      const board = el('div', { class: 'wd-board' });
+      const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+      const kbd = Hub.keyboard({ onKey: type, onEnter: enter, onBack: back });
+      root.append(el('div', { class: 'stage' }, el('div', { class: 'row center' }, seg), info, board, fb, kbd,
+        el('div', { class: 'legend' }, el('span', null, el('i', { style: { background: '#16b17e' } }), 'rätt plats'), el('span', null, el('i', { style: { background: '#f2b53a' } }), 'finns i ordet'), el('span', null, el('i', { style: { background: '#8b87a6' } }), 'finns inte')),
+        el('p', { class: 'muted center', style: { fontSize: '13px' } }, 'Skriv ett svenskt ord med fem bokstäver och tryck ENTER. Å, Ä och Ö är egna bokstäver.')));
+
+      function renderSeg() {
+        seg.replaceChildren(el('button', { type: 'button', 'aria-pressed': String(mode === 'dag'), onclick: () => { mode = 'dag'; renderSeg(); start(); } }, '📅 Dagens ord'),
+          el('button', { type: 'button', 'aria-pressed': String(mode === 'fri'), onclick: () => { mode = 'fri'; renderSeg(); start(); } }, '🎲 Fritt spel'));
+      }
+      function start() {
+        max = MAX[Hub.audience]; cur = ''; done = false; fb.innerHTML = ''; fb.className = 'feedback'; kbd.reset();
+        if (mode === 'dag') {
+          dateKey = Hub.today().key; answer = Hub.dagensOrd();
+          const st = load(dateKey);
+          guesses = st ? st.guesses.slice() : []; if (st && st.max) max = st.max;
+          info.textContent = `Dagens ord för ${new Date().toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'long' })} · ${max} försök`;
+        } else {
+          const prev = answer; do { answer = ORDLISTA.svar[Hub.rand(ORDLISTA.svar.length)]; } while (answer === prev);
+          guesses = []; info.textContent = `Fritt spel · ${max} försök · ger halva poängen`;
+        }
+        build(); guesses.forEach((g, i) => paint(i, false));
+        if (mode === 'dag' && guesses.length && (guesses[guesses.length - 1] === answer || guesses.length >= max)) finish(true);
+      }
+      function build() {
+        board.replaceChildren(...Array.from({ length: max }, () => el('div', { class: 'wd-row' }, Array.from({ length: 5 }, () => el('div', { class: 'wd-cell' })))));
+      }
+      function rowEl(i) { return board.children[i]; }
+      function drawCur() {
+        const r = rowEl(guesses.length); if (!r) return;
+        [...r.children].forEach((c, k) => { c.textContent = cur[k] || ''; c.classList.toggle('filled', !!cur[k]); });
+      }
+      function paint(i, animate) {
+        const g = guesses[i], res = score(g, answer), r = rowEl(i);
+        [...r.children].forEach((c, k) => {
+          c.textContent = g[k]; c.className = 'wd-cell';
+          const apply = () => { c.classList.add(res[k]); };
+          if (animate) { c.style.animationDelay = (k * 0.12) + 's'; apply(); } else { c.style.animation = 'none'; apply(); }
+          const kb = kbd.keys[g[k]]; if (kb) { const old = kb.className; if (!old || RANK[res[k]] > (RANK[old] || 0)) kb.className = res[k]; }
+        });
+      }
+      function type(ch) { if (done || cur.length >= 5) return; cur += ch; fb.textContent = ''; drawCur(); }
+      function back() { if (done) return; cur = cur.slice(0, -1); drawCur(); }
+      function enter() {
+        if (done) return;
+        const r = rowEl(guesses.length);
+        if (cur.length < 5) return complain(r, 'För få bokstäver – ordet ska ha fem.');
+        if (!VALID.has(cur)) return complain(r, `”${cur}” finns inte i ordlistan.`);
+        guesses.push(cur); cur = ''; paint(guesses.length - 1, true); save();
+        if (guesses[guesses.length - 1] === answer || guesses.length >= max) setTimeout(() => finish(false), 750);
+      }
+      function complain(r, msg) { fb.className = 'feedback bad'; fb.textContent = msg; r.classList.remove('shake'); void r.offsetWidth; r.classList.add('shake'); }
+      function save() { if (mode === 'dag') Hub.lsSet('ordagrant:dagensord:' + dateKey, JSON.stringify({ guesses, max, done: guesses[guesses.length - 1] === answer || guesses.length >= max, won: guesses[guesses.length - 1] === answer })); }
+      function finish(restored) {
+        done = true;
+        const won = guesses[guesses.length - 1] === answer, n = guesses.length;
+        let pts = won ? 20 + (max - n + 1) * 10 : 0;
+        let record = false, given = pts;
+        if (!restored) {
+          if (mode === 'dag') { given = won ? Hub.solveItem('dagensord', 'dag-' + dateKey, pts) : 0; Hub.markSolved('dagensord', 'spelad-' + dateKey); }
+          else { given = Math.round(pts / 2); record = Hub.finishRound('dagensord', given); }
+        }
+        const grid = guesses.map(g => score(g, answer).map(x => x === 'correct' ? '🟩' : x === 'present' ? '🟨' : '⬜').join('')).join('\n');
+        const share = `ORDAGRANT · Dagens ord ${mode === 'dag' ? dateKey : '(fritt spel)'} ${won ? n : 'X'}/${max}\n${grid}`;
+        const next = () => { const t = new Date(); t.setHours(24, 0, 0, 0); const s = (t - new Date()) / 1000; return `${Math.floor(s / 3600)} h ${Math.floor(s % 3600 / 60)} min`; };
+        fb.className = '';
+        fb.replaceChildren(el('div', { class: 'result' },
+          el('div', { class: 'big' }, won ? '🎉' : '🤔'),
+          el('h2', null, won ? `Rätt på ${n} ${n === 1 ? 'försök' : 'försök'}!` : 'Inte den här gången'),
+          el('p', null, 'Ordet var ', el('b', null, answer)),
+          restored ? el('p', { class: 'muted' }, 'Du har redan spelat dagens ord.') : el('div', { class: 'score' }, '+' + given + ' poäng'),
+          !restored && mode === 'dag' && won && !given ? el('p', { class: 'muted' }, 'Redan löst tidigare idag.') : null,
+          record ? el('p', null, '🏆 Nytt personligt rekord!') : null,
+          mode === 'dag' ? el('p', { class: 'muted' }, `Nytt ord om ${next()}.`) : null,
+          el('div', { class: 'row center' },
+            el('button', { class: 'btn', onclick: () => copy(share) }, '📋 Kopiera resultat'),
+            mode === 'dag' ? el('button', { class: 'btn primary', onclick: () => { mode = 'fri'; renderSeg(); start(); } }, '🎲 Spela fritt') : el('button', { class: 'btn primary', onclick: start }, '🔄 Nytt ord'),
+            el('a', { class: 'btn', href: '#/' }, '🏠 Till menyn'))));
+        if (won && !restored) Hub.confetti(70);
+      }
+      function copy(t) {
+        const ok = () => Hub.toast('Resultatet är kopierat!', 'ok');
+        try { if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t).then(ok, () => fallback(t)); } catch (e) { /* fall tillbaka */ }
+        fallback(t);
+        function fallback(x) { const ta = el('textarea', { style: { position: 'fixed', opacity: '0' } }); ta.value = x; document.body.append(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch (e) { Hub.toast('Kunde inte kopiera.'); } ta.remove(); }
+      }
+      function key(e) {
+        if (!document.body.contains(board) || (e.target && /INPUT|TEXTAREA/.test(e.target.tagName))) return;
+        const L = Hub.keyLetter(e);
+        if (L) { e.preventDefault(); type(L); }
+        else if (e.key === 'Enter') { e.preventDefault(); enter(); }
+        else if (e.key === 'Backspace') { e.preventDefault(); back(); }
+      }
+      window.addEventListener('keydown', key);
+      self._cleanup = () => window.removeEventListener('keydown', key);
+      renderSeg(); start();
+    },
+    unmount() { this._cleanup && this._cleanup(); },
+  });
+  function load(k) { try { return JSON.parse(Hub.lsGet('ordagrant:dagensord:' + k)); } catch (e) { return null; } }
+})();
+
+</script>
+<script>
+/* ==== js/games/ordjakt.js ==== */
+/* Ordjakt – hitta gömda ord i bokstavsrutnätet (dra eller tryck på första och sista bokstaven) */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const CFG = {
+    familj: { n: 8, words: 6, time: 300, dirs: [[0, 1], [1, 0]] },
+    ungdom: { n: 10, words: 8, time: 270, dirs: [[0, 1], [1, 0], [1, 1], [-1, 1]] },
+    vuxen: { n: 12, words: 10, time: 240, dirs: [[0, 1], [1, 0], [1, 1], [-1, 1], [0, -1], [-1, 0], [-1, -1], [1, -1]] },
+  };
+  // Fyllnadsbokstäver ungefär efter svensk bokstavsfrekvens
+  const FILL = 'EEEEEEEEEAAAAAAAANNNNNNNRRRRRRRTTTTTTTSSSSSSIIIIILLLLLDDDDOOOOMMMKKKGGGVVVHHFFUUPPÄÄÅÅÖÖBBJCY';
+  const HUES = [265, 330, 20, 45, 150, 190, 210, 290, 0, 100, 240, 170];
+
+  /** Skapa ett rutnät; returnerar { grid, placed } eller null */
+  function generate(words, n, dirs, rnd) {
+    rnd = rnd || Math.random;
+    for (let attempt = 0; attempt < 60; attempt++) {
+      const g = Array.from({ length: n }, () => Array(n).fill(''));
+      const placed = [];
+      let ok = true;
+      for (const w of words.slice().sort((a, b) => b.length - a.length)) {
+        let done = false;
+        for (let t = 0; t < 300 && !done; t++) {
+          const [dr, dc] = dirs[Math.floor(rnd() * dirs.length)];
+          const r0 = Math.floor(rnd() * n), c0 = Math.floor(rnd() * n);
+          const r1 = r0 + dr * (w.length - 1), c1 = c0 + dc * (w.length - 1);
+          if (r1 < 0 || r1 >= n || c1 < 0 || c1 >= n) continue;
+          let fits = true;
+          for (let i = 0; i < w.length; i++) { const ch = g[r0 + dr * i][c0 + dc * i]; if (ch && ch !== w[i]) { fits = false; break; } }
+          if (!fits) continue;
+          for (let i = 0; i < w.length; i++) g[r0 + dr * i][c0 + dc * i] = w[i];
+          placed.push({ word: w, r: r0, c: c0, dr, dc }); done = true;
+        }
+        if (!done) { ok = false; break; }
+      }
+      if (!ok) continue;
+      for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (!g[r][c]) g[r][c] = FILL[Math.floor(rnd() * FILL.length)];
+      // Varje ord ska finnas exakt en gång (i alla 8 riktningar), annars nytt försök
+      if (words.every(w => count(g, w) === 1)) return { grid: g, placed };
+    }
+    return null;
+  }
+  const ALL = [[0, 1], [1, 0], [1, 1], [-1, 1], [0, -1], [-1, 0], [-1, -1], [1, -1]];
+  function count(g, w) {
+    const n = g.length; let k = 0;
+    const pal = w === [...w].reverse().join('');
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) for (const [dr, dc] of ALL) {
+      let i = 0; while (i < w.length) { const rr = r + dr * i, cc = c + dc * i; if (rr < 0 || cc < 0 || rr >= n || cc >= n || g[rr][cc] !== w[i]) break; i++; }
+      if (i === w.length) k++;
+    }
+    return pal ? k / 2 : k;
+  }
+  Hub.ordjaktGenerate = generate; Hub.ordjaktCount = count;
+
+  Hub.register({
+    id: 'ordjakt', title: 'Ordjakt', emoji: '🔎', section: 'ordlek', c1: '#29c7ff', c2: '#7b5cff',
+    desc: 'Hitta de gömda orden i rutnätet innan tiden tar slut. Dra över orden med fingret eller musen.',
+    mount(root) {
+      const self = this;
+      const C = CFG[Hub.audience];
+      let theme = null, data, found, cells, t0, timer, left, done, anchor = null, dragging = false, start = null, line = [];
+      const seg = el('select', { class: 'btn small', 'aria-label': 'Tema', onchange: (e) => { theme = e.target.value || null; newGame(); } });
+      const info = el('span', { class: 'pill' }), timeEl = el('span', { class: 'pill' });
+      const gridEl = el('div', { class: 'wj-grid', role: 'grid', 'aria-label': 'Bokstavsrutnät' });
+      const list = el('div', { class: 'wj-words' });
+      const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+      root.append(el('div', { class: 'stage' },
+        el('div', { class: 'row center' }, seg, info, timeEl, el('button', { class: 'btn small', onclick: () => newGame() }, '🆕 Nytt rutnät')),
+        list, gridEl, fb,
+        el('p', { class: 'muted center', style: { fontSize: '13px' } }, `Dra från första till sista bokstaven – eller tryck på första och sedan sista bokstaven. ${C.n}×${C.n} rutor` +
+          (C.dirs.length === 2 ? ', ord står vågrätt och lodrätt.' : C.dirs.length === 4 ? ', ord står vågrätt, lodrätt och diagonalt.' : ', ord kan stå åt alla håll – även baklänges!'))));
+      seg.append(el('option', { value: '' }, '🎲 Blandat tema'), ...DATA.ordjakt.map(t => el('option', { value: t.id }, t.emoji + ' ' + t.name)));
+
+      function newGame() {
+        clearInterval(timer);
+        const th = theme ? DATA.ordjakt.find(t => t.id === theme) : DATA.ordjakt[Hub.rand(DATA.ordjakt.length)];
+        const pool = Hub.shuffle(th.words.filter(w => w.length <= C.n));
+        let res = null, words, want = C.words;
+        const rev = (w) => [...w].reverse().join('');
+        const clash = (a, b) => a.includes(b) || b.includes(a) || a.includes(rev(b)) || b.includes(rev(a));
+        for (let k = 0; !res && k < 30; k++) {
+          words = [];
+          for (const w of Hub.shuffle(pool)) { if (words.length >= want) break; if (!words.some(x => clash(x, w))) words.push(w); }
+          res = generate(words, C.n, C.dirs);
+          if (k % 10 === 9) want--; // sällsynt: färre ord om det inte går ihop
+        }
+        data = { theme: th, words, ...res }; found = new Map(); done = false; anchor = null; fb.innerHTML = ''; fb.className = 'feedback';
+        info.textContent = `${th.emoji} ${th.name}`;
+        build(); renderList();
+        left = C.time; t0 = Date.now(); tick(); timer = setInterval(tick, 500);
+      }
+      function tick() {
+        left = Math.max(0, C.time - (Date.now() - t0) / 1000);
+        timeEl.textContent = `⏱️ ${Hub.fmtTime(left)}`; timeEl.classList.toggle('warn', left < 30);
+        if (left <= 0 && !done) finish(false);
+      }
+      function build() {
+        const n = C.n;
+        gridEl.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+        gridEl.style.fontSize = `clamp(12px, ${Math.round(46 / n * 10) / 10}vw, ${Math.round(300 / n)}px)`;
+        cells = [];
+        gridEl.replaceChildren(...data.grid.flatMap((row, r) => row.map((ch, c) => { const d = el('div', { class: 'wj-cell', 'data-r': r, 'data-c': c, role: 'gridcell' }, ch); cells.push(d); return d; })));
+      }
+      function renderList() {
+        list.replaceChildren(...data.words.map(w => { const f = found.get(w); return el('span', { class: f != null ? 'found' : '', style: f != null ? { background: `hsl(${HUES[f % HUES.length]} 70% 50%)` } : null }, w); }));
+      }
+      const cellAt = (r, c) => cells[r * C.n + c];
+      function fromPoint(x, y) { const e = document.elementFromPoint(x, y); return e && e.classList && e.classList.contains('wj-cell') ? [+e.dataset.r, +e.dataset.c] : null; }
+      function lineBetween(a, b) {
+        let dr = b[0] - a[0], dc = b[1] - a[1];
+        const len = Math.max(Math.abs(dr), Math.abs(dc));
+        if (!len) return [a];
+        // Fäst vid närmaste av de 8 riktningarna
+        const ang = Math.atan2(dr, dc), step = Math.round(ang / (Math.PI / 4));
+        const sr = Math.round(Math.sin(step * Math.PI / 4)), sc = Math.round(Math.cos(step * Math.PI / 4));
+        const out = [];
+        for (let i = 0; i <= len; i++) { const r = a[0] + sr * i, c = a[1] + sc * i; if (r < 0 || c < 0 || r >= C.n || c >= C.n) break; out.push([r, c]); }
+        return out;
+      }
+      function showSel(l) { cells.forEach(x => x.classList.remove('sel')); l.forEach(([r, c]) => cellAt(r, c).classList.add('sel')); }
+      function tryLine(l) {
+        showSel([]);
+        if (l.length < 2) return false;
+        const s = l.map(([r, c]) => data.grid[r][c]).join(''), rev = [...s].reverse().join('');
+        const w = data.words.find(x => (x === s || x === rev) && !found.has(x));
+        if (!w) { if (data.words.some(x => x === s || x === rev)) { fb.className = 'feedback info'; fb.textContent = 'Det ordet har du redan hittat!'; } return false; }
+        const idx = found.size; found.set(w, idx);
+        const col = `hsl(${HUES[idx % HUES.length]} 70% 50%)`;
+        l.forEach(([r, c]) => { const x = cellAt(r, c); x.classList.add('found'); x.style.background = col; });
+        renderList(); fb.className = 'feedback ok'; fb.textContent = `Hittade ${w}! (${found.size}/${data.words.length})`;
+        if (found.size === data.words.length) finish(true);
+        return true;
+      }
+      gridEl.addEventListener('pointerdown', (e) => {
+        if (done) return; const p = fromPoint(e.clientX, e.clientY); if (!p) return;
+        e.preventDefault(); dragging = true; start = p; line = [p]; showSel(line);
+        try { gridEl.setPointerCapture(e.pointerId); } catch (err) { /* ignoreras */ }
+      });
+      gridEl.addEventListener('pointermove', (e) => {
+        if (!dragging) return; const p = fromPoint(e.clientX, e.clientY); if (!p) return;
+        line = lineBetween(start, p); showSel(line);
+      });
+      const up = (e) => {
+        if (!dragging) return; dragging = false;
+        const end = line[line.length - 1];
+        if (line.length === 1) { // tryck-läge: första, sedan sista bokstaven
+          if (anchor && (anchor[0] !== end[0] || anchor[1] !== end[1])) { const l = lineBetween(anchor, end); cellAt(anchor[0], anchor[1]).classList.remove('anchor'); anchor = null; if (!tryLine(l)) miss(l); }
+          else if (anchor) { cellAt(anchor[0], anchor[1]).classList.remove('anchor'); anchor = null; showSel([]); }
+          else { anchor = end; cellAt(end[0], end[1]).classList.add('anchor'); showSel([]); }
+        } else {
+          if (anchor) { cellAt(anchor[0], anchor[1]).classList.remove('anchor'); anchor = null; }
+          if (!tryLine(line)) miss(line);
+        }
+      };
+      function miss(l) { if (l.length > 1) { fb.className = 'feedback bad'; fb.textContent = 'Inget ord där – försök igen.'; } showSel([]); }
+      gridEl.addEventListener('pointerup', up); gridEl.addEventListener('pointercancel', () => { dragging = false; showSel([]); });
+      gridEl.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+      function finish(all) {
+        done = true; clearInterval(timer);
+        // Visa ord som inte hittades
+        data.placed.forEach(p => { if (!found.has(p.word)) for (let i = 0; i < p.word.length; i++) { const x = cellAt(p.r + p.dr * i, p.c + p.dc * i); x.style.outline = '2px dashed #ef4656'; x.style.outlineOffset = '-2px'; } });
+        const pts = found.size * 10 + (all ? 20 + Math.round(left / 3) : 0);
+        const record = Hub.finishRound('ordjakt', pts);
+        fb.className = '';
+        fb.replaceChildren(Hub.resultView({ emoji: all ? '🔎' : '⏰', title: all ? 'Alla ord hittade!' : 'Tiden är ute!', text: `${found.size} av ${data.words.length} ord` + (all ? ` med ${Hub.fmtTime(left)} kvar.` : '. Missade ord är markerade med rött.'), points: pts, record, onAgain: newGame }));
+      }
+      self._cleanup = () => clearInterval(timer);
+      self._debug = () => data;
+      newGame();
+    },
+    unmount() { this._cleanup && this._cleanup(); },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/hanga.js ==== */
+/* Hänga gubbe – gissa ordet bokstav för bokstav. Gubben hänger i ballonger; varje fel spräcker en ballong. */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const LIVES = { familj: 8, ungdom: 7, vuxen: 6 };
+  const COLORS = ['#ff5d8f', '#ffb020', '#29c7ff', '#16b17e', '#7b5cff', '#ff8a5b', '#ffd23f', '#b06bff'];
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+  Hub.register({
+    id: 'hanga', title: 'Hänga gubbe', emoji: '🎈', section: 'ordlek', c1: '#ff8a5b', c2: '#ff5d8f',
+    desc: 'Gissa ordet bokstav för bokstav. Varje fel spräcker en ballong – rädda gubben!',
+    mount(root) {
+      const self = this;
+      let cat = '', word, guessed, wrong, lives, done, last = '', streak = 0;
+      const sel = el('select', { class: 'btn small', 'aria-label': 'Kategori', onchange: (e) => { cat = e.target.value; newWord(); } },
+        el('option', { value: '' }, '🎲 Blandade kategorier'), ...Object.keys(DATA.hanga).map(k => el('option', { value: k }, k)));
+      const catEl = el('span', { class: 'pill warn' }), livesEl = el('span', { class: 'pill' });
+      const art = svg('svg', { viewBox: '0 0 300 250', class: 'hg-svg', role: 'img', 'aria-label': 'Gubbe som hänger i ballonger' });
+      const wordEl = el('div', { class: 'hg-word', 'aria-live': 'polite' });
+      const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+      const kbd = Hub.keyboard({ onKey: guess });
+      root.append(el('div', { class: 'stage' },
+        el('div', { class: 'row center' }, sel, catEl, livesEl),
+        el('div', { class: 'hg-wrap' }, art), wordEl, fb, kbd,
+        el('div', { class: 'row center', style: { marginTop: '10px' } },
+          el('button', { class: 'btn small', onclick: hint }, '💡 Visa en bokstav (kostar en ballong)'),
+          el('button', { class: 'btn small ghost', onclick: () => newWord() }, '⏭ Nytt ord'))));
+
+      function pool() {
+        const L = Hub.levels();
+        const cats = cat ? [cat] : Object.keys(DATA.hanga);
+        return cats.flatMap(k => DATA.hanga[k].filter(([w, l]) => L.includes(l)).map(([w]) => ({ w, k })));
+      }
+      function newWord() {
+        const p = pool().filter(x => x.w !== last);
+        const it = p[Hub.rand(p.length)]; word = it.w; last = word;
+        guessed = new Set(); wrong = 0; lives = LIVES[Hub.audience]; done = false;
+        catEl.textContent = '🏷️ ' + it.k + ` · ${word.length} bokstäver`;
+        fb.innerHTML = ''; fb.className = 'feedback'; kbd.reset();
+        if (Hub.audience === 'familj') { guessed.add(word[0]); kbd.setKey(word[0], 'used-ok', true); fb.className = 'feedback info'; fb.textContent = 'Första bokstaven får du på köpet!'; }
+        draw(); renderWord(); upd();
+      }
+      function draw() {
+        art.innerHTML = '';
+        art.append(svg('rect', { x: 0, y: 228, width: 300, height: 22, rx: 6, fill: '#8fd16a' }));
+        const g = svg('g', { class: 'rise', id: 'hg-fly' });
+        const hand = [150, 150];
+        const n = lives;
+        for (let i = 0; i < n; i++) {
+          const a = Math.PI * (0.15 + 0.7 * (n === 1 ? 0.5 : i / (n - 1)));
+          const x = 150 - Math.cos(a) * 105, y = 98 - Math.sin(a) * 52;
+          const b = svg('g', { class: 'balloon', 'data-i': i });
+          b.append(svg('path', { d: `M${hand[0]} ${hand[1]} Q ${(x + hand[0]) / 2 + (i % 2 ? 8 : -8)} ${(y + hand[1]) / 2} ${x} ${y + 22}`, stroke: '#8b87a6', 'stroke-width': 1.5, fill: 'none' }));
+          b.append(svg('ellipse', { cx: x, cy: y, rx: 17, ry: 21, fill: COLORS[i % COLORS.length] }));
+          b.append(svg('ellipse', { cx: x - 6, cy: y - 8, rx: 4, ry: 6, fill: 'rgba(255,255,255,.45)' }));
+          b.append(svg('path', { d: `M${x - 4} ${y + 24} L${x + 4} ${y + 24} L${x} ${y + 19} Z`, fill: COLORS[i % COLORS.length] }));
+          g.append(b);
+        }
+        // Gubben
+        const body = svg('g', { id: 'hg-man' });
+        body.append(svg('line', { x1: 150, y1: 150, x2: 150, y2: 168, stroke: '#1d1840', 'stroke-width': 5, 'stroke-linecap': 'round' })); // arm upp
+        body.append(svg('circle', { cx: 150, cy: 180, r: 13, fill: '#ffd9b3', stroke: '#1d1840', 'stroke-width': 3 }));
+        body.append(svg('circle', { cx: 145, cy: 178, r: 1.8, fill: '#1d1840' })); body.append(svg('circle', { cx: 155, cy: 178, r: 1.8, fill: '#1d1840' }));
+        body.append(svg('path', { id: 'hg-mouth', d: 'M144 184 Q150 190 156 184', stroke: '#1d1840', 'stroke-width': 2, fill: 'none', 'stroke-linecap': 'round' }));
+        body.append(svg('path', { d: 'M150 193 L150 214', stroke: '#7b5cff', 'stroke-width': 9, 'stroke-linecap': 'round' }));
+        body.append(svg('path', { d: 'M150 198 L136 207 M150 198 L164 192', stroke: '#1d1840', 'stroke-width': 4, 'stroke-linecap': 'round', fill: 'none' }));
+        body.append(svg('path', { d: 'M150 214 L141 228 M150 214 L159 228', stroke: '#1d1840', 'stroke-width': 4, 'stroke-linecap': 'round', fill: 'none' }));
+        g.append(body);
+        g.style.transform = 'translateY(-12px)';
+        art.append(g);
+      }
+      function renderWord(reveal) {
+        wordEl.replaceChildren(...[...word].map(ch => el('span', { class: guessed.has(ch) ? 'show' : reveal ? 'miss' : '' }, guessed.has(ch) || reveal ? ch : '')));
+      }
+      function upd() { livesEl.textContent = `🎈 ${lives - wrong} kvar`; }
+      function guess(ch) {
+        if (done || guessed.has(ch)) return;
+        guessed.add(ch);
+        if (word.includes(ch)) { kbd.setKey(ch, 'used-ok', true); renderWord(); fb.className = 'feedback ok'; fb.textContent = `Ja! ${ch} finns ${[...word].filter(x => x === ch).length === 1 ? 'en gång' : [...word].filter(x => x === ch).length + ' gånger'}.`; }
+        else { kbd.setKey(ch, 'used-bad', true); miss(`Nej, ingen ${ch}.`); }
+        check();
+      }
+      function miss(msg) {
+        const b = art.querySelector(`.balloon[data-i="${wrong}"]`); if (b) b.classList.add('pop');
+        wrong++; upd(); fb.className = 'feedback bad'; fb.textContent = '💥 Pang! ' + msg;
+      }
+      function hint() {
+        if (done) return;
+        const left = [...new Set(word)].filter(ch => !guessed.has(ch));
+        if (left.length <= 1) { fb.className = 'feedback info'; fb.textContent = 'Nu får du klura ut den sista bokstaven själv!'; return; }
+        if (lives - wrong <= 1) { fb.className = 'feedback info'; fb.textContent = 'Du har bara en ballong kvar – ingen ledtråd nu.'; return; }
+        const ch = left[Hub.rand(left.length)];
+        miss(`Ledtråd: ${ch}.`); guessed.add(ch); kbd.setKey(ch, 'used-ok', true); renderWord(); check();
+      }
+      function check() {
+        const won = [...word].every(ch => guessed.has(ch));
+        if (!won && wrong < lives) return;
+        done = true;
+        const fly = art.querySelector('#hg-fly'), mouth = art.querySelector('#hg-mouth');
+        let pts = 0, record = false;
+        if (won) {
+          streak++;
+          pts = 10 + (lives - wrong) * 5 + word.length;
+          record = Hub.finishRound('hanga', pts);
+          requestAnimationFrame(() => { fly.style.transform = 'translateY(-320px)'; });
+        } else {
+          streak = 0; record = Hub.finishRound('hanga', 0);
+          fly.style.transition = 'transform .9s cubic-bezier(.5,0,.6,1.4)'; fly.style.transform = 'translateY(0)';
+          mouth.setAttribute('d', 'M144 186 Q150 183 156 186');
+          renderWord(true);
+        }
+        fb.className = '';
+        fb.replaceChildren(Hub.resultView({
+          emoji: won ? '🎈' : '🌾', title: won ? 'Gubben flög iväg – rätt ord!' : 'Duns! Gubben landade mjukt i gräset.',
+          text: (won ? '' : 'Ordet var ' + word + '. ') + (won && streak > 1 ? `${streak} rätt i rad!` : ''), points: pts, record, onAgain: newWord,
+        }));
+        fb.querySelector('.btn.primary').textContent = '➡ Nästa ord';
+      }
+      function key(e) { if (!document.body.contains(art)) return; const L = Hub.keyLetter(e); if (L) { e.preventDefault(); guess(L); } }
+      window.addEventListener('keydown', key);
+      self._cleanup = () => window.removeEventListener('keydown', key);
+      self._debug = () => word;
+      newWord();
+    },
+    unmount() { this._cleanup && this._cleanup(); },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/ordsprak.js ==== */
+/* Ordspråksluckan – fyll i ordet som fattas i svenska ordspråk */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const ROUND = 10;
+  Hub.register({
+    id: 'ordsprak', title: 'Ordspråksluckan', emoji: '📜', section: 'kunskap', c1: '#b06bff', c2: '#ff5d8f',
+    desc: 'Ett ord fattas i varje svenskt ordspråk. Välj rätt ord – eller skriv det själv för extra poäng.',
+    mount(root) {
+      let mode = Hub.lsGet('ordagrant:ordsprak:mode') || (Hub.audience === 'vuxen' ? 'skriv' : 'val');
+      let qs, i, score, correct, locked;
+      const stage = el('div', { class: 'stage' }); root.append(stage);
+      intro();
+      function intro() {
+        const seg = el('div', { class: 'seg', role: 'group', 'aria-label': 'Svarssätt' },
+          el('button', { type: 'button', 'aria-pressed': String(mode === 'val'), onclick: () => { mode = 'val'; Hub.lsSet('ordagrant:ordsprak:mode', mode); intro(); } }, '🔘 Flerval (10 p)'),
+          el('button', { type: 'button', 'aria-pressed': String(mode === 'skriv'), onclick: () => { mode = 'skriv'; Hub.lsSet('ordagrant:ordsprak:mode', mode); intro(); } }, '⌨️ Skriv själv (15 p)'));
+        stage.replaceChildren(el('div', { class: 'panel center' }, el('div', { style: { fontSize: '54px' } }, '📜'), el('h2', null, 'Vilket ord fattas?'),
+          el('p', { class: 'muted' }, `${ROUND} svenska ordspråk för ${Hub.AUDIENCES[Hub.audience].emoji} ${Hub.AUDIENCES[Hub.audience].name.toLowerCase()}. Efter varje svar får du veta vad ordspråket betyder.`),
+          el('div', { class: 'row center' }, seg),
+          el('div', { class: 'row center', style: { marginTop: '16px' } }, el('button', { class: 'btn primary', onclick: start }, '▶ Starta'))));
+      }
+      function start() { qs = Hub.shuffle(Hub.forAudience(DATA.ordsprak)).slice(0, ROUND); i = 0; score = 0; correct = 0; show(); }
+      function parts(q) { const [a, b] = q.t.split('___'); return [a, b]; }
+      function show() {
+        locked = false; const q = qs[i]; const [a, b] = parts(q);
+        const gap = el('span', { class: 'os-gap' }, '?');
+        const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+        const next = el('div', { class: 'row center', style: { marginTop: '10px' } });
+        let answerArea;
+        if (mode === 'val') {
+          answerArea = el('div', { class: 'quiz-opts' }, Hub.shuffle([q.a, ...q.w]).map((o, k) => el('button', { class: 'quiz-opt', type: 'button', 'data-correct': o === q.a ? '1' : null, onclick: (e) => answer(e.currentTarget, o === q.a, o) }, el('span', { class: 'k' }, 'ABCD'[k]), o)));
+        } else {
+          const inp = el('input', { type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': 'Ordet som fattas', placeholder: 'Skriv ordet som fattas …', lang: 'sv' });
+          answerArea = el('form', { class: 'ans-form', onsubmit: (e) => { e.preventDefault(); if (!inp.value.trim() || locked) return; const r = Hub.check(inp.value, [q.a, ...(q.alt || [])]); answer(null, !!r, inp.value, r); } },
+            inp, el('button', { class: 'btn primary', type: 'submit' }, 'Svara'));
+          answerArea._focus = () => { if (matchMedia('(hover:hover)').matches) inp.focus({ preventScroll: true }); };
+        }
+        stage.replaceChildren(
+          el('div', { class: 'row' }, el('span', { class: 'pill' }, `Ordspråk ${i + 1} / ${qs.length}`), el('span', { class: 'spacer' }), el('span', { class: 'pill' }, `⭐ ${score} p`)),
+          el('div', { class: 'os-text' }, a, gap, b), answerArea, fb, next,
+          mode === 'skriv' ? el('div', { class: 'row center' }, el('button', { class: 'btn small ghost', type: 'button', onclick: () => answer(null, false, '', false, true) }, '🤷 Vet inte')) : null);
+        if (answerArea._focus) answerArea._focus();
+        stage._s = { gap, fb, next, answerArea, q };
+      }
+      function answer(btn, ok, given, how, skip) {
+        if (locked) return; locked = true;
+        const { gap, fb, next, answerArea, q } = stage._s;
+        answerArea.querySelectorAll('button,input').forEach(x => { x.disabled = true; if (x.dataset && x.dataset.correct) x.classList.add('right'); });
+        gap.textContent = q.a; gap.classList.add(ok ? 'ok' : 'bad');
+        if (ok) { const p = mode === 'val' ? 10 : 15; score += p; correct++; fb.className = 'feedback ok'; fb.textContent = `Rätt! +${p} poäng` + (how === 'loose' ? ` (stavas ”${q.a}”)` : ''); }
+        else { if (btn) btn.classList.add('wrong'); fb.className = 'feedback bad'; fb.textContent = skip ? `Ordet var ”${q.a}”.` : `Inte rätt – det ska vara ”${q.a}”.`; }
+        fb.after(el('div', { class: 'fact' }, '💡 ' + q.t.replace('___', q.a) + ' – ' + q.m));
+        const last = i === qs.length - 1;
+        const b = el('button', { class: 'btn primary', onclick: () => { if (last) end(); else { i++; show(); } } }, last ? 'Se resultat 🏁' : 'Nästa →');
+        next.append(b); b.focus({ preventScroll: true });
+      }
+      function end() {
+        const record = Hub.finishRound('ordsprak', score);
+        stage.replaceChildren(Hub.resultView({ emoji: correct >= 8 ? '🏆' : '📜', title: `${correct} av ${qs.length} rätt`, text: correct === qs.length ? 'Du kan dina ordspråk!' : 'Övning ger färdighet!', points: score, record, onAgain: start }));
+      }
+    },
+  });
+})();
+
+</script>
+<script>
+/* ==== js/games/vem.js ==== */
+/* Vem är jag? – gissa med så få ledtrådar som möjligt */
+(function () {
+  'use strict';
+  const { el } = Hub;
+  const ROUND = 5, WORTH = [50, 40, 30, 20, 10];
+  Hub.register({
+    id: 'vem', title: 'Vem är jag?', emoji: '🕵️', section: 'kunskap', c1: '#3a7bd5', c2: '#16b17e',
+    desc: 'Fem ledtrådar, från svår till lätt. Ju färre ledtrådar du behöver, desto fler poäng!',
+    progress: () => { const l = Hub.forAudience(DATA.vem); return { done: l.filter(x => Hub.isSolved('vem', x.id)).length, of: l.length }; },
+    mount(root) {
+      let list, i, shown, score, right, locked;
+      const stage = el('div', { class: 'stage' }); root.append(stage);
+      start();
+      function start() {
+        const pool = Hub.forAudience(DATA.vem);
+        const fresh = Hub.shuffle(pool.filter(x => !Hub.isSolved('vem', x.id))), old = Hub.shuffle(pool.filter(x => Hub.isSolved('vem', x.id)));
+        list = fresh.concat(old).slice(0, ROUND); i = 0; score = 0; right = 0; show();
+      }
+      function show() {
+        const it = list[i]; shown = 1; locked = false;
+        const clues = el('div', { class: 'vj-clues', 'aria-live': 'polite' });
+        const worth = el('span', { class: 'vj-worth' });
+        const inp = el('input', { type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': 'Ditt svar', placeholder: 'Vem eller vad är jag?', lang: 'sv' });
+        const fb = el('div', { class: 'feedback', 'aria-live': 'polite' });
+        const form = el('form', { class: 'ans-form', onsubmit: (e) => { e.preventDefault(); guess(); } }, inp, el('button', { class: 'btn primary', type: 'submit' }, 'Svara'));
+        const moreBtn = el('button', { class: 'btn', type: 'button', onclick: more }, '➕ Nästa ledtråd');
+        const giveBtn = el('button', { class: 'btn ghost', type: 'button', onclick: () => reveal(false) }, '🏳️ Ge upp');
+        const next = el('div', { class: 'row center', style: { marginTop: '10px' } });
+        stage.replaceChildren(
+          el('div', { class: 'row' }, el('span', { class: 'pill' }, `${i + 1} / ${list.length}`), el('span', { class: 'pill warn' }, '🏷️ ' + it.kat), el('span', { class: 'spacer' }), el('span', { class: 'pill' }, `⭐ ${score} p`)),
+          el('p', { class: 'center', style: { margin: '12px 0 0' } }, 'Värd just nu: ', worth),
+          clues, form, fb, el('div', { class: 'row center' }, moreBtn, giveBtn), next);
+        function render() {
+          clues.replaceChildren(...it.c.map((c, k) => k < shown ? el('div', { class: 'vj-clue' }, el('b', null, k + 1), el('span', null, c)) : el('div', { class: 'vj-clue locked' }, el('b', null, k + 1), el('span', null, `Ledtråd ${k + 1} – ${WORTH[k]} poäng`))));
+          worth.textContent = locked ? '–' : WORTH[shown - 1] + ' poäng';
+          moreBtn.disabled = shown >= it.c.length;
+        }
+        function more() { if (locked || shown >= it.c.length) return; shown++; render(); }
+        function guess() {
+          if (locked || !inp.value.trim()) return;
+          const r = Hub.check(inp.value, it.a);
+          if (r) return reveal(true, r);
+          form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake');
+          fb.className = 'feedback bad';
+          if (shown < it.c.length) { fb.textContent = 'Inte rätt – här kommer en ledtråd till.'; more(); }
+          else fb.textContent = 'Inte rätt. Försök igen eller ge upp.';
+          inp.select();
+        }
+        function reveal(ok, how) {
+          locked = true; inp.disabled = true; moreBtn.disabled = giveBtn.disabled = true; form.querySelector('button').disabled = true;
+          const used = shown; shown = it.c.length; render();
+          const name = it.a[0].replace(/(^|\s)\S/g, (m) => m.toLocaleUpperCase('sv-SE'));
+          if (ok) {
+            const pts = WORTH[used - 1]; score += pts; right++; Hub.markSolved('vem', it.id);
+            fb.className = 'feedback ok'; fb.textContent = `Rätt – ${name}! +${pts} poäng (${used} ${used === 1 ? 'ledtråd' : 'ledtrådar'})` + (how === 'loose' ? ` · stavas ”${it.a[0]}”` : '');
+            Hub.confetti(30);
+          } else { fb.className = 'feedback info'; fb.textContent = `Svaret var: ${name}.`; }
+          const last = i === list.length - 1;
+          const b = el('button', { class: 'btn primary', onclick: () => { if (last) end(); else { i++; show(); } } }, last ? 'Se resultat 🏁' : 'Nästa →');
+          next.append(b); b.focus({ preventScroll: true });
+        }
+        render();
+        if (matchMedia('(hover:hover)').matches) inp.focus({ preventScroll: true });
+      }
+      function end() {
+        const record = Hub.finishRound('vem', score);
+        stage.replaceChildren(Hub.resultView({ emoji: right >= 4 ? '🕵️' : '🔍', title: `${right} av ${list.length} rätt`, text: `Max ${ROUND * 50} poäng om man gissar rätt på första ledtråden varje gång.`, points: score, record, onAgain: start }));
+      }
+    },
+  });
+})();
+
+</script>
+<script>
 /* ==== js/menu.js ==== */
 /* Startmeny */
 (function () {
   'use strict';
   const { el } = Hub;
   const SECTIONS = [
-    ['ord', '📚 Ord och kunskap'],
-    ['logik', '🧠 Logik och pussel'],
-    ['sma', '⚡ Snabba småspel'],
+    ['ordlek', '🔤 Ordlekar', ['dagensord', 'ordjakt', 'hanga', 'korsord', 'krypto', 'ordblandning']],
+    ['kunskap', '📚 Kunskap och gåtor', ['quiz', 'vem', 'ordsprak', 'gator', 'rebusar']],
+    ['logik', '🧠 Logik och pussel', ['sudoku', 'pussel']],
+    ['sma', '⚡ Snabba småspel', ['memory', 'snake', 'mullvad']],
   ];
   Hub.renderMenu = function (app) {
     const st = Hub.stats();
@@ -1959,15 +2761,15 @@ Hub.register({
     app.append(
       el('section', { class: 'hero' },
         el('h1', null, 'Välkommen till ', el('span', { class: 'grad' }, 'ORDAGRANT')),
-        el('p', null, 'Quiz, gåtor, rebusar, korsord, sudoku och småspel – på svenska, för hela familjen. Samla poäng och slå dina egna rekord!')),
+        el('p', null, 'Dagens ord, ordjakt, quiz, gåtor, korsord, sudoku och mycket mer – 16 spel på svenska för hela familjen. Samla poäng och slå dina egna rekord!')),
       el('div', { class: 'dash' },
         tile(Hub.fmt(st.total), 'Totalpoäng'),
         tile(Hub.totalSolved(), 'Lösta uppgifter'),
         tile(st.rounds, 'Spelade omgångar'),
         tile(`${played}/${Hub.games.length}`, 'Testade spel')),
       audienceBox(),
-      ...SECTIONS.map(([key, title]) => {
-        const games = Hub.games.filter(g => g.section === key);
+      ...SECTIONS.map(([key, title, order]) => {
+        const games = Hub.games.filter(g => g.section === key).sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
         return el('div', null, el('h2', { class: 'section-title' }, title),
           el('div', { class: 'cards' }, games.map((g, k) => card(g, k))));
       }),
@@ -1994,7 +2796,7 @@ Hub.register({
       el('p', null, g.desc),
       p ? el('div', { class: 'bar', title: `${p.done} av ${p.of} lösta` }, el('i', { style: { width: (p.of ? p.done / p.of * 100 : 0) + '%' } })) : null,
       el('div', { class: 'meta' },
-        el('span', null, p ? `✅ ${p.done}/${p.of} lösta` : `🎮 ${s.plays} ${s.plays === 1 ? 'omgång' : 'omgångar'}`),
+        el('span', null, g.meta ? g.meta() : p ? `✅ ${p.done}/${p.of} lösta` : `🎮 ${s.plays} ${s.plays === 1 ? 'omgång' : 'omgångar'}`),
         el('span', null, `🏆 ${Hub.fmt(s.best)} p`)));
   }
   async function reset() {
