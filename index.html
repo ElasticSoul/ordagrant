@@ -4792,7 +4792,7 @@ Hub.register({
   const orderOf = (g) => { for (const s of SECTIONS) { const i = s[3].indexOf(g.id); if (i >= 0) return i; } return 99; };
   Hub.renderMenu = function (app) {
     const st = Hub.stats();
-    const played = Hub.games.filter(g => Hub.game(g.id).plays > 0 || Hub.game(g.id).solved.length > 0).length;
+    const played = Hub.games.filter(g => Hub.game(g.id).plays > 0 || Hub.game(g.id).solved.length > 0 || Hub.game(g.id).points > 0).length;
     app.append(
       el('section', { class: 'hero' },
         el('h1', null, 'Välkommen till ', el('span', { class: 'grad' }, 'ORDAGRANT')),
